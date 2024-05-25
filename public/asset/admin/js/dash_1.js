@@ -1064,7 +1064,6 @@ window.addEventListener("load", function(){
        */
   
       document.querySelector('.theme-toggle').addEventListener('click', function() {
-  
         getcorkThemeObject = localStorage.getItem("theme");
         getParseObject = JSON.parse(getcorkThemeObject)
         ParsedObject = getParseObject;
