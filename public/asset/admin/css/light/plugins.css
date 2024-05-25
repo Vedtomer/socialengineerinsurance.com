@@ -1,0 +1,13 @@
+@import url('./main.css');
+@import url('./perfect-scrollbar.css');
+@import url('../../../../src/plugins/src/waves/waves.min.css');
+@import url('./structure.css');
+/*
+    Importing highlight.js CSS code 
+
+    Just for demo purpose only
+	
+	@Note:-  monokai-sublime.css stylesheet is for highliting the code;
+
+*/
+@import './monokai-sublime.css';
