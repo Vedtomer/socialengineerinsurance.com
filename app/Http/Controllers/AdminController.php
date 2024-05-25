@@ -1,28 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use DataTables;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Shriramgi;
-use App\Models\Commission;
-use App\Models\Transaction;
-use App\Models\Agent;
 use Illuminate\Http\Request;
-use App\Models\Royalsundaram;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Policy;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithStartRow;
-use Illuminate\Database\Eloquent\Builder;
+use Spatie\Permission\Models\Role;
+
 
 class AdminController extends Controller
 {
@@ -30,23 +14,34 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {
-        if (Auth::guard('admin')->check()) {
+        // Check if the user is already authenticated and has the 'admin' role
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         }
+    
+        // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
             return view('admin.login');
         }
-
+    
+        // Handle POST request (authenticate the user)
         if ($request->isMethod('post')) {
             $credentials = $request->only('email', 'password');
-
-            if (Auth::guard('admin')->attempt($credentials)) {
-                return redirect()->intended(route('admin.dashboard'));
+    
+            if (Auth::attempt($credentials, $request->filled('remember'))) {
+                // Authenticate and check if the user has the 'admin' role
+                $user = Auth::user();
+                if ($user->hasRole('admin')) {
+                    return redirect()->intended(route('admin.dashboard'));
+                } else {
+                    Auth::logout();
+                    return redirect()->route('admin.login')->with('error', 'You do not have the required permissions to access the admin area.');
+                }
             }
-
-            return redirect()->route('admin.login')
-                ->with('error', 'Invalid login credentials');
+    
+            return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
         }
+    
         return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
     }
     public function dashboard(Request $request)

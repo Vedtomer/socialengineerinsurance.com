@@ -123,17 +123,4 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    
-    // config/app.php
-'providers' => [
-    // Other service providers...
-
-  //  App\Providers\AppServiceProvider::class,
-   // App\Providers\MiddlewareServiceProvider::class,
-],
-
-
-
-
-
 ];
