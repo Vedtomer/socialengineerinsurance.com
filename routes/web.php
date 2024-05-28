@@ -45,6 +45,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy');
         
         Route::match(['get', 'post'], '/policy-pdf-upload', [PolicyController::class, 'policyUpload'])->name('admin.policy_pdf_upload');
+        Route::match(['get', 'post'], '/policy-list', [PolicyController::class, 'PolicyList'])->name('policy.list');
         Route::match(['get', 'post'], '/commission/{id}', [AgentController::class, 'commission'])->name('agent.commission');
         #agent list route
         Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');

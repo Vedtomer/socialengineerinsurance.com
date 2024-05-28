@@ -17,6 +17,10 @@
     <!-- END GLOBAL MANDATORY STYLES -->
 
 
-
+    <style>
+        body.dark .layout-px-spacing, .layout-px-spacing {
+            min-height: calc(100vh - 155px) !important;
+        }
+    </style>
 
 </head>

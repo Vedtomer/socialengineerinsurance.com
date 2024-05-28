@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-wf-domain="https://socialengineerinsurance.com" data-wf-page="65b60c5eef338f6b2401686d" data-wf-site="65b60c5def338f6b24016820" lang="en">
 @include('admin.layouts.head')
-<body>
+<body class="layout-boxed" page="starter-pack">
     {{-- <div class="page-wrapper"> --}}
 
     <!-- BEGIN LOADER -->
@@ -17,15 +17,36 @@
     @include('admin.layouts.header')
 
     <!--  BEGIN MAIN CONTAINER  -->
-    <div class="main-container" id="container">
+    <div class="main-container " id="container">
 
         <div class="overlay"></div>
         <div class="search-overlay"></div>
+
+
         @include('admin.layouts.sidebar')
         <div id="content" class="main-content">
-            @yield('content')
+            <div class="layout-px-spacing">
+
+                <div class="middle-content container-xxl p-0">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                @yield('breadcrumb')
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <!-- CONTENT AREA -->
+                    @yield('content')
+                     <!-- CONTENT AREA -->
+                </div>
+
+            </div>
+            @include('admin.layouts.footer')
         </div>
-        @include('admin.layouts.footer')
     </div>
     {{-- </div> --}}
     @include('admin.layouts.scripts')

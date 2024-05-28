@@ -228,7 +228,7 @@ var App = function() {
                         ifStarterKit = document.body.getAttribute('page') === 'starter-pack' ? true : false;
 
                         if (ifStarterKit) {
-                            document.querySelector('.navbar-logo').setAttribute('src', '../../src/assets/img/logo.svg')
+                            document.querySelector('.navbar-logo').setAttribute('src', './assets/img/logo.svg')
                         } else {
                             document.querySelector('.navbar-logo').setAttribute('src', getUpdatedParseObject.settings.layout.logo.darkLogo)
                         }
