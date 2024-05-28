@@ -48,7 +48,7 @@
 
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <div class="errors">
+                    <!-- <div class="errors">
                         @if ($errors->any())
                         @foreach ($errors->all() as $error)
                         <div class="alert alert-danger">
@@ -56,12 +56,12 @@
                         </div>
                         @endforeach
                         @endif
-                    </div>
-                    <form action="{{ route('sliders.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    </div> -->
+                    <form method="POST" action="{{ route('admin.policy_pdf_upload') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label for="name">Upload Slider Image</label>
-                            <input type="file" class="form-control" name="image" required>
+                            <label for="name">Upload PDF</label>
+                            <input type="file" class="form-control" name="files[]" id="excelFile" accept=".pdf" multiple>
                         </div>
 
 
