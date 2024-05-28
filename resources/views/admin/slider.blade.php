@@ -18,8 +18,8 @@
         </div>
         <!-- /BREADCRUMB -->
 
-        <!-- <div class="row layout-top-spacing">
-                        <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
+                <div class="row ">
+                        <!-- <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
                             <input id="t-text" type="text" name="txt" placeholder="Search" class="form-control" required="">
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
@@ -31,25 +31,20 @@
                                 <option value="3">Accessories</option>
                                 <option value="3">Organic</option>
                             </select>
-                        </div>
+                        </div> -->
     
-                        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
-                            <select class="form-select form-select" aria-label="Default select example">
-                                <option selected="">Sort By</option>
-                                <option value="1">Low to High Price</option>
-                                <option value="2">Most Viewed</option>
-                                <option value="3">Hight to Low Price</option>
-                                <option value="3">On Sale</option>
-                                <option value="3">Newest</option>
-                            </select>
+                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+                        <div class="action-btn layout-top-spacing">
+                        <button id="add-list" class="btn btn-secondary"><a id="openModalBtn" href="{{ route('sliders.create') }}">Add Slider</a></button>
                         </div>
-                    </div> -->
+                    </div>
+                </div>
 
         <div class="row">
             @forelse ($sliders as $slider)
             <div class="col-xxl-4 col-xl-4 col-lg-3 col-md-4 col-sm-6 mb-4">
                 <a class="card style-6" href="./app-ecommerce-product.html">
-                    <button class="btn btn-sm status-toggle clickable" data-id="{{ $slider->id }}" data-status="{{ $slider->status ? '1' : '0' }}" onclick="toggleStatus(this)">
+                    <!-- <button class="btn btn-sm status-toggle clickable" data-id="{{ $slider->id }}" data-status="{{ $slider->status ? '1' : '0' }}" onclick="toggleStatus(this)"> -->
                         @if ($slider->status)
                         <span class="badge badge-success">Active</span>
                         @else

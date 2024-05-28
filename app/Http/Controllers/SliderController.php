@@ -13,19 +13,13 @@ class SliderController extends Controller
     public function index()
     {
         $sliders = Slider::all();
-        return view('sliders.index', compact('sliders'));
+        return view('admin.slider', compact('sliders'));
     }
-    //slider that i made
-    public function slide()
-    {
-        // Your specific logic for the slider method
-        $sliders = Slider::all(); // Example logic
-        return view('sliders.slider', compact('sliders'));
-    }
+
 
     public function create()
     {
-        return view('sliders.create');
+        return view('admin.sliders.create');
     }
 
     public function store(Request $request)
