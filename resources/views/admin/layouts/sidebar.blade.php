@@ -79,7 +79,7 @@
                         </a>
                         <ul class="collapse submenu list-unstyled" id="Agent" data-bs-parent="#accordionExample">
                             <li>
-                                <a href="./app-ecommerce-product-shop.html"> Agent List </a>
+                                <a href="{{route("agent.list")}}"> Agent List </a>
                             </li>
                             <li>
                                 <a href="./app-ecommerce-product.html">  Commission Code </a>

@@ -28,6 +28,8 @@
                         <a class="dropdown-item d-flex" href="javascript:void(0);"><img src="{{ asset('asset/admin/images/svg/br.svg') }}" class="flag-width" alt="flag"> <span class="align-self-center">&nbsp;Portuguese</span></a>
                         <a class="dropdown-item d-flex" href="javascript:void(0);"><img src="{{ asset('asset/admin/images/svg/in.svg') }}" class="flag-width" alt="flag"> <span class="align-self-center">&nbsp;Hindi</span></a>
                         <a class="dropdown-item d-flex" href="javascript:void(0);"><img src="{{ asset('asset/admin/images/svg/de.svg') }}" class="flag-width" alt="flag"> <span class="align-self-center">&nbsp;German</span></a>
+
+                        
                     </div>
                 </li> --}}
 
