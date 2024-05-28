@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\AgentController;
 
 // Route::get('/', function () {
 //     return view('app');
@@ -28,6 +28,8 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+        Route::get('agent', [AgentController::class, 'AgentList'])->name('agent.list');
 
     });
 });
