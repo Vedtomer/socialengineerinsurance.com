@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-
+use Carbon\Carbon;
+use App\Models\Transaction;
+Use App\Models\Agent;
 
 class AdminController extends Controller
 {
