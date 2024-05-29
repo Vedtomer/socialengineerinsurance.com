@@ -14,8 +14,8 @@
 @endpush
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="#">Agent</a></li>
-<li class="breadcrumb-item active" aria-current="page">Agent Listing</li>
+<li class="breadcrumb-item"><a href="#">Reward</a></li>
+<li class="breadcrumb-item active" aria-current="page">Policy Listing</li>
 @endsection
 
 @section('content')
