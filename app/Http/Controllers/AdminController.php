@@ -93,4 +93,23 @@ class AdminController extends Controller
 
         return view('admin.transaction', ['data' => $users, 'agent' => $agents]);
     }
+
+    public function AddTransaction(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $agents = Agent::orderBy('created_at', 'desc')->get();
+            return view('admin.transactionadd', ['data' => $agents]);
+        }
+
+        if ($request->isMethod('post')) {
+            $transaction = new Transaction();
+            $transaction->agent_id = $request->agent_id;
+            $transaction->payment_mode = $request->payment_mode;
+            $transaction->transaction_id = $request->transaction_id;
+            $transaction->amount = $request->amount;
+            $transaction->payment_date = $request->payment_date;
+            $transaction->save();
+            return redirect()->route('admin.transaction')->with('success', 'Transaction Add Successfully.');
+        }
+    }
 }

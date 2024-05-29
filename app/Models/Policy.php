@@ -40,7 +40,7 @@ class Policy extends Model
 
         $data = ('/policies') . "/" . $this->policy_no . '.pdf';
 
-        if (Storage::disk('public')->has($data)) {
+        if (Storage::disk('public')->exists($data)) {
             return asset('/storage/policies') . "/" . $this->policy_no . '.pdf';
         } else {
             return "";
