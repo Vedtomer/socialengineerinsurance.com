@@ -55,10 +55,10 @@
                    </a>
                    <ul class="collapse submenu list-unstyled" id="home" data-bs-parent="#accordionExample">
                        <li>
-                           <a href="{{route("agent.list")}}"> Agent List </a>
+                           <a href="{{ route('agent.list') }}"> Agent List </a>
                        </li>
                        <li>
-                           <a href="./app-ecommerce-product.html"> Commission Code </a>
+                           <a href="{{route('commission.code')}}"> Commission Code </a>
                        </li>
                    </ul>
                </li>
@@ -81,10 +81,10 @@
                    </a>
                    <ul class="collapse submenu list-unstyled" id="ecommerce" data-bs-parent="#accordionExample">
                        <li>
-                           <a href="./app-ecommerce-product-shop.html"> Upload Policy </a>
+                           <a href="{{ route('admin.upload') }}"> Upload Policy </a>
                        </li>
                        <li>
-                           <a href="{{ route('policy.list') }}"> Policy List </a>
+                           <a href="{{ route('admin.policy_list') }}"> Policy List </a>
                        </li>
                        <li>
                            <a id="openModalBtn" href="{{ route('admin.policy_pdf_upload') }}"> Upload Policy PDF </a>
@@ -108,10 +108,10 @@
                    </a>
                    <ul class="collapse submenu list-unstyled" id="Reward" data-bs-parent="#accordionExample">
                        <li>
-                           <a href="./app-ecommerce-product-shop.html"> Redem Request </a>
+                           <a href="{{ route('admin.reward.request') }}"> Redem Request </a>
                        </li>
                        <li>
-                           <a href="./app-ecommerce-product.html"> Redem Proceeded </a>
+                           <a href="{{ route('admin.reward.index') }}"> Redem Proceeded </a>
                        </li>
                    </ul>
                </li>

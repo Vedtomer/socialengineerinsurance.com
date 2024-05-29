@@ -5,6 +5,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\PolicyController;
+use App\Http\Controllers\PointRedemptionController;
+
 
 
 
@@ -35,8 +37,23 @@ Route::prefix('admin')->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+        #transaction
+        route::get('transaction/{id?}', [AdminController::class, 'Transaction'])->name('admin.transaction');
+        Route::match(['get', 'post'], '/add-transaction', [AdminController::class, 'AddTransaction'])->name('add.transaction');
+        Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
+        Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
+
+
+        #manage policy
+        Route::match(['get', 'post'], '/upload-policy', [PolicyController::class, 'upload'])->name('admin.upload');
+        Route::match(['get', 'post'], '/updateagentid/{royalsundaram_id?}/{agent_id?}', [AgentController::class, 'updateagentid'])->name('updateagentid');
+        Route::match(['get', 'post'], '/policy-list', [PolicyController::class, 'PolicyList'])->name('admin.policy_list');
+        Route::get('/royalsundaram/{id?}', [AdminController::class, 'royalsundaram'])->name('royalsundaram');
+        Route::match(['get', 'post'], '/policy-pdf-upload', [PolicyController::class, 'policyUpload'])->name('admin.policy_pdf_upload');
+
+
         #Slider Routes
-        // Route::get('/sliders', [SliderController::class, 'slider'])->name('sliders.slider');
+        Route::get('/sliders', [SliderController::class, 'slider'])->name('sliders.slider');
         
         Route::get('/sliders', [SliderController::class, 'index'])->name('sliders.index');
         Route::post('/sliders/{slider}/toggle-status', [SliderController::class, 'toggleStatus'])->name('sliders.toggleStatus');
@@ -44,10 +61,25 @@ Route::prefix('admin')->group(function () {
         Route::post('/sliders', [SliderController::class, 'store'])->name('sliders.store');
         Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy');
         
-        Route::match(['get', 'post'], '/policy-pdf-upload', [PolicyController::class, 'policyUpload'])->name('admin.policy_pdf_upload');
-        Route::match(['get', 'post'], '/policy-list', [PolicyController::class, 'PolicyList'])->name('policy.list');
         Route::match(['get', 'post'], '/commission/{id}', [AgentController::class, 'commission'])->name('agent.commission');
         #agent list route
         Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
+        Route::match(['get', 'post'], '/agent', [AgentController::class, 'Agent'])->name('agent');
+        Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
+        Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
+        Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
+
+
+        // Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
+        Route::get('/download-excel', [AgentController::class ,'downloadExcel'])->name('download.excel');
+        Route::get('/import-excel', [AgentController::class ,'importExcel'])->name('import.excel');
+
+        Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
+
+        #reward
+        Route::get('/points/redemption', [PointRedemptionController::class, 'index'])->name('admin.reward.index');
+        Route::get('/points/redemRequest', [PointRedemptionController::class, 'ReedemRequest'])->name('admin.reward.request');
+        Route::post('/redeem/success/{pointId?}', [PointRedemptionController::class, 'redeemSuccess'])->name('redeem.success');
+        Route::post('/redeem/cancel/{pointId}', [PointRedemptionController::class, 'cancelRedemption'])->name('redeem.cancel');
     });
 });
