@@ -46,6 +46,16 @@ class AdminController extends Controller
     
         return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
     }
+
+    public function logout()
+    {
+        $guard = Auth::getDefaultDriver();
+        Auth::guard($guard)->logout();
+        $redirectRoute = ($guard == 'admin') ? 'admin.login' : 'agent.login';
+        return redirect()->route($redirectRoute);
+    }
+
+
     public function dashboard(Request $request)
     {
         return view('admin.dashboard');

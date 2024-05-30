@@ -44,6 +44,10 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins', // Assuming you have an 'admins' provider
+        ],
     ],
 
     /*
@@ -69,6 +73,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, // Replace with your actual Admin model
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
