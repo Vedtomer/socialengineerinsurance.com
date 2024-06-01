@@ -1,21 +1,10 @@
 @extends('admin.layouts.app')
 
-@push('styles')
 
-
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/src/table/datatable/datatables.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
-
-<!-- END PAGE LEVEL STYLES -->
-@endpush
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="#">Reward</a></li>
-<li class="breadcrumb-item active" aria-current="page">Policy Listing</li>
+<li class="breadcrumb-item"><a href="#">Transaction</a></li>
+<li class="breadcrumb-item active" aria-current="page">Add Transaction</li>
 @endsection
 
 @section('content')
@@ -74,17 +63,36 @@
     </div>
 </div>
 
+
+
+
+
+
+
+<script>
+    function toggleTransactionIDInput() {
+        var paymentMode = document.getElementById("payment_mode").value;
+        var transactionIDField = document.getElementById("transaction_id_field");
+        if (paymentMode === "cash") {
+            transactionIDField.style.display = "none";
+        } else {
+            transactionIDField.style.display = "block";
+        }
+    }
+
+    function getDate() {
+        var today = new Date();
+        document.getElementById("date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $('.dropdown-submenu a.test').on("click", function(e) {
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
+        });
+    });
+</script>
 @endsection
 
-@push('scripts')
-
-
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/datatables.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
-@endpush

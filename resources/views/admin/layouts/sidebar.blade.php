@@ -1,15 +1,14 @@
    <!--  BEGIN SIDEBAR  -->
    <div class="sidebar-wrapper sidebar-theme">
-
        <nav id="sidebar">
 
            <div class="navbar-nav theme-brand flex-row  text-center">
                <div class="nav-logo">
-                   <div class="nav-item theme-logo">
+                   {{-- <div class="nav-item theme-logo">
                        <a href="index.html">
                            <img src="{{ asset('asset/admin/assets/img/logo.png')}}" class="navbar-logo" alt="logo">
                        </a>
-                   </div>
+                   </div> --}}
                    <div class="nav-item theme-text">
                        <a href="index.html" class="nav-link"> SEI </a>
                    </div>
@@ -26,8 +25,8 @@
 
            <ul class="list-unstyled menu-categories" id="accordionExample">
 
-               <li class="menu active">
-                   <a href="{{route('admin.dashboard')}}" aria-expanded="true" class="dropdown-toggle">
+               <li class="menu {{ classActivePath('dashboard') }}">
+                   <a href="{{route('admin.dashboard')}}" aria-expanded="false" class="dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns">
                                <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
@@ -93,7 +92,11 @@
                </li>
 
                <li class="menu">
-                   <a href="#Reward" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                   @php
+
+
+                   @endphp
+                   <a href="#Reward" data-bs-toggle="collapse" aria-expanded="{{ariaExpanded('redemption')}}" class=" dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -116,7 +119,7 @@
                    </ul>
                </li>
 
-               <li class="menu">
+               <li class="menu {{ classActivePath('transaction') }}">
                    <a href="{{ route('admin.transaction') }}" aria-expanded="false" class="dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-monitor">
@@ -129,7 +132,7 @@
                    </a>
                </li>
 
-               <li class="menu">
+               <li class="menu {{ classActivePath('sliders') }}">
                    <a href="{{ route('sliders.index') }}" aria-expanded="false" class="dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout">
@@ -142,66 +145,6 @@
                    </a>
                </li>
 
-               {{-- <li class="menu">
-                   <a href="blank-page.html" aria-expanded="false" class="dropdown-toggle">
-                       <div class="">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
-                               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                           </svg>
-                           <span>Blank Page</span>
-                       </div>
-                   </a>
-               </li> --}}
-
-               {{-- <li class="menu menu-heading">
-                <div class="heading"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg><span>MENU LEVELS</span></div>
-            </li> --}}
-
-               {{-- <li class="menu">
-                <a href="#home" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-hash">
-                            <line x1="4" y1="9" x2="20" y2="9"></line>
-                            <line x1="4" y1="15" x2="20" y2="15"></line>
-                            <line x1="10" y1="3" x2="8" y2="21"></line>
-                            <line x1="16" y1="3" x2="14" y2="21"></line>
-                        </svg>
-                        <span>Level 1</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </a>
-                <ul class="collapse submenu list-unstyled" id="home" data-bs-parent="#accordionExample">
-                    <li>
-                        <a href="javascript:void(0);"> Level 2a </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"> Level 2b </a>
-                    </li>
-
-                    <li>
-                        <a href="#level-three" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed"> Level 2c <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg> </a>
-                        <ul class="collapse list-unstyled sub-submenu" id="level-three" data-bs-parent="#pages">
-                            <li>
-                                <a href="javascript:void(0);"> Level 3a </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);"> Level 3b </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);"> Level 3c </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li> --}}
 
            </ul>
 

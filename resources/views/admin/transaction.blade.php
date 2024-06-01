@@ -3,19 +3,10 @@
 @push('styles')
 
 
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/src/table/datatable/datatables.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
-
-<!-- END PAGE LEVEL STYLES -->
-@endpush
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="#">Agent</a></li>
-<li class="breadcrumb-item active" aria-current="page">Agent Listing</li>
+<li class="breadcrumb-item"><a href="#">Transaction</a></li>
+<li class="breadcrumb-item active" aria-current="page">Transaction Listing</li>
 @endsection
 
 @section('content')
@@ -69,67 +60,46 @@
 
             </div>
         </div>
-        {{-- <h5 class="card-title">TRANSACTION</h5> --}}
-
-
-        <div class="table-responsive">
-            <table class="mb-0 table">
-                <thead>
-                    <tr>
-                        <th>S No</th>
-                        <th>Agent Id</th>
-                        <th>payment_mode</th>
-                        <th>transaction_id</th>
-                        <th>amount</th>
-                        <th>payment_date </th>
-
-                        {{-- <th>Updated Date</th>
-    <th>Updated Time</th> --}}
-
-                        {{-- <th></th> --}}
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data as $user)
-                    <tr>
-
-                        <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $user->agent->name }}</td>
-                        <td>{{ $user->payment_mode }}</td>
-                        <td>{{ $user->transaction_id }}</td>
-                        <td>{{ $user->amount }}</td>
-
-                        <td>{{ $user->payment_date }}</td>
+      
 
 
 
-                        {{-- <td>{{ $user->updated_at->format('Y-m-d H:i:s') }}</td>
-                        <td>{{ $user->updated_at->toDateString() }}</td> --}}
-                        {{-- <td>{{ \Carbon\Carbon::parse($user->updated_at)->format('d M Y h' ) }}</td> --}}
-                        {{-- <td>{{ \Carbon\Carbon::parse($user->updated_at)->format('H:i:s' ) }}</td> --}}
+<div class="row">
 
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area">
+                <table id="html5-extension" class="table dt-table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>S No</th>
+                            <th>Agent </th>
+                            <th>Payment Mode</th>
+                            <th>Transaction ID</th>
+                            <th>Amount</th>
+                            <th>Payment Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data as $user)
+            <tr>
 
+                <td>{{ $loop->index + 1 }}</td>
+                <td>{{ $user->agent->name }}</td>
+                <td>{{ $user->payment_mode }}</td>
+                <td>{{ $user->transaction_id }}</td>
+                <td>{{ $user->amount }}</td>
 
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                <td>{{ $user->payment_date }}</td>
+
+            </tr>
+            @endforeach
+                    </tbody>
+
+                </table>
+            </div>
         </div>
     </div>
+
 </div>
-
 @endsection
-
-@push('scripts')
-
-
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/datatables.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
-@endpush

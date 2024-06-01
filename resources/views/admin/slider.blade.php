@@ -35,7 +35,7 @@
 <div class="row layout-top-spacing">
     @forelse ($sliders as $slider)
     <div class="col-xxl-4 col-xl-4 col-lg-3 col-md-4 col-sm-6 mb-4">
-        <a class="card style-6" href="./app-ecommerce-product.html">
+        <a class="card style-6" href="#">
             <!-- <button class="btn btn-sm status-toggle clickable" data-id="{{ $slider->id }}" data-status="{{ $slider->status ? '1' : '0' }}" onclick="toggleStatus(this)"> -->
             @if ($slider->status)
             <span class="badge badge-success">Active</span>
@@ -43,7 +43,7 @@
             <span class="badge badge-danger">Inactive</span>
             @endif
             </button>
-            <img src="{{ asset('asset/admin/images/jpeg/product-3.jpg') }}" class="card-img-top" alt="...">
+            <img src="{{ $slider->image }}" class="card-img-top" alt="...">
             <div class="card-footer">
                 <div class="row">
                     <div class="col-3">

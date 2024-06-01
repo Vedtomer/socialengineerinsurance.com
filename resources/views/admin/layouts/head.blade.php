@@ -17,6 +17,25 @@
     <!-- END GLOBAL MANDATORY STYLES -->
 
 
+
+
+
+
+
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/src/table/datatable/datatables.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
+
+<!-- END PAGE LEVEL STYLES -->
+
+
+
+
+
+
     <style>
         body.dark .layout-px-spacing, .layout-px-spacing {
             min-height: calc(100vh - 155px) !important;

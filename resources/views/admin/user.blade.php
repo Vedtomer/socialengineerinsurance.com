@@ -3,14 +3,7 @@
 @push('styles')
 
 
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/src/table/datatable/datatables.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
 
-<!-- END PAGE LEVEL STYLES -->
 @endpush
 
 @section('breadcrumb')
@@ -19,70 +12,32 @@
 @endsection
 
 @section('content')
-<div class="col-lg-12">
-    <div class="main-card mb-3 card">
-        <div class="card-body">
 
-            <div class="row justify-content-left mt-2">
-                <div class="col-lg-4 mb-2">
-                    <div class="datefil " id="reportrange" style="background: #fff; padding: 5px 10px; border: 1px solid #ccc;">
-                        <i class="fa fa-calendar"></i>&nbsp;
-                        <span></span> <i class="fa fa-caret-down"></i>
-                    </div>
-                </div>
 
-                <div class="col-lg-4 mb-2">
-                    <div class="">
-                        <select class=" datefil form-select js-example-basic-single  select2" data-control="select2" data-placeholder="Select an option" onchange="filterAgent(this.value)">
 
-                            <optgroup>
-                                <option selected disabled>Select Agent</option>
-                                @foreach ($agent as $user)
-                                <option value="{{ $user->id }}" @if(isset($_GET['agent_id']) && $user->id == $_GET['agent_id']) selected @endif> {{ $user->name }}</option>
+<div class="row">
 
-                                @endforeach
-                            </optgroup>
-                        </select>
-                    </div>
-                </div>
-                <div class="right ml-3">
-                    <form action="{{ route('import.excel') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <a href="{{ route('download.excel') }}" class="btn btn-primary">Download Excel</a>
-                    </form>
-
-                </div>
-            </div>
-
-            <div class="add" style="display: flex; align-items: center;">
-
-                <div class="btns" style="margin-left: auto;">
-                    <a id="openModalBtn" href="{{ route('agent') }}" class="btn btn-secondary mb-2">Add Agent</a>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table class="mb-0 table table-striped table-bordered table-responsive">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area">
+                <table id="html5-extension" class="table dt-table-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th style="width: 5%" scope="col">Sr. No.</th>
-                            <th style="width: 20%" scope="col">Name</th>
-                            <th style="width: 20%" scope="col">Policy</th>
-                            <th style="width: 20%" scope="col">Premium</th>
-                            <th style="width: 20%" scope="col">Earn Points</th>
-                            <th style="width: 20%" scope="col">Email</th>
-                            <th style="width: 20%" scope="col">City</th>
-                            <th style="width: 20%" scope="col">Mobile</th>
-                            <th style="width: 20%" scope="col">Cut And Pay</th>
-                            <th style="width: 20%" scope="col">Commission</th>
-                            <th style="width: 20%" scope="col">Transaction</th>
-                            <th style="width: 15%" scope="col">Update</th>
-                            <th style="width: 15%" scope="col">Change Password</th>
+                            <th>Sr.No.</th>
+                            <th>Name</th>
+                            <th>Policy</th>
+                            <th>Premium</th>
+                            <th>Earn Points</th>
+                            <th>City</th>
+                            <th>Mobile</th>
+                            <th>Cut And Pay</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach ($data as $key => $user)
-                        <tr @if (count($user->Policy) == 0) style="background-color: #374181 ;" @endif>
+                        <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $user->name }}</td>
                             <td>
@@ -113,7 +68,7 @@
                                 @endforeach
                                 <span class="mb-2 ml-2 mr-2 d-flex "><i class="fa fa-rupee pr-2" style="font-size:20px"></i> {{ $totalagentcommission }}</span>
                             </td>
-                            <td>{{ $user->email }}</td>
+                            {{-- <td>{{ $user->email }}</td> --}}
                             <td>{{ $user->city }}</td>
                             <td>{{ $user->mobile_number }}</td>
                             <td>
@@ -124,18 +79,23 @@
                                 @endif
                             </td>
 
-                            <td>
-                                <a class="btn  mr-2" href="{{ route('agent.commission', $user->id) }}"><i class="fa fa-edit" style="font-size:24px"></i></a>
-                            </td>
-                            <td>
-                                <a class="btn  mr-2" href="{{ route('admin.transaction', $user->id) }}"><i class="metismenu-icon pe-7s-look" title="Download" style="font-size:30px;text-align: center;"></i></a>
-                            </td>
-                            <td>
-                                <a class="btn " href="{{ route('agent.edit', $user->id) }}"><i class="fa fa-edit" style="font-size:24px"></i></a>
-                            </td>
 
                             <td>
-                                <a class="btn " href="{{ route('agent.change.password', $user->id) }}"><i class="fa fa-lock" style="font-size:24px"></i></a>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-dark btn-sm">Open</button>
+                                    <button type="button" class="btn btn-dark btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference1">
+
+                                        <a class="dropdown-item " href="{{ route('agent.edit', $user->id) }}">Edit</a>
+                                        <a class="dropdown-item " href="{{ route('agent.change.password', $user->id) }}">Change Paasword</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ route('agent.commission', $user->id) }}">Manage Commission</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -144,19 +104,8 @@
             </div>
         </div>
     </div>
+
 </div>
 
 @endsection
 
-@push('scripts')
-
-
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/datatables.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-<script src="{{ asset('asset/admin/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
-@endpush
