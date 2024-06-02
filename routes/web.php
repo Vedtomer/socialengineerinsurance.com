@@ -10,7 +10,13 @@ use App\Http\Controllers\CompanyController;
 
 
 
+Route::get('/', function () {
+    return view('pages.website.home');
+});
 
+Route::get('/about', function () {
+    return view('pages.website.about');
+});
 
 
 Route::prefix('admin')->group(function () {
