@@ -58,12 +58,12 @@
             font-weight: 500;
             margin-bottom: 0;
             color: #e95f2b;
-            font-size: 30px;
+            font-size: 22px;
         }
 
         .w-info {
             margin-bottom: 0;
-            font-size: 25px;
+            font-size: 18px;
             font-weight: 600;
             color: #bfc9d4;
         }

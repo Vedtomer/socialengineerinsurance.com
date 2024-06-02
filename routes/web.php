@@ -21,12 +21,12 @@ Route::get('/about', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('admin.login');
+        return redirect()->route('login');
     });
 
-    Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('admin.login');
+    Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('login');
 
-    Route::middleware(['role:admin'])->group(function () {
+    Route::middleware(['role:admin', 'auth'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
