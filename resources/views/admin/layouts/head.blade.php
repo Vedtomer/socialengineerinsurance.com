@@ -22,28 +22,51 @@
 
 
 
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/src/table/datatable/datatables.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/src/table/datatable/datatables.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/dt-global_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/dt-global_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
 
-<!-- END PAGE LEVEL STYLES -->
-
-
-   <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-   <link href="{{ asset('asset/admin/src/plugins/src/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
-   <link href="{{ asset('asset/admin/src/assets/css/light/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
-   <link href="{{ asset('asset/admin/src/assets/css/dark/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
-   <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <!-- END PAGE LEVEL STYLES -->
 
 
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link href="{{ asset('asset/admin/src/plugins/src/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset/admin/src/assets/css/light/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('asset/admin/src/assets/css/dark/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+
+
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link href="{{ asset('asset/admin/src/assets/css/light/components/list-group.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset/admin/src/assets/css/light/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
+
+    <link href="{{ asset('asset/admin/src/assets/css/dark/components/list-group.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset/admin/src/assets/css/dark/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
+    <!--  END CUSTOM STYLE FILE  -->
 
     <style>
-        body.dark .layout-px-spacing, .layout-px-spacing {
+        body.dark .layout-px-spacing,
+        .layout-px-spacing {
             min-height: calc(100vh - 155px) !important;
         }
+
+        .info {
+            font-weight: 500;
+            margin-bottom: 0;
+            color: #e95f2b;
+            font-size: 30px;
+        }
+
+        .w-info {
+            margin-bottom: 0;
+            font-size: 25px;
+            font-weight: 600;
+            color: #bfc9d4;
+        }
+
     </style>
 
 </head>

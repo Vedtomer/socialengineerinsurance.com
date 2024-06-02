@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Company;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Transaction;
@@ -21,16 +22,16 @@ class AdminController extends Controller
         if (Auth::check() && Auth::user()->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         }
-    
+
         // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
             return view('admin.login');
         }
-    
+
         // Handle POST request (authenticate the user)
         if ($request->isMethod('post')) {
             $credentials = $request->only('email', 'password');
-    
+
             if (Auth::attempt($credentials, $request->filled('remember'))) {
                 // Authenticate and check if the user has the 'admin' role
                 $user = Auth::user();
@@ -41,10 +42,10 @@ class AdminController extends Controller
                     return redirect()->route('admin.login')->with('error', 'You do not have the required permissions to access the admin area.');
                 }
             }
-    
+
             return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
         }
-    
+
         return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
     }
     public function dashboard(Request $request)
@@ -66,7 +67,7 @@ class AdminController extends Controller
         }
 
         if (isset($agent_id)) {
-          
+
 
             if ($start_date !== null) {
                 $start_date = Carbon::parse($start_date);
@@ -101,9 +102,11 @@ class AdminController extends Controller
             $transactions->where('agent_id', $agent_id);
         }
 
-        $query = User::withCount(['Policy as policy_count' => function (Builder $query) use ($start_date, $end_date) {
-            $query->whereBetween('policy_start_date', [$start_date, $end_date]);
-        }])
+        $query = User::withCount([
+            'Policy as policy_count' => function (Builder $query) use ($start_date, $end_date) {
+                $query->whereBetween('policy_start_date', [$start_date, $end_date]);
+            }
+        ])
             ->having('policy_count', '<', 10)
             ->orderBy('policy_count', 'asc');
         if (!empty($agent_id)) {
@@ -157,12 +160,32 @@ class AdminController extends Controller
         }
 
         $sumCommissioncutandpay = $sumCommission->sum('agent_commission');
-        $paymentby = $premium - $amount - $sumCommissioncutandpay ;
+        $paymentby = $premium - $amount - $sumCommissioncutandpay;
 
+
+        $companies = Company::where('status', 1)->get();
+
+        // Get the company IDs from the companies
+        $companyIds = $companies->pluck('id');
+
+        // Query the policies table to get the sum of premiums and count of records for the active companies
+        $policyData = Policy::whereIn('company_id', $companyIds)
+            ->whereBetween('policy_start_date', [$start_date, $end_date])
+            ->selectRaw('company_id, SUM(premium) as total_premium, COUNT(*) as total_policies')
+            ->groupBy('company_id')
+            ->get();
+
+        // Combine the company data with the policy data
+        $companies = $companies->map(function ($company) use ($policyData) {
+            $policy = $policyData->firstWhere('company_id', $company->id);
+            $company->total_premium = $policy ? $policy->total_premium : 0;
+            $company->total_policies = $policy ? $policy->total_policies : 0;
+            return $company;
+        });
 
 
         $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'datausers', 'policy');
+        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'datausers', 'policy','companies');
         return view('admin.dashboard', ['data' => $data]);
     }
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\PointRedemptionController;
-
+use App\Http\Controllers\CompanyController;
 
 
 
@@ -42,13 +42,13 @@ Route::prefix('admin')->group(function () {
 
         #Slider Routes
         Route::get('/sliders', [SliderController::class, 'slider'])->name('sliders.slider');
-        
+
         Route::get('/sliders', [SliderController::class, 'index'])->name('sliders.index');
         Route::post('/sliders/{slider}/toggle-status', [SliderController::class, 'toggleStatus'])->name('sliders.toggleStatus');
         Route::get('/sliders/create', [SliderController::class, 'create'])->name('sliders.create');
         Route::post('/sliders', [SliderController::class, 'store'])->name('sliders.store');
         Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy');
-        
+
         Route::match(['get', 'post'], '/commission/{id}', [AgentController::class, 'commission'])->name('agent.commission');
         #agent list route
         Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
@@ -56,8 +56,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
         Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
         Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
-        Route::get('/download-excel', [AgentController::class ,'downloadExcel'])->name('download.excel');
-        Route::get('/import-excel', [AgentController::class ,'importExcel'])->name('import.excel');
+        Route::get('/download-excel', [AgentController::class, 'downloadExcel'])->name('download.excel');
+        Route::get('/import-excel', [AgentController::class, 'importExcel'])->name('import.excel');
 
         Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
 
@@ -66,5 +66,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/points/redemRequest', [PointRedemptionController::class, 'ReedemRequest'])->name('admin.reward.request');
         Route::post('/redeem/success/{pointId?}', [PointRedemptionController::class, 'redeemSuccess'])->name('redeem.success');
         Route::post('/redeem/cancel/{pointId}', [PointRedemptionController::class, 'cancelRedemption'])->name('redeem.cancel');
+        Route::resource('companies', CompanyController::class);
     });
 });
