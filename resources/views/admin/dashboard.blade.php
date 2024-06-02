@@ -101,8 +101,12 @@
 <div class="layout-px-spacing" style="min-height: 0px !important;">
 
     <div class="middle-content container-xxl p-0">
-
+       
         <div class="row ">
+           
+            <div class="col-md-12">
+                <h2>Insurance Company</h2>
+        </div>       
 
             @forelse ($data['companies'] as $slider)
             <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 ">

@@ -67,6 +67,10 @@
             color: #bfc9d4;
         }
 
+        body.dark .user-profile .widget-content-area .user-info {
+            margin-top: 0px !important;
+        }
+
     </style>
 
 </head>
