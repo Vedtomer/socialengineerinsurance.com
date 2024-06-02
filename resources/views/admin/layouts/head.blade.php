@@ -32,7 +32,11 @@
 <!-- END PAGE LEVEL STYLES -->
 
 
-
+   <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+   <link href="{{ asset('asset/admin/src/plugins/src/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+   <link href="{{ asset('asset/admin/src/assets/css/light/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ asset('asset/admin/src/assets/css/dark/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
+   <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 
 

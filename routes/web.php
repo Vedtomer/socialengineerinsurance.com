@@ -11,21 +11,8 @@ use App\Http\Controllers\PointRedemptionController;
 
 
 
-// Route::get('/', function () {
-//     return view('app');
-// });
-
-// Route::get('/slider', function () {
-//     return view('admin.slider');
-// });
 
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-});
-
-
-// Admin Routes
 Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return redirect()->route('admin.login');
@@ -43,6 +30,7 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
         Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
 
+        Route::match(['get', 'post'], '/agent-pandding-balance', [PolicyController::class, 'panddingblance'])->name('agentpandding.blance');
 
         #manage policy
         Route::match(['get', 'post'], '/upload-policy', [PolicyController::class, 'upload'])->name('admin.upload');
@@ -68,9 +56,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
         Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
         Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
-
-
-        // Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
         Route::get('/download-excel', [AgentController::class ,'downloadExcel'])->name('download.excel');
         Route::get('/import-excel', [AgentController::class ,'importExcel'])->name('import.excel');
 
