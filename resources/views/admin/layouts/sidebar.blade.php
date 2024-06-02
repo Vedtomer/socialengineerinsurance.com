@@ -37,7 +37,8 @@
                </li>
 
                <li class="menu">
-                   <a href="#home" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <a href="#home" data-bs-toggle="collapse" aria-expanded="{{ ariaExpanded('agent-list') || ariaExpanded('commission-code') ? 'true' : 'false' }}" class="dropdown-toggle">
+
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-monitor">
                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -52,18 +53,18 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled" id="home" data-bs-parent="#accordionExample">
-                       <li>
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-list') || ariaExpanded('commission-code') ? 'show' : '' }}" id="home" data-bs-parent="#accordionExample">
+                       <li class=" {{ classActivePath('agent-list') }}">
                            <a href="{{ route('agent.list') }}"> Agent List </a>
                        </li>
-                       <li>
+                       <li class=" {{ classActivePath('commission-code') }}">
                            <a href="{{route('commission.code')}}"> Commission Code </a>
                        </li>
                    </ul>
                </li>
 
                <li class="menu">
-                   <a href="#ecommerce" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                   <a href="#ecommerce" data-bs-toggle="collapse" aria-expanded="{{ ariaExpanded('upload-policy') ||ariaExpanded('policy-list') || ariaExpanded('policy-pdf-upload') ? 'true' : 'false' }}" class="dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
                                <circle cx="9" cy="21" r="1"></circle>
@@ -78,25 +79,21 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled" id="ecommerce" data-bs-parent="#accordionExample">
-                       <li>
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('upload-policy') ||ariaExpanded('policy-list') || ariaExpanded('policy-pdf-upload') ? 'show' : '' }}" id="ecommerce" data-bs-parent="#accordionExample">
+                       <li class=" {{ classActivePath('upload-policy') }}">
                            <a href="{{ route('admin.upload') }}"> Upload Policy </a>
                        </li>
-                       <li>
+                       <li class=" {{ classActivePath('policy-list') }}">
                            <a href="{{ route('admin.policy_list') }}"> Policy List </a>
                        </li>
-                       <li>
+                       <li class=" {{ classActivePath('policy-pdf-upload') }}">
                            <a id="openModalBtn" href="{{ route('admin.policy_pdf_upload') }}"> Upload Policy PDF </a>
                        </li>
                    </ul>
                </li>
 
                <li class="menu">
-                   @php
-
-
-                   @endphp
-                   <a href="#Reward" data-bs-toggle="collapse" aria-expanded="{{ariaExpanded('redemption')}}" class=" dropdown-toggle">
+                   <a href="#Reward" data-bs-toggle="collapse" aria-expanded="{{ ariaExpanded('points-redemRequest') || ariaExpanded('points-redemption') ? 'true' : 'false' }}" class=" dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -109,11 +106,11 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled" id="Reward" data-bs-parent="#accordionExample">
-                       <li>
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('points-redemRequest') || ariaExpanded('points-redemption') ? 'show' : '' }}" id="Reward" data-bs-parent="#accordionExample">
+                       <li class=" {{ classActivePath('points-redemRequest') }}">
                            <a href="{{ route('admin.reward.request') }}"> Redem Request </a>
                        </li>
-                       <li>
+                       <li class=" {{ classActivePath('points-redemption') }}">
                            <a href="{{ route('admin.reward.index') }}"> Redem Proceeded </a>
                        </li>
                    </ul>

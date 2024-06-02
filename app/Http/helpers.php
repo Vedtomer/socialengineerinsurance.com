@@ -24,11 +24,11 @@ if (!function_exists('ariaExpanded')) {
         $segment = 2;
         foreach ($path as $p) {
             if ((request()->segment($segment) == $p) == false) {
-                return '';
+                return false;
             }
             $segment++;
         }
-        return 'true';
+        return true;
     }
 }
 
