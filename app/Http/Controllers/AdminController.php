@@ -227,7 +227,7 @@ class AdminController extends Controller
         }
 
         $users = $query->get();
-        $agents = Agent::all();
+        $agents = User::role('agent')->get();
 
         return view('admin.transaction', ['data' => $users, 'agent' => $agents]);
     }
@@ -235,7 +235,7 @@ class AdminController extends Controller
     public function AddTransaction(Request $request)
     {
         if ($request->isMethod('get')) {
-            $agents = Agent::orderBy('created_at', 'desc')->get();
+            $agents =User::role('agent')->get();
             return view('admin.transactionadd', ['data' => $agents]);
         }
 

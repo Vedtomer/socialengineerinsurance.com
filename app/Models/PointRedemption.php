@@ -11,6 +11,6 @@ class PointRedemption extends Model
 
     public function agent(): BelongsTo
     {
-        return $this->belongsTo(Agent::class, 'agent_id');
+        return $this->belongsTo(User::class, 'agent_id');
     }
 }

@@ -1,5 +1,7 @@
-<?php 
-use  App\Models\Commission;
+<?php
+use App\Models\Commission;
+use App\Models\Company;
+
 if (!function_exists('classActivePath')) {
     function classActivePath($path)
     {
@@ -59,6 +61,22 @@ if (!function_exists('getAgentId')) {
             $commission = Commission::where('commission_code', $commission_code)->first();
             if ($commission && !empty($commission->agent_id)) {
                 return $commission->agent_id;
+            }
+        }
+        return null;
+    }
+}
+
+
+
+if (!function_exists('getCompanyId')) {
+    function getCompanyId($insurance_company)
+    {
+        if (!empty($insurance_company)) {
+            $code = trim($insurance_company);
+            $commission = Company::where('slug', $code)->first();
+            if ($commission && !empty($commission->id)) {
+                return $commission->id;
             }
         }
         return null;

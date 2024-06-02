@@ -21,7 +21,7 @@
                 <tr>
                     <th scope="col">Logo</th>
                     <th scope="col">Name</th>
-                    <th class="text-center" scope="col">Company ID<small>(For excel upload)<small> </th>
+                    <th class="text-center" scope="col">Company Code<small>(For excel upload)<small> </th>
                     <th class="text-center" scope="col">Status</th>
                     <th class="text-center" scope="col"></th>
                 </tr>
@@ -31,13 +31,16 @@
                 <tr>
                     <td>
                         <div class="media">
-                            <div class="avatar me-2">
+                            <div class="avatar avatar-xl">
                                 <img alt="avatar" src="{{$company->image}}" class="rounded-circle" />
                             </div>
                         </div>
                     </td>
                     <td>{{$company->name}}</td>
-                    <td>{{ strtoupper($company->slug) }}</td>
+                    <td>{{ strtoupper($company->slug) }}   <span class="badge outline-badge-info mb-2 me-4"
+                        onclick="copyCompanyCode('{{ strtoupper($company->slug) }}')">
+                        Copy
+                    </span></td>
 
                     <td class="text-center">
                         @if($company->status === 1)

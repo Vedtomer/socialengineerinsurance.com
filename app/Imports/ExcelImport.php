@@ -33,7 +33,7 @@ class ExcelImport implements ToModel, WithHeadingRow
         $existingRecord->policy_end_date = $existingRecord->policy_start_date->copy()->addYear();
         $existingRecord->fill([
             'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
-            'insurance_company' => isset($row['insurance_company']) ? strtoupper(trim($row['insurance_company'])) : null,
+            'company_id' => isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null,
             'customername' => $row['customername'] ?? null,
             'agent_id' => isset($row['commission_code']) ? getAgentId($row['commission_code']) : null,
             'premium' => $row['premium'] ?? null,

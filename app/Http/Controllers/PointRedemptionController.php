@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Agent;
 use App\Models\PointRedemption;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PointRedemptionController extends Controller
@@ -16,7 +17,7 @@ class PointRedemptionController extends Controller
             ->orderByDesc('created_at') // Order by the latest data
             ->get();
     
-        $agents = Agent::get();
+        $agents = User::role('agent')->get();
     
         return view('admin.reward.index', ['points' => $inProgressPoints, 'agents' => $agents]);
     }
@@ -24,7 +25,7 @@ class PointRedemptionController extends Controller
     public function ReedemRequest(Request $request)
     {
         $inProgressPoints = PointRedemption::with('agent')->where('status', 'in_progress')->get();
-        $agents = Agent::get();
+        $agents = User::role('agent')->get();
         return view('admin.reward.request', ['points' => $inProgressPoints, 'agents' => $agents]);
     }
 

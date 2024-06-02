@@ -46,7 +46,8 @@
     <link href="{{ asset('asset/admin/src/assets/css/dark/components/list-group.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('asset/admin/src/assets/css/dark/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
     <!--  END CUSTOM STYLE FILE  -->
-
+ <!-- Include Toastr CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Agent;
 use App\Models\Policy;
@@ -9,7 +10,6 @@ use App\Models\Transaction;
 use App\Imports\ExcelImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 
@@ -57,7 +57,7 @@ class PolicyController extends Controller
         }
 
         $data = $query->get();
-        $agentData = Agent::get();
+        $agentData = User::role('agent')->get();
 
         return view('admin.policy_list', ['data' => $data, 'agentData' => $agentData]);
     }

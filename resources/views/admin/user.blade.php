@@ -13,7 +13,13 @@
 
 @section('content')
 
-
+<div class="row">
+    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+        <div class="action-btn layout-top-spacing">
+            <button id="add-list" class="btn btn-secondary"><a id="openModalBtn" href="{{ route('agent') }}">Add Agent</a></button>
+        </div>
+    </div>
+</div>
 
 <div class="row">
 

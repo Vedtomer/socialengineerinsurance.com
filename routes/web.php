@@ -49,17 +49,22 @@ Route::prefix('admin')->group(function () {
         Route::post('/sliders', [SliderController::class, 'store'])->name('sliders.store');
         Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy');
 
+
+        #commission
         Route::match(['get', 'post'], '/commission/{id}', [AgentController::class, 'commission'])->name('agent.commission');
+        Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
+        Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
+
+        
         #agent list route
         Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
         Route::match(['get', 'post'], '/agent', [AgentController::class, 'Agent'])->name('agent');
-        Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
         Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
         Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
         Route::get('/download-excel', [AgentController::class, 'downloadExcel'])->name('download.excel');
         Route::get('/import-excel', [AgentController::class, 'importExcel'])->name('import.excel');
 
-        Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
+        
 
         #reward
         Route::get('/points/redemption', [PointRedemptionController::class, 'index'])->name('admin.reward.index');

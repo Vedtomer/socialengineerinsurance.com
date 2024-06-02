@@ -27,13 +27,14 @@ class Policy extends Model
         'gst',
         'agent_commission',
         'net_amount',
-        'payment_by'
+        'payment_by',
+        'company_id'
         // Add other attributes here if needed
     ];
     protected $appends = ['policy_link'];
     public function agent(): BelongsTo
     {
-        return $this->belongsTo(Agent::class, 'agent_id');
+        return $this->belongsTo(User::class, 'agent_id');
     }
     public function getPolicyLinkAttribute()
     {
