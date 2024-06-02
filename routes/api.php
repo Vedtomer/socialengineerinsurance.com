@@ -1,18 +1,25 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\Api\ApiController;
 
-Route::controller(AuthController::class)->group(function () {
-    Route::post('/signup', 'signup')->name('signup');
-    Route::post('/mobile/send-otp', 'sendMobileOtp')->name('mobile.send.otp');
-    Route::post('/mobile/verify-otp', 'verifyMobileOtp')->name('mobile.verify.otp');
-    
-});
+Route::prefix('agent')->group(function () {
+    Route::post('login', [LoginController::class, 'agentLogin']);
+    Route::post('signup', [LoginController::class, 'agentSignUp']);
 
+    // Logout route accessible to any authenticated user
+    Route::middleware(['auth:api'])->post('logout', [LoginController::class, 'agentLogout']);
 
-Route::middleware('auth:api')->controller(AuthController::class)->group(function () {
-    Route::post('/pin/change', 'changePin')->name('change.pin');
-    Route::post('/set/new/pin', 'setNewPin')->name('set.new.pin');
-    Route::post('/verify/pin', 'verifyPin')->name('verify.pin');
+    // Routes restricted to users with the 'agent' role
+    Route::middleware(['auth:api', 'role:agent'])->group(function () {
+        Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
+        Route::match(['get', 'post'], '/slider', [ApiController::class, 'getActiveSliders']);
+        Route::match(['get', 'post'], '/getPolicy', [ApiController::class, 'getPolicy']);
+        Route::match(['get', 'post'], '/getPointsSummary', [ApiController::class, 'getPointsSummary']);
+        Route::match(['get', 'post'], '/pointsRedemption', [ApiController::class, 'pointsRedemption']);
+        Route::match(['get', 'post'], '/points-ledger', [ApiController::class, 'PointsLedger']);
+        Route::match(['get', 'post'], '/pending-premium-ledger', [ApiController::class, 'PendingPremiumLedger']);
+        Route::match(['get', 'post'], '/transaction/{id?}', [ApiController::class, 'Transaction']);
+    });
 });
