@@ -34,34 +34,43 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:200', 
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:200', 
+    ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->extension();
 
-            try {
-                // Store the image in the storage/slider folder
-                $image->storeAs('public/company', $imageName);
+        try {
+            // Store the image in the storage/company folder
+            $image->storeAs('public/company', $imageName);
 
-                // Save slider details to the database
-                $slider = new Company();
-                $slider->image = $imageName;
-                $slider->name = $request->name;
-                $slider->save();
+            // Save company details to the database
+            $company = new Company();
+            $company->image = $imageName;
+            $company->name = $request->name;
+            $company->status = $request->status ?? 1; // assuming status is passed in the request
+            $company->save();
 
-                return redirect()->route('companies.index')->with('success', 'Company created successfully.');
-            } catch (\Exception $e) {
-                return $e;
-                return redirect()->back()->with('error', 'Failed to upload image.');
-            }
+            // Generate the slug
+            $slug = $company->id . strtolower(substr($company->name, 0, 4));
+
+            // Update the company with the generated slug
+            $company->slug = $slug;
+            $company->save();
+
+            return redirect()->route('companies.index')->with('success', 'Company created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to upload image.');
         }
-
-        return redirect()->back()->with('error', 'No image uploaded.');
     }
+
+    return redirect()->back()->with('error', 'No image uploaded.');
+}
+
 
     /**
      * Display the specified resource.
@@ -82,7 +91,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        return view('companies.edit', compact('company'));
+        return view('admin.companies.edit', compact('company'));
     }
 
     /**
@@ -93,22 +102,33 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Company $company)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
-            'status' => 'required|boolean',
-        ]);
+{
+ 
+    $request->validate([
+        'file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:200', // Allow image to be optional during update
+        'status' => 'required|in:0,1', // Validate status (0 or 1)
+    ]);
 
-        $company->name = $request->name;
-        if ($request->hasFile('image')) {
-            $company->image = $request->file('image')->store('images', 'public');
+    try {
+        if ($request->hasFile('file')) {
+            // Handle image upload if a new image is provided
+            $image = $request->file('file');
+            $imageName = time() . '.' . $image->extension();
+            $image->storeAs('public/company', $imageName);
+            $company->image = $imageName;
         }
-        $company->status = $request->status;
+
+        // Update other company details
+        // $company->name = $request->name;
+        $company->status = $request->status; // Set the status
         $company->save();
 
         return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
+    } catch (\Exception $e) {
+        return $e;
+        return redirect()->back()->with('error', 'Failed to update company.');
     }
+}
 
     /**
      * Remove the specified resource from storage.
