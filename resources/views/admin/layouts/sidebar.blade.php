@@ -54,10 +54,10 @@
                        </div>
                    </a>
                    <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-list') || ariaExpanded('commission-code') ? 'show' : '' }}" id="home" data-bs-parent="#accordionExample">
-                       <li class=" {{ classActivePath('agent-list') }}">
+                       <li class="menu {{ classActivePath('agent-list') }}">
                            <a href="{{ route('agent.list') }}"> Agent List </a>
                        </li>
-                       <li class=" {{ classActivePath('commission-code') }}">
+                       <li class="menu {{ classActivePath('commission-code') }}">
                            <a href="{{route('commission.code')}}"> Commission Code </a>
                        </li>
                    </ul>
