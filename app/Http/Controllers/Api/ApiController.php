@@ -45,10 +45,10 @@ class ApiController extends Controller
 
         $pendingPremium = Policy::where('payment_by', 'self')
             ->where('agent_id', $agent_id)
-           // ->whereBetween('policy_start_date', [$startDate, $endDate])
+            // ->whereBetween('policy_start_date', [$startDate, $endDate])
             ->sum('premium');
 
-            $totalCommissionpendingPremium = Policy::where('agent_id', $agent_id)
+        $totalCommissionpendingPremium = Policy::where('agent_id', $agent_id)
             //->whereBetween('policy_start_date', [$startDate, $endDate])
             ->sum('agent_commission');
 
@@ -155,7 +155,7 @@ class ApiController extends Controller
             return response()->json(['message' => "Points are requireds", 'status' => false, 'data' => null]);
         }
         $points = $request->input('points');
-        $agent =  auth()->guard('api')->user();
+        $agent = auth()->guard('api')->user();
         $agent_id = $agent->id;
 
         $inProgressRedemption = PointRedemption::where('agent_id', $agent_id)
@@ -213,8 +213,8 @@ class ApiController extends Controller
     public function sendWhatsAppMessage($points, $agent)
     {
         try {
-            $sid    = env('TWILIO_SID');
-            $token  = env('TWILIO_AUTH_TOKEN');
+            $sid = env('TWILIO_SID');
+            $token = env('TWILIO_AUTH_TOKEN');
             $twilio = new Client($sid, $token);
 
             $messageBody = "$agent requested redeem of $points points.";
@@ -228,63 +228,53 @@ class ApiController extends Controller
                     )
                 );
 
-            // print($message->sid);
             return response()->json(['message' => 'WhatsApp message sent successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
     public function points($request)
     {
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
+        $startDate = $request->filled('start_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
+            : Carbon::now()->startOfMonth();
 
-        if (empty($startDate)) {
-            $startDate = Carbon::now()->firstOfMonth();
-        } else {
-            $startDate = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
-        }
+        $endDate = $request->filled('end_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
+            : Carbon::now()->endOfMonth();
 
-        if (empty($endDate)) {
-            $endDate = Carbon::now();
-        } else {
-            $endDate = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
-        }
-        $agent_id =  auth()->guard('api')->user()->id;
+        $agent_id = auth()->guard('api')->id();
 
-
-        $royalData = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
+        $royalData = Policy::whereDate('policy_start_date', '>=', $startDate)
+            ->whereDate('policy_start_date', '<=', $endDate)
             ->where('agent_id', $agent_id)
             ->select('policy_no', 'policy_start_date', 'policy_end_date', 'customername', 'premium', 'agent_commission', 'insurance_company')
             ->get();
 
-
-
-        $totalAgentCommission = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
-            ->where('agent_id', $agent_id)
-            ->sum('agent_commission');
-
-        $totalInProgressCommission = PointRedemption::where('agent_id', $agent_id)
-            ->where('status', 'in_progress')
-            ->sum('points');
-
-
-        $totalCompletedCommission = PointRedemption::whereBetween('created_at', [$startDate, $endDate])
-            ->where('agent_id', $agent_id)
-            ->where('status', 'completed')
-            ->sum('points');
-
-        // $total = Policy::where('agent_id', $agent_id)
-        //     ->sum('agent_commission');
+        $totalAgentCommission = $royalData->sum('agent_commission');
 
         $reedeemPoints = PointRedemption::where('agent_id', $agent_id)
+            ->whereYear('policy_period_month_year', $startDate->year)
+            ->whereMonth('policy_period_month_year', $startDate->month)
             ->whereIn('status', ['in_progress', 'completed'])
             ->sum('points');
 
+        $totalCompletedCommission = PointRedemption::where('agent_id', $agent_id)
+            ->whereYear('policy_period_month_year', $startDate->year)
+            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->where('status', 'completed')
+            ->sum('points');
+
+        $totalInProgressCommission = PointRedemption::where('agent_id', $agent_id)
+            ->whereYear('policy_period_month_year', $startDate->year)
+            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->where('status', 'in_progress')
+            ->sum('points');
 
         $remainingPoints = $totalAgentCommission - $reedeemPoints;
 
-        return  $data = [
+        return [
             'remaining_points' => $remainingPoints,
             'total_points' => $totalAgentCommission,
             'total_completed_reedeem' => $totalCompletedCommission,
@@ -358,19 +348,19 @@ class ApiController extends Controller
 
             // Retrieve point_redemptions for tds
             $tdsRedemptions = DB::table('point_redemptions')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->where('agent_id', $agentId)
-            ->whereIn('status', ['in_progress', 'completed'])
-            ->select(
-                DB::raw('NULL as policy_no'),
-                DB::raw('DATE(created_at) as date'), // Change the date format
-                DB::raw('NULL as customername'),
-                DB::raw('NULL as credit'),
-                DB::raw('NULL as debit'),
-                DB::raw('CAST(tds AS CHAR) as tds'), // Cast tds to string
-                'status' // Adding status column
-            )
-            ->get();
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('agent_id', $agentId)
+                ->whereIn('status', ['in_progress', 'completed'])
+                ->select(
+                    DB::raw('NULL as policy_no'),
+                    DB::raw('DATE(created_at) as date'), // Change the date format
+                    DB::raw('NULL as customername'),
+                    DB::raw('NULL as credit'),
+                    DB::raw('NULL as debit'),
+                    DB::raw('CAST(tds AS CHAR) as tds'), // Cast tds to string
+                    'status' // Adding status column
+                )
+                ->get();
 
             // Set status to NULL or 0 for policies
             foreach ($tdsRedemptions as $tdsRedemption) {
@@ -426,22 +416,22 @@ class ApiController extends Controller
             $currentMonthStart = $startDate->copy()->startOfMonth();
 
             // Calculate the opening balance for the previous month
-                 $submitBalance = Transaction::where('agent_id', $agentId)
+            $submitBalance = Transaction::where('agent_id', $agentId)
                 ->where('payment_date', '<', $currentMonthStart)
                 ->sum('amount');
 
             // Calculate the sum of pending premium for the previous month
-                $pendingAmount = Policy::where('agent_id', $agentId)
-            ->where('payment_by', "SELF")
-            ->where('policy_start_date', '<', $currentMonthStart)
-            ->selectRaw('SUM(premium) as premium_total, SUM(agent_commission) as commission_total')
-            ->first();
+            $pendingAmount = Policy::where('agent_id', $agentId)
+                ->where('payment_by', "SELF")
+                ->where('policy_start_date', '<', $currentMonthStart)
+                ->selectRaw('SUM(premium) as premium_total, SUM(agent_commission) as commission_total')
+                ->first();
 
 
             $openingBalance = $pendingAmount['premium_total'] - $submitBalance;
 
-            if($cutAndPay){
-                $openingBalance = $pendingAmount['premium_total']- $pendingAmount['commission_total'] - $submitBalance;
+            if ($cutAndPay) {
+                $openingBalance = $pendingAmount['premium_total'] - $pendingAmount['commission_total'] - $submitBalance;
             }
 
             // Retrieve policies
