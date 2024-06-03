@@ -150,7 +150,7 @@ class ApiController extends Controller
             'points.required' => 'Points are required.',
             'points.numeric' => 'Points must be a number.',
             'points.min' => 'Points must be at least :min.',
-            'start_date.required' => 'Start date is required.',
+            'start_date.required' => 'Please update App from App Store.',
             'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
         ];
     
