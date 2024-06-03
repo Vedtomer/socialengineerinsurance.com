@@ -26,7 +26,8 @@
                                 <th>Point</th>
                                 <th>TDS(5%)</th>
                                 <th>Amount Pay</th>
-                                <th>Date</th>
+                                <th>Policy Month</th>
+                                <th>Requested Date</th>
                                
                                 <th>Action</th>
                             </tr>
@@ -40,6 +41,15 @@
                             <td>{{ $point->points }}</td>
                             <td>{{ $point->tds }}</td>
                             <td>{{ $point->amount_to_be_paid }}</td>
+                            <td>
+                                @if(!empty($point->policy_period_month_year))
+                                    {{ \Carbon\Carbon::parse($point->policy_period_month_year)->format('F Y') }}
+                                @else
+                                    <!-- Optionally, you can display a default value or leave it empty -->
+                                    N/A
+                                @endif
+                            </td>
+
                             <td>{{ date('M d, Y', strtotime($point->created_at)) }}</td>
 
                             <td>
