@@ -275,10 +275,10 @@ class ApiController extends Controller
         $remainingPoints = $totalAgentCommission - $reedeemPoints;
 
         return [
-            'remaining_points' => $remainingPoints,
-            'total_points' => $totalAgentCommission,
-            'total_completed_reedeem' => $totalCompletedCommission,
-            'total_in_progress_reedeem' => $totalInProgressCommission,
+            'remaining_points' => round($remainingPoints),
+            'total_points' => round($totalAgentCommission),
+            'total_completed_reedeem' => round($totalCompletedCommission),
+            'total_in_progress_reedeem' => round($totalInProgressCommission),
             'policy' => $royalData,
         ];
     }
