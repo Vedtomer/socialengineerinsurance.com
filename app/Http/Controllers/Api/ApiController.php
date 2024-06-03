@@ -145,7 +145,7 @@ class ApiController extends Controller
             'points' => 'required|numeric|min:0',
             'start_date' => 'required|date_format:d-m-Y',
         ];
-    
+
         $messages = [
             'points.required' => 'Points are required.',
             'points.numeric' => 'Points must be a number.',
@@ -153,49 +153,59 @@ class ApiController extends Controller
             'start_date.required' => 'Please update App from App Store.',
             'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
         ];
-    
+
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => false, 'data' => null]);
         }
-    
+
         $points = $request->input('points');
         $agent = auth()->guard('api')->user();
         $agent_id = $agent->id;
         $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date);
-    
+
         $inProgressRedemption = PointRedemption::where('agent_id', $agent_id)
             ->whereYear('policy_period_month_year', $startDate->year)
             ->whereMonth('policy_period_month_year', $startDate->month)
             ->where('status', 'in_progress')
             ->exists();
-    
+
         if ($inProgressRedemption) {
             return response()->json(['message' => 'You already have a redemption in progress.', 'status' => false, 'data' => null]);
         }
-    
+
         if ($agent->cut_and_pay) {
             return response()->json(['message' => 'You are not allowed to redeem points because "cut and pay" is enabled for your account.', 'status' => false, 'data' => null]);
         }
-    
-        $total = Policy::where('agent_id', $agent_id)
+
+        $startDate = $request->filled('start_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
+            : Carbon::now()->endOfMonth();
+
+        $total = Policy::whereDate('policy_start_date', '>=', $startDate)
+            ->whereDate('policy_start_date', '<=', $endDate)
+            ->where('agent_id', $agent_id)
             ->sum('agent_commission');
-    
+
         $redeemPoints = PointRedemption::where('agent_id', $agent_id)
             ->whereYear('policy_period_month_year', $startDate->year)
             ->whereMonth('policy_period_month_year', $startDate->month)
             ->whereIn('status', ['in_progress', 'completed'])
             ->sum('points');
-    
+
         $remainingPoints = $total - $redeemPoints;
-    
+
         if ($points > $remainingPoints) {
             return response()->json(['message' => 'Redeemed points cannot exceed remaining points.', 'status' => false, 'data' => null]);
         }
-    
+
         $tds = 0.05 * $points;
         $amountToBePaid = $points - $tds;
-    
+
         $pointRedemption = new PointRedemption();
         $pointRedemption->agent_id = $agent_id;
         $pointRedemption->points = $points;
@@ -204,11 +214,11 @@ class ApiController extends Controller
         $pointRedemption->amount_to_be_paid = $amountToBePaid;
         $pointRedemption->policy_period_month_year = Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfMonth()->format('Y-m-d');
         $pointRedemption->save();
-    
+
         $data = $this->points($request);
-    
+
         // $whatsapp = $this->sendWhatsAppMessage($points, $agent->name);
-    
+
         return response([
             'status' => true,
             'data' => $data,
