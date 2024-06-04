@@ -259,4 +259,15 @@ class AdminController extends Controller
         // Pass the user data to the view
         return view('admin.user.profile', compact('user'));
     }
+
+    public function ProfileEdit(Request $request)
+    {
+        // Retrieve the authenticated user
+        $user = Auth::user();
+
+        // Pass the user data to the view
+        return view('admin.user.edit', compact('user'));
+    }
+
+    
 }

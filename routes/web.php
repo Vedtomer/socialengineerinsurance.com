@@ -17,6 +17,11 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('pages.website.about');
 });
+Route::get('/policies/privacy-policy', function () {
+    return view('pages.website.privacy_policy');
+});
+
+// [PagesController::class, 'PrivacyPolicy'])->name('privacy.policy');
 
 
 Route::prefix('admin')->group(function () {
@@ -28,6 +33,8 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['role:admin', 'auth'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+        Route::get('/profile/edit', [AdminController::class, 'ProfileEdit'])->name('edit.profile');
+        Route::get('/profile/update', [AdminController::class, 'ProfileEdit'])->name('admin.update');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         #transaction
@@ -61,7 +68,7 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
         Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
 
-        
+
         #agent list route
         Route::get('agent-list', [AgentController::class, 'AgentList'])->name('agent.list');
         Route::match(['get', 'post'], '/agent', [AgentController::class, 'Agent'])->name('agent');
@@ -70,7 +77,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/download-excel', [AgentController::class, 'downloadExcel'])->name('download.excel');
         Route::get('/import-excel', [AgentController::class, 'importExcel'])->name('import.excel');
 
-        
+
 
         #reward
         Route::get('/points-redemption', [PointRedemptionController::class, 'index'])->name('admin.reward.index');
