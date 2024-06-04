@@ -17,7 +17,7 @@
                 <div class="widget-content widget-content-area">
                     <div class="row">
                         <div class="col-11 mx-auto pb-4 mt-5">
-                            <div class="text-center mb-2">
+                            <div class="text-center mb-2 avatar avatar-xl">
                                 <img alt="avatar" src="{{$user->profile_image}}" class="rounded-circle">
                             </div>
                             <div class="d-flex justify-content-between mb-5">

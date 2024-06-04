@@ -4,15 +4,16 @@
 
            <div class="navbar-nav theme-brand flex-row  text-center">
                <div class="nav-logo">
-                   {{-- <div class="nav-item theme-logo">
-                       <a href="index.html">
-                           <img src="{{ asset('asset/admin/assets/img/logo.png')}}" class="navbar-logo" alt="logo">
+                   <div class="nav-item  avatar avatar-indicators avatar-online">
+                       <a href="{{route("admin.dashboard")}}">
+                           <img src="{{ asset('asset/admin/assets/img/small-logo.png')}}" class="rounded-circle" alt="logo">
                        </a>
-                   </div> --}}
-                   <div class="nav-item theme-text">
-                       <a href="index.html" class="nav-link"> SEI </a>
                    </div>
+                   {{-- <div class="nav-item theme-text">
+                       <a href="{{route("admin.dashboard")}}" class="nav-link"> SEI </a>
+                   </div> --}}
                </div>
+
                <div class="nav-item sidebar-toggle">
                    <div class="btn-toggle sidebarCollapse">
                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left">
@@ -22,6 +23,18 @@
                    </div>
                </div>
            </div>
+
+           <div class="profile-info">
+            <div class="user-info">
+                <div class="profile-img  ">
+                    <img src="{{Auth::user()->profile_image}}" alt="avatar">
+                </div>
+                <div class="profile-content">
+                    <h6 class="">{{Auth::user()->name}}</h6>
+                    <p class="">{{ Auth::user()->roles->pluck('name')[0] ?? '' }}</p>
+                </div>
+            </div>
+        </div>
 
            <ul class="list-unstyled menu-categories" id="accordionExample">
 

@@ -337,6 +337,13 @@ class AdminController extends Controller
     }
 
 
-
+    public function logout()
+    {
+        // Log the user out
+        Auth::logout();
+    
+        // Redirect to the login page
+        return redirect()->route('login');
+    }
 
 }
