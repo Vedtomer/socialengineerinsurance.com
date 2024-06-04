@@ -46,8 +46,8 @@
     <link href="{{ asset('asset/admin/src/assets/css/dark/components/list-group.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('asset/admin/src/assets/css/dark/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
     <!--  END CUSTOM STYLE FILE  -->
- <!-- Include Toastr CSS -->
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <!-- Include Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {
@@ -66,6 +66,22 @@
             font-size: 18px;
             font-weight: 600;
             color: #bfc9d4;
+        }
+
+        body.dark .details-section {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid;
+            margin-bottom: 1rem;
+        }
+
+        body.dark .details-section .text-info {
+            font-weight: bolder;
+        }
+
+        body.dark .details-section:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+            margin-bottom: 0;
         }
 
         body.dark .user-profile .widget-content-area .user-info {

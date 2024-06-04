@@ -25,9 +25,9 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('login');
-
     Route::middleware(['role:admin', 'auth'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+        Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         #transaction

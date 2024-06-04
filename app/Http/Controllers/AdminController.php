@@ -185,7 +185,7 @@ class AdminController extends Controller
 
 
         $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'datausers', 'policy','companies');
+        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'datausers', 'policy', 'companies');
         return view('admin.dashboard', ['data' => $data]);
     }
 
@@ -235,7 +235,7 @@ class AdminController extends Controller
     public function AddTransaction(Request $request)
     {
         if ($request->isMethod('get')) {
-            $agents =User::role('agent')->get();
+            $agents = User::role('agent')->get();
             return view('admin.transactionadd', ['data' => $agents]);
         }
 
@@ -249,5 +249,14 @@ class AdminController extends Controller
             $transaction->save();
             return redirect()->route('admin.transaction')->with('success', 'Transaction Add Successfully.');
         }
+    }
+
+    public function profile(Request $request)
+    {
+        // Retrieve the authenticated user
+        $user = Auth::user();
+
+        // Pass the user data to the view
+        return view('admin.user.profile', compact('user'));
     }
 }
