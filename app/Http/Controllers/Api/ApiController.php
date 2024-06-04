@@ -125,6 +125,36 @@ class ApiController extends Controller
     {
         try {
 
+            $request->request->remove('start_date');
+            $request->request->remove('end_date');
+            
+            // Determine the default start date (first day of the previous month)
+            $defaultStartDate = Carbon::now()->subMonth()->startOfMonth();
+
+            // Determine the start date from the request or use the default
+            $startDate = $request->filled('start_date')
+                ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
+                : $defaultStartDate;
+
+            // Determine the end date (last day of the previous month if no end_date is provided)
+            $defaultEndDate = $defaultStartDate->copy()->endOfMonth();
+            $endDate = $request->filled('end_date')
+                ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
+                : $defaultEndDate;
+
+            // Merge start_date and end_date into the request
+            $request->merge([
+                'start_date' => $startDate->format('d-m-Y'),
+                'end_date' => $endDate->format('d-m-Y'),
+            ]);
+
+            // Define validation rules
+            $rules = [
+                'points' => 'required|numeric|min:0',
+                'start_date' => 'required|date_format:d-m-Y',
+                'end_date' => 'required|date_format:d-m-Y',
+            ];
+
             $data = $this->points($request);
 
 
@@ -143,16 +173,36 @@ class ApiController extends Controller
     {
         $rules = [
             'points' => 'required|numeric|min:0',
-            'start_date' => 'required|date_format:d-m-Y',
+            // 'start_date' => 'required|date_format:d-m-Y',
         ];
 
         $messages = [
             'points.required' => 'Points are required.',
             'points.numeric' => 'Points must be a number.',
             'points.min' => 'Points must be at least :min.',
-            'start_date.required' => 'Please update App from App Store.',
-            'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
+            // 'start_date.required' => 'Please update App from App Store.',
+            // 'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
         ];
+
+        // Determine the default start date (first day of the previous month)
+        $defaultStartDate = Carbon::now()->subMonth()->startOfMonth();
+
+        // Determine the start date from the request or use the default
+        $startDate = $request->filled('start_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
+            : $defaultStartDate;
+
+        // Determine the end date (last day of the previous month if no end_date is provided)
+        $defaultEndDate = $defaultStartDate->copy()->endOfMonth();
+        $endDate = $request->filled('end_date')
+            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
+            : $defaultEndDate;
+
+        // Merge start_date and end_date into the request
+        $request->merge([
+            'start_date' => $startDate->format('d-m-Y'),
+            'end_date' => $endDate->format('d-m-Y'),
+        ]);
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
