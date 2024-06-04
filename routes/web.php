@@ -34,7 +34,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
         Route::get('/profile/edit', [AdminController::class, 'ProfileEdit'])->name('edit.profile');
-        Route::get('/profile/update', [AdminController::class, 'ProfileEdit'])->name('admin.update');
+        Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         #transaction

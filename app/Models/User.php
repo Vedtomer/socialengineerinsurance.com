@@ -10,6 +10,7 @@ use App\Models\Commission;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
@@ -42,6 +43,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function getprofileImageAttribute($value)
+    {
+        $data = ('/profile') . "/" . $value;
+        if (Storage::disk('public')->has($data)) {
+            return asset('/storage/profile') . "/" .$value;
+        } else {
+            return "";
+        }
+    }
 
     protected $casts = [
         'email_verified_at' => 'datetime',

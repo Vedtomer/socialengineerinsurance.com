@@ -11,7 +11,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Policy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Support\Facades\Storage;
+use Validator;
+use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
 
@@ -269,5 +271,72 @@ class AdminController extends Controller
         return view('admin.user.edit', compact('user'));
     }
 
-    
+    public function ProfileUpdate(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            // Validate the request
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'mobile_number' => 'nullable|string|max:15',
+            'email' => 'nullable|email|max:255',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'current_password' => 'nullable|string',
+            'new_password' => 'nullable|string',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            // Get the first error message
+            $firstError = $validator->errors()->first();
+            return redirect()->back()->with('error', $firstError);
+        }
+
+            // Update user details
+            if ($request->filled('name')) {
+                $user->name = $request->input('name');
+            }
+
+            if ($request->filled('mobile_number')) {
+                $user->mobile_number = $request->input('mobile_number');
+            }
+
+            if ($request->filled('email')) {
+                $user->email = $request->input('email');
+            }
+
+            // Handle image upload if a new image is provided
+            if ($request->hasFile('profile_image')) {
+                $image = $request->file('profile_image');
+                $imageName = time() . '.' . $image->extension();
+                $image->storeAs('public/profile', $imageName);
+                $user->profile_image = $imageName;
+            }
+
+            // Handle password change
+            $msg="Profile updated successfully";
+            if ($request->filled('current_password') && $request->filled('new_password')) {
+                if (Hash::check($request->input('current_password'), $user->password)) {
+                    $user->password = Hash::make($request->input('new_password'));
+                    $msg="Paasword changed successfully";
+                } else {
+                    return redirect()->back()->with(['error', 'Current password is incorrect']);
+                }
+            }
+
+            // Save the user
+            $user->save();
+
+            return redirect()->route('admin.profile')->with('success', $msg);
+        } catch (\Exception $e) {
+            return $e;
+            return redirect()->back()->with(['error', 'An error occurred while updating the profile. Please try again.']);
+
+        }
+    }
+
+
+
+
 }

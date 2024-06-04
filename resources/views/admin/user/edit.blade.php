@@ -28,21 +28,22 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" data-bs-toggle="tab" href="#change-password" aria-selected="false" role="tab" tabindex="-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key">
-                                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                                        </path>
                                     </svg> Change Password
                                 </button>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div id="profile-details" class="tab-pane fade active show" role="tabpanel">
-                                <form class="needs-validation mt-4" method="post" action="{{route("admin.update")}}" autocomplete="off" novalidate="novalidate" block-unload="true">
+                                <form class="needs-validation mt-4" method="post" action="{{route("admin.update")}}" autocomplete="off" novalidate="novalidate" block-unload="true" enctype="multipart/form-data">
                                     <div class="row">
-                                       @csrf
-                                        <input type="hidden" name="_method" value="put">
+                                        @csrf
+                                        {{-- <input type="hidden" name="_method" value="put"> --}}
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="first-name-input"> Name</label>
-                                                <input id="first-name-input" type="text" name="name" class="form-control" placeholder="First Name" autocomplete="off" required="required" maxlength="255" spellcheck="false" autofocus="true" value="Head">
+                                                <input id="first-name-input" type="text" name="name" class="form-control" placeholder="First Name" autocomplete="off" required="required" maxlength="255" spellcheck="false" autofocus="true" value="{{$user->name}}">
                                                 <div class="invalid-feedback">Please enter name</div>
                                             </div>
                                         </div>
@@ -64,13 +65,14 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="email-input">Update Image</label>
-                                                <input id="email-input" type="email" name="email" class="form-control" placeholder="Email Address" autocomplete="off" required="required" maxlength="255" spellcheck="false" value="{{$user->email}}">
+                                                <input id="email-input" type="file" name="profile_image" class="form-control" placeholder="Email Address" autocomplete="off" required="required" maxlength="255" spellcheck="false" value="{{$user->email}}">
                                                 <div class="invalid-feedback">Please enter email address</div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group mt-3 mb-5 text-start">
-                                                <button type="submit" class="btn btn-outline-info mb-2 me-4 _effect--ripple waves-effect waves-light">Update Profile</button>
+                                                <button type="submit" class="btn btn-outline-info mb-2 me-4 _effect--ripple waves-effect waves-light">Update
+                                                    Profile</button>
                                                 <a href="{{route("admin.profile")}}" class="btn btn-outline-warning mb-2 me-4 _effect--ripple waves-effect waves-light"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
                                                         <polyline points="15 18 9 12 15 6"></polyline>
                                                     </svg> Back</a>
@@ -82,7 +84,7 @@
                             <div id="change-password" class="tab-pane fade" role="tabpanel">
                                 <form class="needs-validation mt-4" method="post" action="{{route("admin.update")}}" autocomplete="off" novalidate="novalidate">
                                     <div class="row">
-                                      @csrf
+                                        @csrf
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="current-password-input">Current Password</label>
@@ -100,13 +102,14 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="confirm-new-password-input">Confirm New Password</label>
-                                                <input id="confirm-new-password-input" type="text" name="confirm_new_password" class="form-control" placeholder="Re-enter New Password" autocomplete="off" required="required" maxlength="255" spellcheck="false">
+                                                <input id="confirm-new-password-input" type="text" name="c_new_password" class="form-control" placeholder="Re-enter New Password" autocomplete="off" required="required" maxlength="255" spellcheck="false">
                                                 <div class="invalid-feedback">Please re-enter new password</div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group mt-3 mb-5 text-start">
-                                                <button type="submit" class="btn btn-outline-info mb-2 me-4 _effect--ripple waves-effect waves-light">Update Password</button>
+                                                <button type="submit" class="btn btn-outline-info mb-2 me-4 _effect--ripple waves-effect waves-light">Update
+                                                    Password</button>
 
                                                 <a href="{{route("admin.profile")}}" class="btn btn-outline-warning mb-2 me-4 _effect--ripple waves-effect waves-light"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
                                                         <polyline points="15 18 9 12 15 6"></polyline>
@@ -123,7 +126,7 @@
         </div>
     </div>
     {{-- <div class="col-xl-12 col-lg-12 col-sm-12 text-end">
-<a href="{{route("admin.profile")}}" class="btn btn-primary px-5 mb-3 _effect--ripple"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
+        <a href="{{route("admin.profile")}}" class="btn btn-primary px-5 mb-3 _effect--ripple"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
         <polyline points="15 18 9 12 15 6"></polyline>
     </svg> Back</a>
 </div> --}}
