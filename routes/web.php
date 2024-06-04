@@ -12,7 +12,7 @@ use App\Http\Controllers\CompanyController;
 
 Route::get('/', function () {
     return view('pages.website.home');
-});
+})->name("homepage");
 
 Route::get('/about', function () {
     return view('pages.website.about');

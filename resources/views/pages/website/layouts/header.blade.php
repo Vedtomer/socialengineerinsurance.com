@@ -4,7 +4,7 @@
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="navbar-wrapper">
 
-                <a href="/home/home-one" class="navbar-brand w-nav-brand">
+                <a href="{{route('homepage')}}" class="navbar-brand w-nav-brand">
                     <img src="{{ asset('asset/website/images/logo.png') }}" loading="lazy" alt="Logo" class="brand-logo" />
                 </a>
 
@@ -12,7 +12,7 @@
 
                 <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
                     <ul role="list" class="nav-menu-list-wrap w-list-unstyled">
-                        <li class="mobile-menu-logo"><a href="/home/home-one" class="navbar-brand w-nav-brand"><img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b75d6980c184325a8daff1_InsurBes%20Logo.png" loading="lazy" alt="" class="brand-logo" /></a></li>
+                        <li class="mobile-menu-logo"><a href="{{route('homepage')}}" class="navbar-brand w-nav-brand"><img src="{{ asset('asset/website/images/logo.png') }}" loading="lazy" alt="" class="brand-logo" /></a></li>
                         <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="ae4b32c0-8975-07e2-c09e-90c8dffb18bd" class="nav-dropdown w-dropdown">
                                 <div class="nav-dropdown-toggle-wrap w-dropdown-toggle">
@@ -104,4 +104,3 @@
     </div>
     <div class="nav-box-shadow"></div>
 </header>
-
