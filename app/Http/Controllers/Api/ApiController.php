@@ -127,7 +127,7 @@ class ApiController extends Controller
 
             $request->request->remove('start_date');
             $request->request->remove('end_date');
-            
+
             // Determine the default start date (first day of the previous month)
             $defaultStartDate = Carbon::now()->subMonth()->startOfMonth();
 
@@ -247,7 +247,8 @@ class ApiController extends Controller
             ->whereIn('status', ['in_progress', 'completed'])
             ->sum('points');
 
-        $remainingPoints = $total - $redeemPoints;
+            $remainingPoints = round($total - $redeemPoints);
+
 
         if ($points > $remainingPoints) {
             return response()->json(['message' => 'Redeemed points cannot exceed remaining points.', 'status' => false, 'data' => null]);
