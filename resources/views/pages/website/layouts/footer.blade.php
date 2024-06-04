@@ -2,7 +2,7 @@
     <div class="footer-upper-section">
         <div class="w-layout-blockcontainer main-container w-container">
             <div data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80c4" class="footer-flex">
-                <div class="footer-about-column"><a href="/home/home-one" class="footer-logo-wrap w-inline-block"><img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b75d6980c184325a8daff1_InsurBes%20Logo.png" loading="lazy" alt="Logo" class="footer-logo" /></a>
+                <div class="footer-about-column"><a href="/home/home-one" class="footer-logo-wrap w-inline-block"><img src="{{ asset('asset/website/images/logo.png') }}" loading="lazy" alt="Logo" class="footer-logo" /></a>
                     <div class="footer-excerpt">Insurance can be difficult hard. Social Engineer Insurance makes it
                         easy.</div>
 
