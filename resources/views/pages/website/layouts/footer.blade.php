@@ -63,12 +63,15 @@
             <div class="footer-lower-section">
                 <div class="w-layout-blockcontainer main-container w-container">
                     <div class="footer-copyright-block">
-                        <div class="footer-copyright-text">Copyright © <a href="/home/home-one"
-                                class="copyright-link"><strong class="bold-text">Insurbes </strong></a>| Designed by
+                        <div class="footer-copyright-text">Copyright © 2024 <a href="https://socialengineerinsurance.com"
+                                class="copyright-link"><strong class="bold-text">Social Engineer Insurance </strong></a> 
+                                {{-- | Designed by
                             <a href="https://brandbes.com/" target="_blank" class="copyright-link"><strong
                                     class="bold-text">Brandbes</strong></a> - Powered by - <a
                                 href="https://webflow.com/templates/designers/brandbes" target="_blank"
-                                class="copyright-link"><strong class="bold-text">Webflow</strong></a></div>
+                                class="copyright-link"><strong class="bold-text">Webflow</strong></a> --}}
+                            
+                            </div>
                     </div>
                 </div>
             </div>
