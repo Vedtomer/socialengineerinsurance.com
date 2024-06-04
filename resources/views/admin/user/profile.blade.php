@@ -53,20 +53,8 @@
                                     <div class="col-9 text-end text-info">{{$user->mobile_number}}</div>
                                 </div>
                             </div>
-                            <div class="details-section">
-                                <div class="row">
-                                    <div class="col-3">User Since</div>
-                                    <div class="col-9 text-end text-info">{{$user->created_at}}</div>
-                                </div>
-                            </div>
-                            <div class="details-section">
-                                <div class="row">
-                                    <div class="col-3">Last updated</div>
-                                    <div class="col-9 text-end text-info">
-                                        {{$user->updated_at}}
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            
                             
                         </div>
 
