@@ -27,7 +27,7 @@ class AdminController extends Controller
 
         // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
-            return view('admin.login');
+            return view('login');
         }
 
         // Handle POST request (authenticate the user)
@@ -41,14 +41,14 @@ class AdminController extends Controller
                     return redirect()->intended(route('admin.dashboard'));
                 } else {
                     Auth::logout();
-                    return redirect()->route('admin.login')->with('error', 'You do not have the required permissions to access the admin area.');
+                    return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
                 }
             }
 
-            return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
+            return redirect()->route('login')->with('error', 'Invalid login credentials');
         }
 
-        return redirect()->route('admin.login')->with('error', 'Invalid login credentials');
+        return redirect()->route('login')->with('error', 'Invalid login credentials');
     }
     public function dashboard(Request $request)
     {
