@@ -250,7 +250,7 @@ class ApiController extends Controller
             $remainingPoints = round($total - $redeemPoints);
 
 
-        if ($points > $remainingPoints) {
+        if ($points > $remainingPoints+2) {
             return response()->json(['message' => 'Redeemed points cannot exceed remaining points.', 'status' => false, 'data' => null]);
         }
 
