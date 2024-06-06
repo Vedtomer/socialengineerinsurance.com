@@ -27,7 +27,7 @@ class AdminController extends Controller
 
         // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
-            return view('login');
+            return view('admin.login');
         }
 
         // Handle POST request (authenticate the user)
