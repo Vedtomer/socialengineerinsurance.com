@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html data-wf-domain="https://socialengineerinsurance.com" data-wf-page="65b60c5eef338f6b2401686d" data-wf-site="65b60c5def338f6b24016820" lang="en">
+<html data-wf-domain="https://socialengineerinsurance.com" data-wf-page="65b60c5eef338f6b2401686d"
+    data-wf-site="65b60c5def338f6b24016820" lang="en">
 @include('admin.layouts.head')
+
 <body class="layout-boxed" page="starter-pack">
     {{-- <div class="page-wrapper"> --}}
 
@@ -32,24 +34,48 @@
                     <!-- BREADCRUMB -->
                     <div class="page-meta">
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
-                            <div>
-                                <select id="select-beast" placeholder="Select a Agent" autocomplete="off">
-                                    <option>Select Agent</option>
-                                    @foreach ($data['agent'] as $item)
-                                        <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                             <ol class="breadcrumb">
                                 @yield('breadcrumb')
                             </ol>
                         </nav>
+
+                    </div>
+                    <div class="row layout-top-spacing">
+                        <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
+                            <select class=" select2   form-select js-example-basic-single" aria-label="Default select example" id="mySelect" >
+                                <option value=""></option>
+                                @foreach ($data['agent'] as $item)
+                                <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+                            {{-- <select class="form-select form-select" aria-label="Default select example">
+                                <option selected="">All Category</option>
+                                <option value="3">Apperal</option>
+                                <option value="1">Electronics</option>
+                                <option value="2">Clothing</option>
+                                <option value="3">Accessories</option>
+                                <option value="3">Organic</option>
+                            </select> --}}
+                        </div>
+
+                        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
+                            <select class="form-select form-select" aria-label="Default select example">
+                                <option selected="">Sort By</option>
+                                <option value="1">Low to High Price</option>
+                                <option value="2">Most Viewed</option>
+                                <option value="3">Hight to Low Price</option>
+                                <option value="3">On Sale</option>
+                                <option value="3">Newest</option>
+                            </select>
+                        </div>
                     </div>
                     <!-- /BREADCRUMB -->
 
                     <!-- CONTENT AREA -->
                     @yield('content')
-                     <!-- CONTENT AREA -->
+                    <!-- CONTENT AREA -->
                 </div>
 
             </div>

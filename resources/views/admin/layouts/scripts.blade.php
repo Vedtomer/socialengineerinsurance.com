@@ -32,98 +32,87 @@
    <!-- END PAGE LEVEL SCRIPTS -->
 
 
-    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-    <script src="{{ asset('asset/admin/src/plugins/src/apex/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('asset/admin/src/assets/js/dashboard/dash_1.js') }}"></script>
-    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+   <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+   <script src="{{ asset('asset/admin/src/plugins/src/apex/apexcharts.min.js') }}"></script>
+   <script src="{{ asset('asset/admin/src/assets/js/dashboard/dash_1.js') }}"></script>
+   <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
-    <!-- Include Toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+   <!-- Include Toastr JS -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+   <script>
+       $('.js-example-basic-single').select2({
+           placeholder: 'Select Agent',
+           allowClear: true
+       });
+   </script>
 
+   <script>
+       @if (session('error'))
+           toastr.error("{{ session('error') }}");
+       @endif
 
-    <!-- BEGIN PAGE LEVEL SCRIPTS -->
-    <script src="{{ asset('asset/admin/src/assets/js/scrollspyNav.js') }}"></script>
-    <script src="{{ asset('asset/admin/src/plugins/src/tomSelect/tom-select.base.js') }}"></script>
-    <script src="{{ asset('asset/admin/src/plugins/src/tomSelect/custom-tom-select.js') }}"></script>
-    <!-- END PAGE LEVEL SCRIPTS -->
+       // New code for success message
+       @if (session('success'))
+           toastr.success("{{ session('success') }}");
+       @endif
 
-<script>
-   @if(session('error'))
-       toastr.error("{{ session('error') }}");
-   @endif
+       // Initialize Toastr
+       $(document).ready(function() {
+           toastr.options = {
+               "positionClass": "toast-top-right",
+               "closeButton": true,
+               "progressBar": true
+           };
+       });
+   </script>
 
-   // New code for success message
-   @if(session('success'))
-       toastr.success("{{ session('success') }}");
-   @endif
+   <script>
+       function copyCommissionCode(code) {
+           // Create a textarea element
+           var textarea = document.createElement('textarea');
 
-   // Initialize Toastr
-   $(document).ready(function() {
-       toastr.options = {
-           "positionClass": "toast-top-right",
-           "closeButton": true,
-           "progressBar": true
-       };
-   });
+           // Set the value of the textarea to the commission code
+           textarea.value = code;
 
-</script>
+           // Append the textarea to the document body
+           document.body.appendChild(textarea);
 
-<script>
-   function copyCommissionCode(code) {
-       // Create a textarea element
-       var textarea = document.createElement('textarea');
+           // Select the content of the textarea
+           textarea.select();
 
-       // Set the value of the textarea to the commission code
-       textarea.value = code;
+           // Copy the selected text to the clipboard
+           document.execCommand('copy');
 
-       // Append the textarea to the document body
-       document.body.appendChild(textarea);
+           // Remove the textarea from the document body
+           document.body.removeChild(textarea);
 
-       // Select the content of the textarea
-       textarea.select();
+           // Alert the user that the commission code has been copied
+           toastr.success("Commission code copied: " + code);
 
-       // Copy the selected text to the clipboard
-       document.execCommand('copy');
+       }
 
-       // Remove the textarea from the document body
-       document.body.removeChild(textarea);
+       function copyCompanyCode(code) {
+           // Create a textarea element
+           var textarea = document.createElement('textarea');
 
-       // Alert the user that the commission code has been copied
-       toastr.success("Commission code copied: " + code);
+           // Set the value of the textarea to the commission code
+           textarea.value = code;
 
-   }
+           // Append the textarea to the document body
+           document.body.appendChild(textarea);
 
-   function copyCompanyCode(code) {
-       // Create a textarea element
-       var textarea = document.createElement('textarea');
+           // Select the content of the textarea
+           textarea.select();
 
-       // Set the value of the textarea to the commission code
-       textarea.value = code;
+           // Copy the selected text to the clipboard
+           document.execCommand('copy');
 
-       // Append the textarea to the document body
-       document.body.appendChild(textarea);
+           // Remove the textarea from the document body
+           document.body.removeChild(textarea);
 
-       // Select the content of the textarea
-       textarea.select();
+           // Alert the user that the commission code has been copied
+           toastr.success("Company  code copied: " + code);
 
-       // Copy the selected text to the clipboard
-       document.execCommand('copy');
-
-       // Remove the textarea from the document body
-       document.body.removeChild(textarea);
-
-       // Alert the user that the commission code has been copied
-       toastr.success("Company  code copied: " + code);
-
-   }
-
-
-   new TomSelect("#select-beast",{
-    create: true,
-    sortField: {
-        field: "text",
-        direction: "asc"
-    }
-});
-</script>
-
+       }
+   </script>
