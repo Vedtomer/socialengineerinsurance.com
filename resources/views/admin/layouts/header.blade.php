@@ -17,19 +17,7 @@
              </svg>
          </a>
 
-         {{-- <div class="search-animated toggle-search show-search">
-            <form class="form-inline search-full form-inline search" role="search">
-                <div class="search-bar">
-                    <select id="single" class="js-states form-control">
-                        <option>Java</option>
-                        <option>Javascript</option>
-                        <option>PHP</option>
-                        <option>Visual Basic</option>
-                    </select>
 
-                </div>
-            </form>
-        </div> --}}
 
 
 
@@ -116,15 +104,6 @@
 
              </li>
          </ul>
-
-         <div>
-            <select id="select-beast" placeholder="Select a Agent" autocomplete="off">
-                <option>Select Agent</option>
-                @foreach ($data['agent'] as $item)
-                    <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
-                @endforeach
-            </select>
-        </div>
      </header>
  </div>
  <!--  END NAVBAR  -->

@@ -32,6 +32,14 @@
                     <!-- BREADCRUMB -->
                     <div class="page-meta">
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <div>
+                                <select id="select-beast" placeholder="Select a Agent" autocomplete="off">
+                                    <option>Select Agent</option>
+                                    @foreach ($data['agent'] as $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <ol class="breadcrumb">
                                 @yield('breadcrumb')
                             </ol>
