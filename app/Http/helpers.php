@@ -1,6 +1,8 @@
 <?php
+
 use App\Models\Commission;
 use App\Models\Company;
+use App\Models\User;
 
 if (!function_exists('classActivePath')) {
     function classActivePath($path)
@@ -80,5 +82,12 @@ if (!function_exists('getCompanyId')) {
             }
         }
         return null;
+    }
+}
+
+if (!function_exists('getAgents')) {
+    function getAgents()
+    {
+        return $agentData = User::role('agent')->orderBy('name', 'asc')->get();
     }
 }

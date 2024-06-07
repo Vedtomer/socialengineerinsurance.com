@@ -40,13 +40,14 @@
                         </nav>
 
                     </div>
-                    <div class="row layout-top-spacing">
+                    <div class="row ">
                         <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
-                            <select class=" select2   form-select js-example-basic-single" aria-label="Default select example" id="mySelect" >
+                            <select class=" select2   form-select js-example-basic-single"
+                                aria-label="Default select example" id="mySelect">
                                 <option value=""></option>
-                                @foreach ($data['agent'] as $item)
-                                <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
-                            @endforeach
+                                @foreach (getAgents() as $item)
+                                    <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
@@ -61,14 +62,14 @@
                         </div>
 
                         <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
-                            <select class="form-select form-select" aria-label="Default select example">
+                            {{-- <select class="form-select form-select" aria-label="Default select example">
                                 <option selected="">Sort By</option>
                                 <option value="1">Low to High Price</option>
                                 <option value="2">Most Viewed</option>
                                 <option value="3">Hight to Low Price</option>
                                 <option value="3">On Sale</option>
                                 <option value="3">Newest</option>
-                            </select>
+                            </select> --}}
                         </div>
                     </div>
                     <!-- /BREADCRUMB -->
