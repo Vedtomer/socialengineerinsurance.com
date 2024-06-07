@@ -110,11 +110,18 @@
 
 
         .select2-container--default .select2-selection--single {
-            background-color: #0e1726;
-            border: 1px solid #aaa;
-            border-radius: 4px;
-            height: 100%;
+            height: auto;
+            font-size: 15px;
+            padding: 0.75rem 1.25rem;
+            letter-spacing: 1px;
+            border: 1px solid #1b2e4b;
+            color: #009688;
+            background-color: #1b2e4b;
+            border-radius: 6px;
+
+            transition: none;
         }
+
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: #009688 !important;
@@ -128,6 +135,14 @@
 
         .select2-selection__clear span {
             color: white
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: auto;
+            position: absolute;
+            top: 50%;
+            right: 1px;
+            width: 20px;
         }
     </style>
 
