@@ -40,6 +40,13 @@
     <!-- Include Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="{{ asset('asset/admin/src/assets/js/scrollspyNav.js') }}"></script>
+    <script src="{{ asset('asset/admin/src/plugins/src/tomSelect/tom-select.base.js') }}"></script>
+    <script src="{{ asset('asset/admin/src/plugins/src/tomSelect/custom-tom-select.js') }}"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+
 <script>
    @if(session('error'))
        toastr.error("{{ session('error') }}");
@@ -83,7 +90,7 @@
 
        // Alert the user that the commission code has been copied
        toastr.success("Commission code copied: " + code);
-     
+
    }
 
    function copyCompanyCode(code) {
@@ -107,6 +114,16 @@
 
        // Alert the user that the commission code has been copied
        toastr.success("Company  code copied: " + code);
-     
+
    }
+
+
+   new TomSelect("#select-beast",{
+    create: true,
+    sortField: {
+        field: "text",
+        direction: "asc"
+    }
+});
 </script>
+

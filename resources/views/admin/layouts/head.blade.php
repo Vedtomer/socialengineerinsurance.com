@@ -48,6 +48,19 @@
     <!--  END CUSTOM STYLE FILE  -->
     <!-- Include Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+
+       <!--  BEGIN CUSTOM STYLE FILE  -->
+       <link href="{{ asset('asset/admin/src/assets/css/light/scrollspyNav.css" rel="stylesheet" type="text/css') }}" />
+       <link href="{{ asset('asset/admin/src/assets/css/dark/scrollspyNav.css" rel="stylesheet" type="text/css') }}" />
+
+
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/src/tomSelect/tom-select.default.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/light/tomSelect/custom-tomSelect.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/dark/tomSelect/custom-tomSelect.css') }}">
+
+
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {
