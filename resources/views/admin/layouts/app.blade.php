@@ -47,7 +47,7 @@
                                 <option value=""></option>
                                 @foreach (getAgents() as $item)
                                     <option value="{{ $item['id'] }}"
-                                        {{ $_GET['agent_id'] == $item['id'] ? 'selected' : '' }}>
+                                        {{ (!empty($_GET['agent_id']) && $_GET['agent_id'] == $item['id']) ? 'selected' : '' }}>
                                         {{ $item['name'] }}
                                     </option>
                                 @endforeach
@@ -71,17 +71,15 @@
                                 @php
                                     $data = getMonthsFromAprilToCurrent();
                                 @endphp
-                              @foreach ($data['months'] as $month)
-                              <option value="{{ $month['value'] }}"
-                                  @if(isset($_GET['date']) && $_GET['date'] == $month['value'])
-                                      selected
+                                @foreach ($data['months'] as $month)
+                                    <option value="{{ $month['value'] }}"
+                                        @if (isset($_GET['date']) && $_GET['date'] == $month['value']) selected
                                   @elseif(empty($_GET['date']) && $month['value'] == $data['currentMonth'])
-                                      selected
-                                  @endif>
-                                  {{ $month['name'] }}
-                              </option>
-                          @endforeach
-                                <option value="year" {{ $_GET['date'] == 'year' ? 'selected' : '' }}>
+                                      selected @endif>
+                                        {{ $month['name'] }}
+                                    </option>
+                                @endforeach
+                                <option value="year" {{ (!empty($_GET['date']) &&  $_GET['date'] == 'year') ? 'selected' : '' }}>
                                     {{ $data['currentYear'] }}</option>
 
                             </select>
