@@ -54,8 +54,6 @@ class AdminController extends Controller
     }
     public function dashboard(Request $request)
     {
-
-
         // Get the 'agent_id' parameter from the request
         $agent_id = $request->input('agent_id', "");
 
@@ -75,55 +73,44 @@ class AdminController extends Controller
         } elseif (is_numeric($date)) {
             // Get the month value from 'date' parameter
             $month = intval($date);
-            // Set start date to the 1st of the specified month
+            // Set start date to the 1st of the specified month and the current year
             $start_date = Carbon::create(null, $month, 1)->toDateString();
-            // Set end date to today's date
-            $end_date = Carbon::now()->toDateString();
+            // Set end date to the last day of the specified month and the current year
+            $end_date = Carbon::create(null, $month, 1)->endOfMonth()->toDateString();
         }
 
-
+        // Define the transaction and policy queries
         $transactions = Transaction::orderBy('id', 'ASC');
-
         $policy = Policy::orderBy('id', 'ASC');
 
-
+        // Apply date range filter to transactions and policies
         if (!empty($start_date) && !empty($end_date)) {
+            $transactions->whereBetween('payment_date', [$start_date, $end_date]);
             $policy->whereBetween('policy_start_date', [$start_date, $end_date]);
         }
 
-        if (!empty($start_date) && !empty($end_date)) {
-            $transactions->whereBetween('payment_date', [$start_date, $end_date]);
-        }
-
-        if (!empty($agent_id)) {
-            $policy->where('agent_id', $agent_id);
-        }
+        // Apply agent_id filter if provided
         if (!empty($agent_id)) {
             $transactions->where('agent_id', $agent_id);
+            $policy->where('agent_id', $agent_id);
         }
 
-        $query = User::withCount([
-            'Policy as policy_count' => function (Builder $query) use ($start_date, $end_date) {
-                $query->whereBetween('policy_start_date', [$start_date, $end_date]);
-            }
-        ])
-            ->having('policy_count', '<', 10)
-            ->orderBy('policy_count', 'asc');
-        if (!empty($agent_id)) {
+        // Get the count of policies for each user
+        $datausers = User::withCount(['Policy as policy_count' => function ($query) use ($start_date, $end_date) {
+            $query->whereBetween('policy_start_date', [$start_date, $end_date]);
+        }])
+        ->having('policy_count', '<', 10)
+        ->orderBy('policy_count', 'asc')
+        ->when(!empty($agent_id), function ($query) use ($agent_id) {
             $query->where('id', $agent_id);
-        }
+        })
+        ->get();
 
-        $datausers = $query->get();
-
+        // Get the count of policies for each insurance company
         $counts = Policy::whereBetween('policy_start_date', [$start_date, $end_date])
-            ->where(function ($query) {
-                $query->where('insurance_company', 'LIKE', '%ROYAL%')
-                    ->orWhere('insurance_company', 'LIKE', '%FUTURE%')
-                    ->orWhere('insurance_company', 'LIKE', '%TATA%')
-                    ->orWhere('insurance_company', 'LIKE', '%tata%');
-            })
+            ->whereIn('insurance_company', ['ROYAL', 'FUTURE', 'TATA', 'tata'])
             ->when(!empty($agent_id), function ($query) use ($agent_id) {
-                return $query->where('agent_id', $agent_id);
+                $query->where('agent_id', $agent_id);
             })
             ->selectRaw('insurance_company, COUNT(*) as count')
             ->groupBy('insurance_company')
