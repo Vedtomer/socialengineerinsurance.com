@@ -3,6 +3,7 @@
 use App\Models\Commission;
 use App\Models\Company;
 use App\Models\User;
+use Carbon\Carbon;
 
 if (!function_exists('classActivePath')) {
     function classActivePath($path)
@@ -89,5 +90,29 @@ if (!function_exists('getAgents')) {
     function getAgents()
     {
         return $agentData = User::role('agent')->orderBy('name', 'asc')->get();
+    }
+}
+
+if (!function_exists('getMonthsFromAprilToCurrent')) {
+    function getMonthsFromAprilToCurrent()
+    {
+        $currentDate = now();
+        $currentYear = $currentDate->year;
+        $currentMonth = $currentDate->month;
+
+        // Generate months list from April to the current month
+        $months = [];
+        for ($month = 4; $month <= $currentMonth; $month++) {
+            $months[] = [
+                'name' => Carbon::create()->month($month)->format('F'),
+                'value' => $month,
+            ];
+        }
+
+        return [
+            'months' => $months,
+            'currentYear' => $currentYear,
+            'currentMonth' => $currentMonth
+        ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+
 class AdminController extends Controller
 {
 
@@ -53,36 +55,32 @@ class AdminController extends Controller
     public function dashboard(Request $request)
     {
 
-        $start_date = $request->input('start_date', "") === "null" ? date('Y-m-01') : $request->input('start_date');
-        $end_date = $request->input('end_date', "") === "null" ? date('Y-m-t') : $request->input('end_date');
-        $agent_id = $request->input('agent_id', "") === "null" ? "" : $request->input('agent_id', "");
 
-        if (!isset($agent_id)) {
+        // Get the 'agent_id' parameter from the request
+        $agent_id = $request->input('agent_id', "");
 
-            if (!isset($start_date) || !$start_date instanceof Carbon) {
-                $start_date = now()->startOfMonth();
-            }
+        // Get the 'date' parameter from the request
+        $date = $request->input('date', "");
 
-            if (!isset($end_date) || !$end_date instanceof Carbon) {
-                $end_date = now()->endOfDay();
-            }
+        // Set default start and end dates
+        $start_date = Carbon::now()->firstOfMonth()->toDateString();
+        $end_date = Carbon::now()->toDateString();
+
+        // Check if 'date' parameter is "year"
+        if ($date == "year") {
+            // Set start date to April 1st of the current year
+            $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();
+            // Set end date to today's date
+            $end_date = Carbon::now()->toDateString();
+        } elseif (is_numeric($date)) {
+            // Get the month value from 'date' parameter
+            $month = intval($date);
+            // Set start date to the 1st of the specified month
+            $start_date = Carbon::create(null, $month, 1)->toDateString();
+            // Set end date to today's date
+            $end_date = Carbon::now()->toDateString();
         }
 
-        if (isset($agent_id)) {
-
-
-            if ($start_date !== null) {
-                $start_date = Carbon::parse($start_date);
-            } else {
-                $start_date = now()->startOfMonth();
-            }
-
-            if ($end_date !== null) {
-                $end_date = Carbon::parse($end_date);
-            } else {
-                $end_date = now()->endOfDay();
-            }
-        }
 
         $transactions = Transaction::orderBy('id', 'ASC');
 
@@ -277,21 +275,21 @@ class AdminController extends Controller
             $user = Auth::user();
 
             // Validate the request
-        $validator = Validator::make($request->all(), [
-            'name' => 'nullable|string|max:255',
-            'mobile_number' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'current_password' => 'nullable|string',
-            'new_password' => 'nullable|string',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'name' => 'nullable|string|max:255',
+                'mobile_number' => 'nullable|string|max:15',
+                'email' => 'nullable|email|max:255',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'current_password' => 'nullable|string',
+                'new_password' => 'nullable|string',
+            ]);
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            // Get the first error message
-            $firstError = $validator->errors()->first();
-            return redirect()->back()->with('error', $firstError);
-        }
+            // Check if validation fails
+            if ($validator->fails()) {
+                // Get the first error message
+                $firstError = $validator->errors()->first();
+                return redirect()->back()->with('error', $firstError);
+            }
 
             // Update user details
             if ($request->filled('name')) {
@@ -315,11 +313,11 @@ class AdminController extends Controller
             }
 
             // Handle password change
-            $msg="Profile updated successfully";
+            $msg = "Profile updated successfully";
             if ($request->filled('current_password') && $request->filled('new_password')) {
                 if (Hash::check($request->input('current_password'), $user->password)) {
                     $user->password = Hash::make($request->input('new_password'));
-                    $msg="Paasword changed successfully";
+                    $msg = "Paasword changed successfully";
                 } else {
                     return redirect()->back()->with(['error', 'Current password is incorrect']);
                 }
@@ -332,7 +330,6 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return $e;
             return redirect()->back()->with(['error', 'An error occurred while updating the profile. Please try again.']);
-
         }
     }
 
@@ -341,9 +338,8 @@ class AdminController extends Controller
     {
         // Log the user out
         Auth::logout();
-    
+
         // Redirect to the login page
         return redirect()->route('login');
     }
-
 }

@@ -43,10 +43,13 @@
                     <div class="row ">
                         <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
                             <select class=" select2   form-select js-example-basic-single"
-                                aria-label="Default select example" id="mySelect">
+                                aria-label="Default select example" onchange="filterData()" id="agent">
                                 <option value=""></option>
                                 @foreach (getAgents() as $item)
-                                    <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                    <option value="{{ $item['id'] }}"
+                                        {{ $_GET['agent_id'] == $item['id'] ? 'selected' : '' }}>
+                                        {{ $item['name'] }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -62,14 +65,26 @@
                         </div>
 
                         <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
-                            {{-- <select class="form-select form-select" aria-label="Default select example">
-                                <option selected="">Sort By</option>
-                                <option value="1">Low to High Price</option>
-                                <option value="2">Most Viewed</option>
-                                <option value="3">Hight to Low Price</option>
-                                <option value="3">On Sale</option>
-                                <option value="3">Newest</option>
-                            </select> --}}
+                            <select class="select2   form-select  no-search" id="date"
+                                aria-label="Default select example" onchange="filterData()">
+                                <option disabled>Select Option</option>
+                                @php
+                                    $data = getMonthsFromAprilToCurrent();
+                                @endphp
+                              @foreach ($data['months'] as $month)
+                              <option value="{{ $month['value'] }}"
+                                  @if(isset($_GET['date']) && $_GET['date'] == $month['value'])
+                                      selected
+                                  @elseif(empty($_GET['date']) && $month['value'] == $data['currentMonth'])
+                                      selected
+                                  @endif>
+                                  {{ $month['name'] }}
+                              </option>
+                          @endforeach
+                                <option value="year" {{ $_GET['date'] == 'year' ? 'selected' : '' }}>
+                                    {{ $data['currentYear'] }}</option>
+
+                            </select>
                         </div>
                     </div>
                     <!-- /BREADCRUMB -->

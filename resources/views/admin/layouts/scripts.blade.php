@@ -48,6 +48,13 @@
    </script>
 
    <script>
+       $('#date').select2({
+           placeholder: 'Select Option',
+           minimumResultsForSearch: Infinity
+       });
+   </script>
+
+   <script>
        @if (session('error'))
            toastr.error("{{ session('error') }}");
        @endif
@@ -145,5 +152,29 @@
            if (form instanceof HTMLFormElement) {
                form.submit();
            }
+       }
+
+
+
+
+       function filterData() {
+           // Get the selected agent value
+           var agent = document.getElementById('agent').value;
+           // Get the selected date value
+           var date = document.getElementById('date').value;
+
+           // Create the query parameters
+           var queryParams = new URLSearchParams(window.location.search);
+           queryParams.set('agent_id', agent);
+           queryParams.set('date', date);
+
+           // Get the current base URL without query parameters
+           var baseUrl = window.location.origin + window.location.pathname;
+
+           // Create the new URL with query parameters
+           var newUrl = baseUrl + '?' + queryParams.toString();
+
+           // Reload the page with the new URL
+           window.location.href = newUrl;
        }
    </script>
