@@ -243,7 +243,7 @@ class AgentController extends Controller
                 $commission->commission_code = $commissionCode;
                 $commission->save();
             }
-            return redirect()->route('agent.list')->with('success', 'Commission added successfully');
+            return redirect()->back()->with('success', 'Commission added successfully');
         }
 
         return view('admin.commission', compact('data', 'commissiondata'));

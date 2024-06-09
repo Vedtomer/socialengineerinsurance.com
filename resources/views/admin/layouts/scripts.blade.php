@@ -116,3 +116,34 @@
 
        }
    </script>
+
+
+   <script>
+       var length = {{ isset($commissiondata) && count($commissiondata) > 0 ? count($commissiondata) : 1 }};
+       $(document).ready(function() {
+           $("#addCommissionBtn").click(function(event) {
+               event.preventDefault();
+               // Clone the commission inputs and append them to the form
+               var clonedInputs = $("#commissionContainer").first().clone();
+               // Remove delete button from the cloned inputs
+               clonedInputs.find(".d-flex.align-items-center").remove();
+               clonedInputs.find("input, select").val(""); // Clear the input values
+               clonedInputs.find("input[type='hidden']").remove(); // Remove hidden input if it exists
+               clonedInputs.appendTo("form");
+           });
+
+           $("#removeCommissionBtn").click(function(event) {
+               event.preventDefault();
+               // Check if there is more than one set before removing
+               if ($("form").find(".row.mb-4").length > length) {
+                   $("form").find(".row.mb-4").last().remove();
+               }
+           });
+       });
+
+       function submitForm(form) {
+           if (form instanceof HTMLFormElement) {
+               form.submit();
+           }
+       }
+   </script>

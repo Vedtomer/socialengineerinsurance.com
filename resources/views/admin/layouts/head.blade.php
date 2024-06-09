@@ -144,6 +144,10 @@
             right: 1px;
             width: 20px;
         }
+
+        table#html5-extension {
+            min-height: 350px
+        }
     </style>
 
 </head>
