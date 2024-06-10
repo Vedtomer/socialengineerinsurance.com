@@ -36,6 +36,12 @@ class Policy extends Model
     {
         return $this->belongsTo(User::class, 'agent_id');
     }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
     public function getPolicyLinkAttribute()
     {
 

@@ -50,7 +50,7 @@ class PolicyController extends Controller
         $start_date = $start_date ? Carbon::parse($start_date)->startOfDay() : now()->startOfMonth();
         $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
 
-        $query = Policy::with('agent')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
+        $query = Policy::with('agent','company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
 
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);

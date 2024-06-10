@@ -68,6 +68,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
+       <!-- BEGIN PAGE LEVEL STYLES -->
+
+
+   <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/light/table/datatable/dt-global_style.css') }}">
+   <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/dark/table/datatable/dt-global_style.css') }}">
+   <!-- END PAGE LEVEL STYLES -->
+
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {
