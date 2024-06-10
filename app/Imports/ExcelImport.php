@@ -35,6 +35,7 @@ class ExcelImport implements ToModel, WithHeadingRow
             'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
             'company_id' => isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null,
             'customername' => $row['customername'] ?? null,
+            'discount' => $row['discount'] ?? null,
             'agent_id' => isset($row['commission_code']) ? getAgentId($row['commission_code']) : null,
             'premium' => $row['premium'] ?? null,
             'gst' => isset($row['premium']) ? $row['premium'] * 0.1525 : null,
