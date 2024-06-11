@@ -28,7 +28,8 @@ class Policy extends Model
         'agent_commission',
         'net_amount',
         'payment_by',
-        'company_id'
+        'company_id',
+        'discount'
         // Add other attributes here if needed
     ];
     protected $appends = ['policy_link'];
