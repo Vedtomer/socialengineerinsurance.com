@@ -7,7 +7,8 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\PointRedemptionController;
 use App\Http\Controllers\CompanyController;
-
+use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\CustomerController;
 
 
 Route::get('/', function () {
@@ -85,5 +86,12 @@ Route::prefix('admin')->group(function () {
         Route::post('/redeem/success/{pointId?}', [PointRedemptionController::class, 'redeemSuccess'])->name('redeem.success');
         Route::post('/redeem/cancel/{pointId}', [PointRedemptionController::class, 'cancelRedemption'])->name('redeem.cancel');
         Route::resource('companies', CompanyController::class);
+
+
+        #claim
+        Route::resource('claims', ClaimController::class);
+        Route::resource('customers', CustomerController::class);
+        Route::match(['get', 'post'], 'customers/{customer}/change-password', [CustomerController::class, 'changePassword'])->name('customers.changePassword');
+
     });
 });

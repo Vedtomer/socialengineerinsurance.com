@@ -3,6 +3,7 @@
 use App\Models\Commission;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Policy;
 use Carbon\Carbon;
 
 if (!function_exists('classActivePath')) {
@@ -92,6 +93,14 @@ if (!function_exists('getAgents')) {
         return $agentData = User::role('agent')->orderBy('name', 'asc')->get();
     }
 }
+
+if (!function_exists('getPolicy')) {
+    function getPolicy()
+    {
+        return  $Policy = Policy::all();
+    }
+}
+
 
 if (!function_exists('getMonthsFromAprilToCurrent')) {
     function getMonthsFromAprilToCurrent()

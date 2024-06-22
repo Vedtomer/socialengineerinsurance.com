@@ -71,6 +71,11 @@
            placeholder: 'Select Agent',
            allowClear: true
        });
+
+       $('.Policy_Number').select2({
+           placeholder: 'Select Policy',
+           allowClear: true
+       });
    </script>
 
    <script>
@@ -203,4 +208,15 @@
            // Reload the page with the new URL
            window.location.href = newUrl;
        }
+
+
+       $('.Policy_Number').change(function() {
+           // Get selected option data attributes
+           var customerName = $(this).find(':selected').data('customername');
+           var agentId = $(this).find(':selected').data('agent_name');
+           var users_id = $(this).find(':selected').data('users_id');
+           $('#agent_name').val(agentId); // Assuming you want to display agent ID, adjust as needed
+           $('#users_id').val(users_id);
+           $('#customer_name').val(customerName);
+       });
    </script>

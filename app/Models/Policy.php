@@ -54,4 +54,13 @@ class Policy extends Model
             return "";
         }
     }
+
+    public function getAgentNameAttribute()
+    {
+        // Ensure that the 'agent' relationship is loaded
+        $agent = $this->agent;
+
+        // Return the agent's name if it exists
+        return $agent ? $agent->name : null;
+    }
 }

@@ -22,4 +22,10 @@ Route::prefix('agent')->group(function () {
         Route::match(['get', 'post'], '/pending-premium-ledger', [ApiController::class, 'PendingPremiumLedger']);
         Route::match(['get', 'post'], '/transaction/{id?}', [ApiController::class, 'Transaction']);
     });
+
+
+    Route::middleware(['auth:api', 'role:customer'])->group(function () {
+        Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
+
+    });
 });

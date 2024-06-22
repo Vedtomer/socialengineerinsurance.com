@@ -2,6 +2,7 @@
 
 
 namespace App\Http\Controllers\Api;
+
 use Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -18,29 +19,26 @@ class LoginController extends Controller
         try {
             $email = $request->input('email');
             $password = $request->input('password');
-    
+
             if (empty($password) || empty($email)) {
                 return response()->json(['message' => 'Password or email missing', 'status' => false, 'data' => []], 400);
             }
-    
+
             $credentials = $request->only('email', 'password');
             $emailCredentials = $credentials;
             $mobileCredentials = [
                 'mobile_number' => $email,
                 'password' => $password
             ];
-    
+
             if (Auth::attempt($emailCredentials) || Auth::attempt($mobileCredentials)) {
                 $user = Auth::user();
-                
-                if (!$user->hasRole('agent')) {
-                    return response()->json(['message' => 'Unauthorized', 'status' => false, 'data' => []], 401);
-                }
-                
+
+
                 if (!$user->status) {
                     return response()->json(['message' => 'Your account is not active', 'status' => false, 'data' => []], 400);
                 }
-    
+
                 $record = [
                     'name' => $user->name,
                     'email' => $user->email,
@@ -49,36 +47,24 @@ class LoginController extends Controller
                     'address' => $user->address,
                     'mobile_number' => $user->mobile_number,
                     'commission' => [],
+                    'roles' => $user->getRoleNames(),
                 ];
-    
-                // Format commissions
-                // foreach ($user->commissions as $commission) {
-                //     $formattedCommission = '';
-    
-                //     if ($commission->commission_type === 'percentage') {
-                //         $formattedCommission = $commission->commission . '%';
-                //     } elseif ($commission->commission_type === 'fixed') {
-                //         $formattedCommission = '₹' . $commission->commission;
-                //     }
-    
-                //     $record['commission'][] = $formattedCommission;
-                // }
-    
+
                 $token = $user->createToken('MyApp')->accessToken;
-    
+
                 return response()->json([
                     'status' => true,
                     'data' => $record,
                     'token' => $token
                 ], 200);
             }
-    
+
             return response()->json(['message' => 'User not found', 'status' => false, 'data' => []], 404);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => false, 'data' => []], 500);
         }
     }
-    
+
 
     public function agentSignUp(Request $request)
     {
@@ -90,13 +76,13 @@ class LoginController extends Controller
             'mobile_number' => 'required|string|max:15|unique:agents',
             'address' => 'nullable|string|max:255', // Assuming address is optional
         ]);
-    
+
         if ($validator->fails()) {
             // Return only the first validation error
             $firstError = $validator->errors()->first();
             return response()->json(['message' => 'Validation Error', 'error' => $firstError, 'status' => false], 422);
         }
-    
+
         try {
             // Create new agent
             $agent = new Agent();
@@ -106,10 +92,10 @@ class LoginController extends Controller
             $agent->address = $request->address;
             $agent->mobile_number = $request->mobile_number;
             $agent->save();
-    
+
             // Generate a token for the newly created agent
             $token = $agent->createToken('MyApp')->accessToken;
-    
+
             return response()->json([
                 'status' => true,
                 'data' => $agent,
@@ -120,21 +106,14 @@ class LoginController extends Controller
         }
     }
 
-public function agentlogout()
-{
-    
-    try {
-        auth()->guard('api')->user()->tokens()->delete();
-        return response()->json(['message' => 'Logout successfully', 'status' => true , 'data' => []], 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+    public function agentlogout()
+    {
+
+        try {
+            auth()->guard('api')->user()->tokens()->delete();
+            return response()->json(['message' => 'Logout successfully', 'status' => true, 'data' => []], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
-
-
-
-
-
-}
-
-
