@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 use App\Models\Transaction;
 use App\Models\Slider;
+use App\Models\CustomerPolicy;
 use App\Models\User;
 use App\Models\Policy;
 use Carbon\Carbon;
@@ -20,11 +21,12 @@ class ApiCustomerController extends Controller
      */
     public function home(Request $request)
     {
+        // Fetch data for each policy type using the model
         $dummyData = [
-            'health_insurance' => [],
-            'general_insurance' => [], // Fixed spelling mistake here
-            'life_insurance' => [],
-            'claim' => [],
+            'life_insurance' => CustomerPolicy::where('policy_type', 'life_insurance')->get(),
+            'health_insurance' => CustomerPolicy::where('policy_type', 'health_insurance')->get(),
+            'general_insurance' => CustomerPolicy::where('policy_type', 'general_insurance')->get(),
+            'claim' => [], // Assuming this is another type of data you might fetch later
             'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
         ];
 
