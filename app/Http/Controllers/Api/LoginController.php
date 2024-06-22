@@ -38,7 +38,7 @@ class LoginController extends Controller
                 if (!$user->status) {
                     return response()->json(['message' => 'Your account is not active', 'status' => false, 'data' => []], 400);
                 }
-               $role= $user->getRoleNames();
+                $role = $user->getRoleNames();
                 $record = [
                     'name' => $user->name,
                     'email' => $user->email,
@@ -48,6 +48,8 @@ class LoginController extends Controller
                     'mobile_number' => $user->mobile_number,
                     'commission' => [],
                     'roles' => $role[0],
+                    'aadhaar_number' => $user->aadhaar_number,  // Add aadhaar_number
+                    'pan_number' => $user->pan_number           // Add pan_number
                 ];
 
                 $token = $user->createToken('MyApp')->accessToken;
