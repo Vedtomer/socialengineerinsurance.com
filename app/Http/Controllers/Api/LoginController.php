@@ -38,7 +38,7 @@ class LoginController extends Controller
                 if (!$user->status) {
                     return response()->json(['message' => 'Your account is not active', 'status' => false, 'data' => []], 400);
                 }
-
+               $role= $user->getRoleNames();
                 $record = [
                     'name' => $user->name,
                     'email' => $user->email,
@@ -47,7 +47,7 @@ class LoginController extends Controller
                     'address' => $user->address,
                     'mobile_number' => $user->mobile_number,
                     'commission' => [],
-                    'roles' => implode(', ', $user->getRoleNames()),
+                    'roles' => $role[0],
                 ];
 
                 $token = $user->createToken('MyApp')->accessToken;
