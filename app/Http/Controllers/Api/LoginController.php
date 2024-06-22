@@ -48,7 +48,7 @@ class LoginController extends Controller
                     'mobile_number' => $user->mobile_number,
                     'commission' => [],
                     'roles' => $role[0],
-                    'aadhaar_number' => $user->aadhaar_number,  // Add aadhaar_number
+                    'aadhar_number' => $user->aadhar_number,  // Add aadhaar_number
                     'pan_number' => $user->pan_number           // Add pan_number
                 ];
 
