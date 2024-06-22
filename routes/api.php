@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ApiCustomerController;
 
 Route::prefix('agent')->group(function () {
     Route::post('login', [LoginController::class, 'agentLogin']);
@@ -25,7 +26,9 @@ Route::prefix('agent')->group(function () {
 
 
     Route::middleware(['auth:api', 'role:customer'])->group(function () {
-        Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
+        Route::match(['get', 'post'], '/home', [ApiCustomerController::class, 'home']);
 
     });
 });
+
+
