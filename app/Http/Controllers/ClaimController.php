@@ -56,7 +56,7 @@ class ClaimController extends Controller
             'incident_date' => 'required|date',
             'amount_claimed' => 'nullable|numeric',
             'amount_approved' => 'nullable|numeric',
-            'status' => 'required|in:Pending,Approved,Rejected,Under Review,In Progress,Closed',
+            'status' => 'required',
         ]);
 
         // Create a new claim instance
