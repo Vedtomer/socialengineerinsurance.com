@@ -47,7 +47,7 @@ class LoginController extends Controller
                     'address' => $user->address,
                     'mobile_number' => $user->mobile_number,
                     'commission' => [],
-                    'roles' => $user->getRoleNames(),
+                    'roles' => implode(', ', $user->getRoleNames()),
                 ];
 
                 $token = $user->createToken('MyApp')->accessToken;
