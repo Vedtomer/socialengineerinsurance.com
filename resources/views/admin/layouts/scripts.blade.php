@@ -76,6 +76,11 @@
            placeholder: 'Select Policy',
            allowClear: true
        });
+
+       $('.customer').select2({
+           placeholder: 'Select Customer',
+           allowClear: true
+       });
    </script>
 
    <script>

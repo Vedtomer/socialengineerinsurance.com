@@ -94,6 +94,14 @@ if (!function_exists('getAgents')) {
     }
 }
 
+if (!function_exists('getCustomers')) {
+    function getCustomers()
+    {
+        return $agentData = User::role('customer')->orderBy('name', 'asc')->get();
+    }
+}
+
+
 if (!function_exists('getPolicy')) {
     function getPolicy()
     {

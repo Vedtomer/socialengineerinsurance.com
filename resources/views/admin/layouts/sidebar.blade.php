@@ -222,7 +222,7 @@
 
                <li class="menu">
                    <a href="#Customers" data-bs-toggle="collapse"
-                       aria-expanded="{{ ariaExpanded('agent-list') || ariaExpanded('commission-code') ? 'true' : 'false' }}"
+                       aria-expanded="{{ ariaExpanded('customers') || ariaExpanded('customer-policies') ? 'true' : 'false' }}"
                        class="dropdown-toggle">
 
                        <div class="">
@@ -243,13 +243,13 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('commission-code') ? 'show' : '' }}"
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('customer-policies') ? 'show' : '' }}"
                        id="Customers" data-bs-parent="#accordionExample">
                        <li class="menu {{ classActivePath('customers') }}">
                            <a href="{{ route('customers.index') }}"> Customer List </a>
                        </li>
-                       <li class="menu {{ classActivePath('commission-code') }}">
-                           <a href="{{ route('commission.code') }}">Customer Policy </a>
+                       <li class="menu {{ classActivePath('customer-policies') }}">
+                           <a href="{{ route('customer-policies.index') }}">Customer Policy </a>
                        </li>
                    </ul>
                </li>

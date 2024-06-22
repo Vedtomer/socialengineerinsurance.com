@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 class CustomerPolicy extends Model
 {
     use HasFactory;
-    protected $appends = ['policy_link'];
+
+    protected $appends = ['policy_link', 'user_name']; // Added 'user_name' to the appends array
     protected $table = 'customer_policies';
 
     protected $fillable = [
@@ -25,14 +26,9 @@ class CustomerPolicy extends Model
         'policy_type',
     ];
 
-    protected $casts = [
-        'policy_start_date' => 'date',
-        'policy_end_date' => 'date',
-    ];
-
+    // Accessor to get the policy link
     public function getPolicyLinkAttribute()
     {
-
         $data = ('/customer_policies') . "/" . $this->policy_no . '.pdf';
 
         if (Storage::disk('public')->exists($data)) {
@@ -40,5 +36,17 @@ class CustomerPolicy extends Model
         } else {
             return "";
         }
+    }
+
+    // Accessor to get the user's name
+    public function getUserNameAttribute()
+    {
+        return $this->user->name; // Assuming 'user' is the relationship method
+    }
+
+    // Relationship to fetch the associated user
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
