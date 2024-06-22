@@ -20,10 +20,9 @@ class ApiCustomerController extends Controller
      */
     public function home(Request $request)
     {
-
         $dummyData = [
             'health_insurance' => [],
-            'genral_insurance' => [],
+            'general_insurance' => [], // Fixed spelling mistake here
             'life_insurance' => [],
             'claim' => [],
             'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
@@ -35,6 +34,7 @@ class ApiCustomerController extends Controller
             'data' => $dummyData
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
