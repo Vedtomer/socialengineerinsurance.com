@@ -10,7 +10,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPolicyController;
-
+use App\Http\Controllers\InsuranceProductController;
 
 
 Route::get('/', function () {
@@ -95,6 +95,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('customers', CustomerController::class);
         Route::match(['get', 'post'], 'customers/{customer}/change-password', [CustomerController::class, 'changePassword'])->name('customers.changePassword');
         Route::resource('customer-policies', CustomerPolicyController::class);
+        Route::resource('insurance-products', InsuranceProductController::class);
 
     });
 });

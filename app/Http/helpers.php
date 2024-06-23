@@ -2,6 +2,7 @@
 
 use App\Models\Commission;
 use App\Models\Company;
+use App\Models\InsuranceProduct;
 use App\Models\User;
 use App\Models\Policy;
 use Carbon\Carbon;
@@ -100,6 +101,15 @@ if (!function_exists('getCustomers')) {
         return $agentData = User::role('customer')->orderBy('name', 'asc')->get();
     }
 }
+
+if (!function_exists('getInsuranceProducts')) {
+    function getInsuranceProducts()
+    {
+        return $agentData = InsuranceProduct::where('status',1)->orderBy('name', 'asc')->get();
+    }
+}
+
+
 
 
 if (!function_exists('getPolicy')) {

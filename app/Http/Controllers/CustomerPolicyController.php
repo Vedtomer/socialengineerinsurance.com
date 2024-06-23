@@ -33,7 +33,8 @@ class CustomerPolicyController extends Controller
         'premium' => 'required|numeric',
         'insurance_company' => 'required',
         'policy_type' => 'required',
-        'policy_document' => 'nullable|mimes:pdf|max:2048', // PDF file, max size 2MB (optional and nullable)
+        'product_id' => 'required',
+        'policy_document' => 'nullable|mimes:pdf|max:2048',
     ]);
 
     // Handle file upload for policy document
@@ -55,6 +56,9 @@ class CustomerPolicyController extends Controller
     $customerPolicy->premium = $validatedData['premium'];
     $customerPolicy->insurance_company = $validatedData['insurance_company'];
     $customerPolicy->policy_type = $validatedData['policy_type'];
+    $customerPolicy->product_id = $validatedData['product_id'];
+
+
 
     // Save the CustomerPolicy record
     $customerPolicy->save();
@@ -94,6 +98,7 @@ class CustomerPolicyController extends Controller
             'premium' => 'required|numeric',
             'insurance_company' => 'required',
             'policy_type' => 'required',
+            'product_id' => 'required',
         ]);
 
         $customerPolicy->update($validatedData);

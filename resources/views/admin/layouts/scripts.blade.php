@@ -81,6 +81,11 @@
            placeholder: 'Select Customer',
            allowClear: true
        });
+    //    $('.InsuranceProduct').select2({
+    //        placeholder: 'Select Insurance  Product',
+    //        allowClear: false
+    //    });
+
    </script>
 
    <script>

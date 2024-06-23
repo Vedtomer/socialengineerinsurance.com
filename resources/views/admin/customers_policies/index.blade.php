@@ -31,6 +31,8 @@
                                 <th>GST</th>
                                 <th>Premium</th>
                                 <th>Insurance Company</th>
+                                <th>Type</th>
+                                <th>Product</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -62,6 +64,8 @@
                                     <td>{{ $policy->gst }}</td>
                                     <td>{{ $policy->premium }}</td>
                                     <td>{{ $policy->insurance_company }}</td>
+                                    <td>{{ $policy->policy_type }}</td>
+                                    <td>{{ $policy->product_name }}</td>
                                     <td class="text-center">
                                         <ul class="table-controls">
                                             <li>

@@ -243,7 +243,7 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('customer-policies') ? 'show' : '' }}"
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('customer-policies') || ariaExpanded('insurance-products') ? 'show' : '' }}"
                        id="Customers" data-bs-parent="#accordionExample">
                        <li class="menu {{ classActivePath('customers') }}">
                            <a href="{{ route('customers.index') }}"> Customer List </a>
@@ -251,6 +251,9 @@
                        <li class="menu {{ classActivePath('customer-policies') }}">
                            <a href="{{ route('customer-policies.index') }}">Customer Policy </a>
                        </li>
+                       <li class="menu {{ classActivePath('insurance-products') }}">
+                        <a href="{{ route('insurance-products.index') }}">Insurance Product </a>
+                    </li>
                    </ul>
                </li>
 
