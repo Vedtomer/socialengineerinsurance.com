@@ -75,6 +75,12 @@
    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/dark/table/datatable/dt-global_style.css') }}">
    <!-- END PAGE LEVEL STYLES -->
 
+
+   <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/light/table/datatable/custom_dt_miscellaneous.css') }}">
+
+   <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
+
+
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {

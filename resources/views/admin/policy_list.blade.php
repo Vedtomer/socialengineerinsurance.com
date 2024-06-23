@@ -12,11 +12,12 @@
 
 
 
-    <div class="row layout-top-spacing">
+<div class="row">
 
-        <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-            <div class="widget-content widget-content-area br-8">
-                <table id="zero-config" class="table dt-table-hover" style="width:100%">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area">
+                <table id="html5-extension" class="table dt-table-hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>S No</th>
@@ -91,6 +92,6 @@
 
     </div>
 
-
+</div>
 
 @endsection

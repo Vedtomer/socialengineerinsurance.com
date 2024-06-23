@@ -23,12 +23,12 @@
 
 
    <!-- BEGIN PAGE LEVEL SCRIPTS -->
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/datatables.js') }}"></script>
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-   <script src="{{ asset('asset/admin/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/datatables.js') }}"></script> --}}
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script> --}}
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script> --}}
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script> --}}
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script> --}}
+   {{-- <script src="{{ asset('asset/admin/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script> --}}
    <!-- END PAGE LEVEL SCRIPTS -->
 
 
@@ -225,3 +225,12 @@
            $('#customer_name').val(customerName);
        });
    </script>
+
+
+
+
+  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
+  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
