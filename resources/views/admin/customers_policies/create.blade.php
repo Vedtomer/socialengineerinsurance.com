@@ -95,7 +95,7 @@
                             <label for="user_id" class="form-label">Insurance Product <span class="text-danger">*</span></label>
                             <select class="select2 form-select InsuranceProduct" id="user_id" name="product_id" aria-label="Select Customer" required>
                                 <option value="" disabled selected>Select Insurance Product</option>
-                                @foreach (getInsuranceProduct() as $customer)
+                                @foreach (getInsuranceProducts() as $customer)
                                     <option value="{{ $customer->id }}" {{ old('product_id') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                                 @endforeach
                             </select>
