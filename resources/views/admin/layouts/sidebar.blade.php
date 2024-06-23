@@ -222,7 +222,7 @@
 
                <li class="menu">
                    <a href="#Customers" data-bs-toggle="collapse"
-                       aria-expanded="{{ ariaExpanded('customers') || ariaExpanded('customer-policies') ? 'true' : 'false' }}"
+                       aria-expanded="{{ ariaExpanded('customers') || ariaExpanded('customer-policies') || ariaExpanded('insurance-products') ? 'true' : 'false' }}"
                        class="dropdown-toggle">
 
                        <div class="">
