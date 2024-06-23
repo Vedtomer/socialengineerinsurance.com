@@ -33,6 +33,7 @@
                             <th>Insurance Company</th>
                             <th>Payment By</th>
                             <th>Discount</th>
+                            <th>Payout</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +82,9 @@
 
                             <td>
                                 {{ $user->discount }}
+                            </td>
+                            <td>
+                                {{ $user->payout }}
                             </td>
                         </tr>
                     @endforeach
