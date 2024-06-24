@@ -15,6 +15,7 @@ Route::prefix('agent')->group(function () {
     // Routes restricted to users with the 'agent' role
     Route::middleware(['auth:api', 'role:agent|customer'])->group(function () {
         Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
+        Route::match(['get', 'post'], '/get-claim', [ApiController::class, 'getClaim']);
         Route::match(['get', 'post'], '/slider', [ApiController::class, 'getActiveSliders']);
         Route::match(['get', 'post'], '/getPolicy', [ApiController::class, 'getPolicy']);
         Route::match(['get', 'post'], '/getPointsSummary', [ApiController::class, 'getPointsSummary']);
