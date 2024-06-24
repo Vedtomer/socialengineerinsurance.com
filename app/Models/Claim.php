@@ -35,4 +35,15 @@ class Claim extends Model
     {
         return $this->belongsTo(User::class, 'users_id');
     }
+
+    // Customize toArray method to remove 'user' key and include 'agent_name' directly
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        // Remove 'user' key from the array
+        unset($array['user']);
+
+        return $array;
+    }
 }
