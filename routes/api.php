@@ -13,7 +13,7 @@ Route::prefix('agent')->group(function () {
     Route::middleware(['auth:api'])->post('logout', [LoginController::class, 'agentLogout']);
 
     // Routes restricted to users with the 'agent' role
-    Route::middleware(['auth:api', 'role:agent'])->group(function () {
+    Route::middleware(['auth:api', 'role:agent|customer'])->group(function () {
         Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
         Route::match(['get', 'post'], '/slider', [ApiController::class, 'getActiveSliders']);
         Route::match(['get', 'post'], '/getPolicy', [ApiController::class, 'getPolicy']);

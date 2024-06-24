@@ -12,20 +12,23 @@ use App\Models\Policy;
 use Carbon\Carbon;
 use App\Models\PointRedemption;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\CustomerPolicy;
+use Spatie\Permission\Traits\HasRoles;
 class ApiController extends Controller
 {
     public function index(Request $request)
-    {
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
+{
+    $startDate = $request->start_date;
+    $endDate = $request->end_date;
 
-        $startDate = !empty($startDate) ? Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay() : Carbon::now()->firstOfMonth();
-        $endDate = !empty($endDate) ? Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay() : Carbon::now();
+    $startDate = !empty($startDate) ? Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay() : Carbon::now()->firstOfMonth();
+    $endDate = !empty($endDate) ? Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay() : Carbon::now();
 
-        $agent = auth()->guard('api')->user();
-        $agent_id = $agent->id;
-        $cutAndPayTrue = $agent->cut_and_pay;
+    $user = auth()->guard('api')->user();
+
+    if ($user->hasRole('agent')) {
+        $agent_id = $user->id;
+        $cutAndPayTrue = $user->cut_and_pay;
 
         $totalCommission = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
             ->where('agent_id', $agent_id)
@@ -40,16 +43,13 @@ class ApiController extends Controller
             ->sum('premium');
 
         $transaction = Transaction::where('agent_id', $agent_id)
-            //->whereBetween('created_at', [$startDate, $endDate])
             ->sum('amount');
 
         $pendingPremium = Policy::where('payment_by', 'self')
             ->where('agent_id', $agent_id)
-            // ->whereBetween('policy_start_date', [$startDate, $endDate])
             ->sum('premium');
 
         $totalCommissionpendingPremium = Policy::where('agent_id', $agent_id)
-            //->whereBetween('policy_start_date', [$startDate, $endDate])
             ->sum('agent_commission');
 
         if ($cutAndPayTrue) {
@@ -58,7 +58,6 @@ class ApiController extends Controller
             $pendingPremium = $pendingPremium - $transaction;
         }
 
-
         $dummyData = [
             'total_commission' => round($totalCommission),
             'total_policy' => $totalPolicy,
@@ -66,13 +65,28 @@ class ApiController extends Controller
             'pending_premium' => round($pendingPremium),
             'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
         ];
-
+    } elseif ($user->hasRole('customer')) {
+        $dummyData = [
+            'life_insurance' => CustomerPolicy::where('policy_type', 'life_insurance')->get(),
+            'health_insurance' => CustomerPolicy::where('policy_type', 'health_insurance')->get(),
+            'general_insurance' => CustomerPolicy::where('policy_type', 'general_insurance')->get(),
+            'claim' => [], // Assuming this is another type of data you might fetch later
+            'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
+        ];
+    } else {
         return response()->json([
-            'message' => 'Success',
-            'status' => true,
-            'data' => $dummyData
-        ]);
+            'message' => 'Unauthorized',
+            'status' => false,
+        ], 403);
     }
+
+    return response()->json([
+        'message' => 'Success',
+        'status' => true,
+        'data' => $dummyData
+    ]);
+}
+
 
 
 
