@@ -49,10 +49,10 @@ class Claim extends Model
     public function getPolicyLinkAttribute()
     {
 
-        $data = ('/policies') . "/" . $this->policy_no . '.pdf';
+        $data = ('/policies') . "/" . $this->policy_number . '.pdf';
 
         if (Storage::disk('public')->exists($data)) {
-            return asset('/storage/policies') . "/" . $this->policy_no . '.pdf';
+            return asset('/storage/policies') . "/" . $this->policy_number . '.pdf';
         } else {
             return "";
         }
