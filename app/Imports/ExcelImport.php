@@ -34,11 +34,11 @@ class ExcelImport implements ToModel, WithHeadingRow
         $net_amount = isset($row['premium']) ? $row['premium'] - $row['premium'] * 0.1525 : null;
         $discount = $row['discount'] ?? null;
 
+
         // Consider 59% discount if discount is null or 0 for payout calculation
         $effectiveDiscount = (!isset($discount) || $discount == 0) ? 59 : $discount;
         $payout = (isset($net_amount) && isset($effectiveDiscount)) ? ($net_amount * $effectiveDiscount / 100) : null;
-
-        $payout = (isset($net_amount) && isset($discount) && $discount > 0) ? ($net_amount * $discount / 100) : null;
+        $payout = isset($payout) ? round($payout, 2) : null;
         $existingRecord->fill([
             'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
             'company_id' => isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null,
