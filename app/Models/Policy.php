@@ -25,8 +25,8 @@ class Policy extends Model
         'net_amount',
         'payment_by',
         'company_id',
-        'discount'
-        // Add other attributes here if needed
+        'discount',
+        'payout'
     ];
     protected $appends = ['policy_link'];
     public function agent(): BelongsTo
