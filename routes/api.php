@@ -25,10 +25,10 @@ Route::prefix('agent')->group(function () {
     });
 
 
-    Route::middleware(['auth:api', 'role:customer'])->group(function () {
-        Route::match(['get', 'post'], '/home', [ApiCustomerController::class, 'home']);
+    // Route::middleware(['auth:api', 'role:customer'])->group(function () {
+    //     Route::match(['get', 'post'], '/home', [ApiCustomerController::class, 'home']);
 
-    });
+    // });
 });
 
 
