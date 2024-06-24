@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Claim extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'policy_number',
         'claim_number',
@@ -21,7 +20,7 @@ class Claim extends Model
     ];
 
     // Append the 'agent_name' attribute
-    protected $appends = ['agent_name'];
+    protected $appends = ['agent_name','policy_link'];
 
     // Accessor method to get agent_name
     public function getAgentNameAttribute()
@@ -45,5 +44,17 @@ class Claim extends Model
         unset($array['user']);
 
         return $array;
+    }
+
+    public function getPolicyLinkAttribute()
+    {
+
+        $data = ('/policies') . "/" . $this->policy_no . '.pdf';
+
+        if (Storage::disk('public')->exists($data)) {
+            return asset('/storage/policies') . "/" . $this->policy_no . '.pdf';
+        } else {
+            return "";
+        }
     }
 }
