@@ -44,9 +44,7 @@ class AgentController extends Controller
 
     public function AgentList(Request $request)
     {
-        $start_date = $request->input('start_date', "") === "null" ? date('Y-m-01') : $request->input('start_date');
-        $end_date = $request->input('end_date', "") === "null" ? date('Y-m-t') : $request->input('end_date');
-        $agent_id = $request->input('agent_id', "") === "null" ? "" : $request->input('agent_id', "");
+        list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
         if (!isset($agent_id)) {
 
