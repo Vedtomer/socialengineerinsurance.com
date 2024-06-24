@@ -54,30 +54,8 @@ class AdminController extends Controller
     }
     public function dashboard(Request $request)
     {
-        // Get the 'agent_id' parameter from the request
-        $agent_id = $request->input('agent_id', "");
 
-        // Get the 'date' parameter from the request
-        $date = $request->input('date', "");
-
-        // Set default start and end dates
-        $start_date = Carbon::now()->firstOfMonth()->toDateString();
-        $end_date = Carbon::now()->toDateString();
-
-        // Check if 'date' parameter is "year"
-        if ($date == "year") {
-            // Set start date to April 1st of the current year
-            $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();
-            // Set end date to today's date
-            $end_date = Carbon::now()->toDateString();
-        } elseif (is_numeric($date)) {
-            // Get the month value from 'date' parameter
-            $month = intval($date);
-            // Set start date to the 1st of the specified month and the current year
-            $start_date = Carbon::create(null, $month, 1)->toDateString();
-            // Set end date to the last day of the specified month and the current year
-            $end_date = Carbon::create(null, $month, 1)->endOfMonth()->toDateString();
-        }
+        list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
         // Define the transaction and policy queries
         $transactions = Transaction::orderBy('id', 'ASC');

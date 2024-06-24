@@ -42,20 +42,15 @@ class PolicyController extends Controller
 
     public function PolicyList(Request $request)
     {
-        $start_date = $request->input('start_date', "") ===  "null"  ? "" : $request->input('start_date');
-        $end_date = $request->input('end_date', "") ===  "null"  ? "" : $request->input('end_date');
-        $agent_id = $request->input('agent_id', "") === "null" ? "" : $request->input('agent_id', "");
+        list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-
-        $start_date = $start_date ? Carbon::parse($start_date)->startOfDay() : now()->startOfMonth();
-        $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
+        $query = Policy::with('agent','company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
 
         if (!empty($agent_id)) {
-            $data = Policy::with('agent', 'company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc')->where('agent_id', $agent_id)->get();
-        } else {
-            $data = Policy::with('agent', 'company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc')->get();
+            $query->where('agent_id', $agent_id);
         }
 
+        $data = $query->get();
         $agentData = User::role('agent')->get();
 
         return view('admin.policy_list', ['data' => $data, 'agentData' => $agentData]);
@@ -121,7 +116,7 @@ class PolicyController extends Controller
         if ($end_date !== null) {
             $end_date = Carbon::parse($end_date);
         }
-        $policy = DB::table('policies')
+            $policy = DB::table('policies')
             ->whereBetween('policy_start_date', [$start_date, $end_date])
             ->leftJoin('agents', function ($join) {
                 $join->on('policies.agent_id', '=', 'agents.id');
@@ -142,14 +137,14 @@ class PolicyController extends Controller
             )
             ->groupBy('policies.agent_id', 'agents.name', 'agents.cut_and_pay') // Group by cut_and_pay as well
             ->havingRaw('balance > 0')
-            ->orderBy('balance', "desc")
+            ->orderBy('balance',"desc")
             ->get();
 
 
         // Calculate sum for each column
         $totalPremium = $policy->sum('total_premium');
         $totalAmount = $policy->sum('total_amount');
-        $totalBalance = $policy->sum('balance') - $policy->sum('total_agent_commission');
+        $totalBalance = $policy->sum('balance')-$policy->sum('total_agent_commission');
 
         $agentData = Agent::get();
         return view('admin.agent_pandding_blance', compact('policy', 'agentData', 'totalPremium', 'totalAmount', 'totalBalance'));

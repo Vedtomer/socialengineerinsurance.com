@@ -35,12 +35,18 @@ class Policy extends Model
     protected $appends = ['policy_link'];
     public function agent(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'agent_id');
+        return $this->belongsTo(User::class, 'agent_id')->withDefault([
+            'name' => 'No Agent Assigned',
+            // Add more default attributes as needed
+        ]);
     }
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id')->withDefault([
+            'name' => 'No Company Assigned',
+            // Add more default attributes as needed
+        ]);
     }
 
     public function getPolicyLinkAttribute()

@@ -6,6 +6,7 @@ use App\Models\InsuranceProduct;
 use App\Models\User;
 use App\Models\Policy;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Request;
 
 if (!function_exists('classActivePath')) {
     function classActivePath($path)
@@ -141,5 +142,28 @@ if (!function_exists('getMonthsFromAprilToCurrent')) {
             'currentYear' => $currentYear,
             'currentMonth' => $currentMonth
         ];
+    }
+}
+
+
+
+if (!function_exists('prepareDashboardData')) {
+    function prepareDashboardData(Request $request)
+    {
+        $agent_id = $request->input('agent_id', "");
+        $date = $request->input('date', "");
+
+        $start_date = Carbon::now()->firstOfMonth()->toDateString();
+        $end_date = Carbon::now()->toDateString();
+
+        if ($date == "year") {
+            $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();
+        } elseif (is_numeric($date)) {
+            $month = intval($date);
+            $start_date = Carbon::create(null, $month, 1)->toDateString();
+            $end_date = Carbon::create(null, $month, 1)->endOfMonth()->toDateString();
+        }
+
+        return [$agent_id, $start_date, $end_date];
     }
 }
