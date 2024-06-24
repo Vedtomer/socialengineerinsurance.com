@@ -598,9 +598,8 @@ class ApiController extends Controller
         $user = auth()->guard('api')->user();
 
         $data = Claim::where('users_id', $user->id)
-        ->whereBetween('claim_date', [$startDate, $endDate])
-        ->get(['claim_number', 'customer_name', 'policy_number', 'status', 'claim_date', 'incident_date', 'amount_claimed', 'amount_approved','policy_link']);
-
+            ->whereBetween('claim_date', [$startDate, $endDate])
+            ->get();
 
         return response()->json([
             'status' => true,
