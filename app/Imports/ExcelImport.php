@@ -31,8 +31,13 @@ class ExcelImport implements ToModel, WithHeadingRow
             $existingRecord->policy_start_date = $this->parseDate($row['policy_start_date']);
         }
         $existingRecord->policy_end_date = $existingRecord->policy_start_date->copy()->addYear();
-        $net_amount=isset($row['premium']) ? $row['premium'] - $row['premium'] * 0.1525 : null;
-        $discount=$row['discount'] ?? null;
+        $net_amount = isset($row['premium']) ? $row['premium'] - $row['premium'] * 0.1525 : null;
+        $discount = $row['discount'] ?? null;
+
+        // Consider 59% discount if discount is null or 0 for payout calculation
+        $effectiveDiscount = (!isset($discount) || $discount == 0) ? 59 : $discount;
+        $payout = (isset($net_amount) && isset($effectiveDiscount)) ? ($net_amount * $effectiveDiscount / 100) : null;
+
         $payout = (isset($net_amount) && isset($discount) && $discount > 0) ? ($net_amount * $discount / 100) : null;
         $existingRecord->fill([
             'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
@@ -44,7 +49,7 @@ class ExcelImport implements ToModel, WithHeadingRow
             'gst' => isset($row['premium']) ? $row['premium'] * 0.1525 : null,
             'agent_commission' => isset($row['commission_code']) ? getCommission($row['commission_code'], $row['premium']) : null,
             'net_amount' => $net_amount,
-            'payout'=>$payout,
+            'payout' => $payout,
         ]);
 
         $existingRecord->save();
