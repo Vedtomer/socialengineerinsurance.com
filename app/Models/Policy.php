@@ -3,12 +3,8 @@
 namespace App\Models;
 
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
-use PhpOffice\PhpSpreadsheet\Writer\Pdf;
-use function PHPUnit\Framework\returnSelf;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
