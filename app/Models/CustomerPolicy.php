@@ -27,6 +27,9 @@ class CustomerPolicy extends Model
         'product_id'
     ];
 
+    // Hide user and product relationships in JSON response
+    protected $hidden = ['user', 'product'];
+
     // Accessor to get the policy link
     public function getPolicyLinkAttribute()
     {
@@ -42,20 +45,14 @@ class CustomerPolicy extends Model
     // Accessor to get the user's name
     public function getUserNameAttribute()
     {
-        return $this->user->name; // Assuming 'user' is the relationship method
+        return $this->user ? $this->user->name : null;
     }
 
     // Accessor to get the product's name
     public function getProductNameAttribute()
     {
-        // Check if the 'product' relationship is loaded and not null
-        if ($this->product && $this->product->name) {
-            return $this->product->name;
-        } else {
-            return null; // Or return a default value or handle the error as needed
-        }
+        return $this->product ? $this->product->name : null;
     }
-
 
     // Relationship to fetch the associated user
     public function user()

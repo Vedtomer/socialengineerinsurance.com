@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class InsuranceProduct extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','status'];
+    protected $fillable = ['name', 'status'];
 
-
+    public function customer_policies()
+    {
+        return $this->hasMany(CustomerPolicy::class, 'product_id');
+    }
 }

@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use App\Models\PointRedemption;
 use Illuminate\Support\Facades\DB;
 use App\Models\CustomerPolicy;
+use App\Models\InsuranceProduct;
 use Spatie\Permission\Traits\HasRoles;
 
 class ApiController extends Controller
@@ -68,13 +69,16 @@ class ApiController extends Controller
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
             ];
         } elseif ($user->hasRole('customer')) {
-            $dummyData = [
-                'life_insurance' => CustomerPolicy::where('policy_type', 'life_insurance')->get(),
-                'health_insurance' => CustomerPolicy::where('policy_type', 'health_insurance')->get(),
-                'general_insurance' => CustomerPolicy::where('policy_type', 'general_insurance')->get(),
-                'claim' => [], // Assuming this is another type of data you might fetch later
-                'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
-            ];
+
+            $dummyData =InsuranceProduct::with('customer_policies')->get();
+
+            // $dummyData = [
+            //     'life_insurance' => CustomerPolicy::where('policy_type', 'life_insurance')->get(),
+            //     'health_insurance' => CustomerPolicy::where('policy_type', 'health_insurance')->get(),
+            //     'general_insurance' => CustomerPolicy::where('policy_type', 'general_insurance')->get(),
+            //     'claim' => [], // Assuming this is another type of data you might fetch later
+            //     'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
+            // ];
         } else {
             return response()->json([
                 'message' => 'Unauthorized',
