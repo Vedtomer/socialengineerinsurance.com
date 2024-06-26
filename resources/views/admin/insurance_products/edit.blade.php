@@ -29,6 +29,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="name">App Icon</label>
+                        <input type="file" class="form-control" name="icon" required>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="status">Status</label>
                         <select class="form-control" name="status" required>
                             <option value="1" {{ $insuranceProduct->status ? 'selected' : '' }}>Active</option>

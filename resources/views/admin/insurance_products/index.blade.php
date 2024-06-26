@@ -19,8 +19,9 @@
         <table class="table table-hover table-striped table-bordered">
             <thead>
                 <tr>
-
+                    <th scope="col">APP ICON</th>
                     <th scope="col">Name</th>
+
                     <th class="text-center" scope="col">Status</th>
                     <th class="text-center" scope="col">Action</th>
                 </tr>
@@ -28,7 +29,13 @@
             <tbody>
                 @forelse ($insuranceProducts as $company)
                 <tr>
-
+                    <td>
+                        <div class="media">
+                            <div class="avatar avatar-xl">
+                                <img alt="avatar" src="{{$company->icon}}" class="rounded-circle" />
+                            </div>
+                        </div>
+                    </td>
                     <td>{{$company->name}}</td>
 
 

@@ -14,4 +14,12 @@ class InsuranceProduct extends Model
     {
         return $this->hasMany(CustomerPolicy::class, 'product_id');
     }
+
+    public function getIconAttribute($value)
+    {
+        if ($value) {
+            return asset($value); // Assuming $value is stored as 'icon/filename.ext' in the database
+        }
+        return null;
+    }
 }

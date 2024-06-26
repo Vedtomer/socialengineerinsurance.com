@@ -27,6 +27,11 @@
                         <input type="text" class="form-control" name="name" required>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="name">App Icon</label>
+                        <input type="file" class="form-control" name="icon" required>
+                    </div>
+
 
 
                     <div class="mb-3">
