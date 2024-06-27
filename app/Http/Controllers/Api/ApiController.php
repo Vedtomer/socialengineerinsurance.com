@@ -70,15 +70,13 @@ class ApiController extends Controller
             ];
         } elseif ($user->hasRole('customer')) {
 
-            $dummyData =InsuranceProduct::with('customer_policies')->get();
+            $data =InsuranceProduct::with('customer_policies')->get();
 
-            // $dummyData = [
-            //     'life_insurance' => CustomerPolicy::where('policy_type', 'life_insurance')->get(),
-            //     'health_insurance' => CustomerPolicy::where('policy_type', 'health_insurance')->get(),
-            //     'general_insurance' => CustomerPolicy::where('policy_type', 'general_insurance')->get(),
-            //     'claim' => [], // Assuming this is another type of data you might fetch later
-            //     'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
-            // ];
+            $dummyData = [
+                'insurance' => $data,
+               // 'claim' => [], // Assuming this is another type of data you might fetch later
+                'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
+            ];
         } else {
             return response()->json([
                 'message' => 'Unauthorized',
