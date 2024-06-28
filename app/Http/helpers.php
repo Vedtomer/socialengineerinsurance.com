@@ -6,6 +6,8 @@ use App\Models\InsuranceProduct;
 use App\Models\User;
 use App\Models\Policy;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use PgSql\Lob;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!function_exists('classActivePath')) {
@@ -106,7 +108,7 @@ if (!function_exists('getCustomers')) {
 if (!function_exists('getInsuranceProducts')) {
     function getInsuranceProducts()
     {
-        return $agentData = InsuranceProduct::where('status',1)->orderBy('name', 'asc')->get();
+        return $agentData = InsuranceProduct::where('status', 1)->orderBy('name', 'asc')->get();
     }
 }
 
@@ -166,4 +168,31 @@ if (!function_exists('prepareDashboardData')) {
 
         return [$agent_id, $start_date, $end_date];
     }
+}
+
+
+ function prepareApiParameter(Request $request)
+{
+    $agent_id = auth()->guard('api')->id();
+    $start_date_input = $request->input('start_date', "");
+    $end_date_input = $request->input('end_date', "");
+
+    try {
+        if ($start_date_input && $end_date_input) {
+            $start_date = Carbon::createFromFormat('d-m-Y', $start_date_input)->toDateString();
+            $end_date = Carbon::createFromFormat('d-m-Y', $end_date_input)->toDateString();
+        } else {
+            $start_date = Carbon::now()->firstOfMonth()->toDateString();
+            $end_date = Carbon::now()->toDateString();
+        }
+    } catch (\Exception $e) {
+        Log::error('Error parsing date: ' . $e->getMessage());
+        $start_date = Carbon::now()->firstOfMonth()->toDateString();
+        $end_date = Carbon::now()->toDateString();
+    }
+
+    Log::info('Parsed start_date: ' . $start_date);
+    Log::info('Parsed end_date: ' . $end_date);
+
+    return [$agent_id, $start_date, $end_date];
 }

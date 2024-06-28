@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\CustomerPolicy;
 use App\Models\InsuranceProduct;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
@@ -70,11 +71,11 @@ class ApiController extends Controller
             ];
         } elseif ($user->hasRole('customer')) {
 
-            $data =InsuranceProduct::with('customer_policies')->get();
+            $data = InsuranceProduct::with('customer_policies')->get();
 
             $dummyData = [
                 'insurance' => $data,
-               // 'claim' => [], // Assuming this is another type of data you might fetch later
+                // 'claim' => [], // Assuming this is another type of data you might fetch later
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
             ];
         } else {
@@ -142,31 +143,6 @@ class ApiController extends Controller
     public function getPointsSummary(Request $request)
     {
         try {
-
-            $request->request->remove('start_date');
-            $request->request->remove('end_date');
-
-            // Determine the default start date (first day of the previous month)
-            $defaultStartDate = Carbon::now()->subMonth()->startOfMonth();
-
-            // Determine the start date from the request or use the default
-            $startDate = $request->filled('start_date')
-                ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
-                : $defaultStartDate;
-
-            // Determine the end date (last day of the previous month if no end_date is provided)
-            $defaultEndDate = $defaultStartDate->copy()->endOfMonth();
-            $endDate = $request->filled('end_date')
-                ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
-                : $defaultEndDate;
-
-            // Merge start_date and end_date into the request
-            $request->merge([
-                'start_date' => $startDate->format('d-m-Y'),
-                'end_date' => $endDate->format('d-m-Y'),
-            ]);
-
-            // Define validation rules
             $rules = [
                 'points' => 'required|numeric|min:0',
                 'start_date' => 'required|date_format:d-m-Y',
@@ -191,85 +167,60 @@ class ApiController extends Controller
     {
         $rules = [
             'points' => 'required|numeric|min:0',
-            // 'start_date' => 'required|date_format:d-m-Y',
+            'start_date' => 'required|date_format:d-m-Y',
         ];
 
         $messages = [
             'points.required' => 'Points are required.',
             'points.numeric' => 'Points must be a number.',
             'points.min' => 'Points must be at least :min.',
-            // 'start_date.required' => 'Please update App from App Store.',
-            // 'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
+            'start_date.required' => 'Start date is required.',
+            'start_date.date_format' => 'Start date must be in the format dd-mm-yyyy.',
         ];
 
-        // Determine the default start date (first day of the previous month)
-        $defaultStartDate = Carbon::now()->subMonth()->startOfMonth();
-
-        // Determine the start date from the request or use the default
-        $startDate = $request->filled('start_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
-            : $defaultStartDate;
-
-        // Determine the end date (last day of the previous month if no end_date is provided)
-        $defaultEndDate = $defaultStartDate->copy()->endOfMonth();
-        $endDate = $request->filled('end_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
-            : $defaultEndDate;
-
-        // Merge start_date and end_date into the request
-        $request->merge([
-            'start_date' => $startDate->format('d-m-Y'),
-            'end_date' => $endDate->format('d-m-Y'),
-        ]);
-
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first(), 'status' => false, 'data' => null]);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => false, 'data' => null], 422);
         }
 
         $points = $request->input('points');
+        list($agent_id, $start_date, $end_date) = prepareApiParameter($request);
+
+        // Fetch the agent
         $agent = auth()->guard('api')->user();
-        $agent_id = $agent->id;
-        $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date);
+        if (!$agent) {
+            return response()->json(['message' => 'Agent not found.', 'status' => false, 'data' => null], 404);
+        }
+
+        if ($agent->cut_and_pay) {
+            return response()->json(['message' => 'You are not allowed to redeem points because "cut and pay" is enabled for your account.', 'status' => false, 'data' => null], 403);
+        }
 
         $inProgressRedemption = PointRedemption::where('agent_id', $agent_id)
-            ->whereYear('policy_period_month_year', $startDate->year)
-            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->whereYear('policy_period_month_year', Carbon::parse($start_date)->year)
+            ->whereMonth('policy_period_month_year', Carbon::parse($start_date)->month)
             ->where('status', 'in_progress')
             ->exists();
 
         if ($inProgressRedemption) {
-            return response()->json(['message' => 'You already have a redemption in progress.', 'status' => false, 'data' => null]);
+            return response()->json(['message' => 'You already have a redemption in progress.', 'status' => false, 'data' => null], 409);
         }
 
-        if ($agent->cut_and_pay) {
-            return response()->json(['message' => 'You are not allowed to redeem points because "cut and pay" is enabled for your account.', 'status' => false, 'data' => null]);
-        }
-
-        $startDate = $request->filled('start_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
-            : Carbon::now()->startOfMonth();
-
-        $endDate = $request->filled('end_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
-            : Carbon::now()->endOfMonth();
-
-        $total = Policy::whereDate('policy_start_date', '>=', $startDate)
-            ->whereDate('policy_start_date', '<=', $endDate)
+        $total = Policy::whereDate('policy_start_date', '>=', $start_date)
+            ->whereDate('policy_start_date', '<=', $end_date)
             ->where('agent_id', $agent_id)
             ->sum('agent_commission');
 
         $redeemPoints = PointRedemption::where('agent_id', $agent_id)
-            ->whereYear('policy_period_month_year', $startDate->year)
-            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->whereYear('policy_period_month_year', Carbon::parse($start_date)->year)
+            ->whereMonth('policy_period_month_year', Carbon::parse($start_date)->month)
             ->whereIn('status', ['in_progress', 'completed'])
             ->sum('points');
 
         $remainingPoints = round($total - $redeemPoints);
 
-
         if ($points > $remainingPoints + 2) {
-            return response()->json(['message' => 'Redeemed points cannot exceed remaining points.', 'status' => false, 'data' => null]);
+            return response()->json(['message' => 'Redeemed points cannot exceed remaining points.', 'status' => false, 'data' => null], 400);
         }
 
         $tds = 0.05 * $points;
@@ -281,19 +232,16 @@ class ApiController extends Controller
         $pointRedemption->status = 'in_progress';
         $pointRedemption->tds = $tds;
         $pointRedemption->amount_to_be_paid = $amountToBePaid;
-        $pointRedemption->policy_period_month_year = Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfMonth()->format('Y-m-d');
+        $pointRedemption->policy_period_month_year = Carbon::createFromFormat('d-m-Y', $request->input('start_date'))->startOfMonth();
         $pointRedemption->save();
 
         $data = $this->points($request);
 
-        // $whatsapp = $this->sendWhatsAppMessage($points, $agent->name);
-
-        return response([
+        return response()->json([
             'status' => true,
             'data' => $data,
-            // 'whatsapp' => $whatsapp,
             'message' => 'Points redeemed successfully'
-        ]);
+        ], 200);
     }
 
     public function sendWhatsAppMessage($points, $agent)
@@ -320,41 +268,35 @@ class ApiController extends Controller
         }
     }
 
-    public function points($request)
+    public function points(Request $request)
     {
-        $startDate = $request->filled('start_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->start_date)->startOfDay()
-            : Carbon::now()->startOfMonth();
+        list($agent_id, $start_date, $end_date) = prepareApiParameter($request);
 
-        $endDate = $request->filled('end_date')
-            ? Carbon::createFromFormat('d-m-Y', $request->end_date)->endOfDay()
-            : Carbon::now()->endOfMonth();
-
-        $agent_id = auth()->guard('api')->id();
-
-        $royalData = Policy::whereDate('policy_start_date', '>=', $startDate)
-            ->whereDate('policy_start_date', '<=', $endDate)
+        $royalData = Policy::whereDate('policy_start_date', '>=', $start_date)
+            ->whereDate('policy_start_date', '<=', $end_date)
             ->where('agent_id', $agent_id)
             ->select('policy_no', 'policy_start_date', 'policy_end_date', 'customername', 'premium', 'agent_commission', 'insurance_company')
             ->get();
 
         $totalAgentCommission = $royalData->sum('agent_commission');
 
+        $start_date_carbon = Carbon::parse($start_date);
+
         $reedeemPoints = PointRedemption::where('agent_id', $agent_id)
-            ->whereYear('policy_period_month_year', $startDate->year)
-            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->whereYear('policy_period_month_year', $start_date_carbon->year)
+            ->whereMonth('policy_period_month_year', $start_date_carbon->month)
             ->whereIn('status', ['in_progress', 'completed'])
             ->sum('points');
 
         $totalCompletedCommission = PointRedemption::where('agent_id', $agent_id)
-            ->whereYear('policy_period_month_year', $startDate->year)
-            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->whereYear('policy_period_month_year', $start_date_carbon->year)
+            ->whereMonth('policy_period_month_year', $start_date_carbon->month)
             ->where('status', 'completed')
             ->sum('points');
 
         $totalInProgressCommission = PointRedemption::where('agent_id', $agent_id)
-            ->whereYear('policy_period_month_year', $startDate->year)
-            ->whereMonth('policy_period_month_year', $startDate->month)
+            ->whereYear('policy_period_month_year', $start_date_carbon->year)
+            ->whereMonth('policy_period_month_year', $start_date_carbon->month)
             ->where('status', 'in_progress')
             ->sum('points');
 
