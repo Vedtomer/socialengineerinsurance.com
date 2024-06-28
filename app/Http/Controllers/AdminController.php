@@ -136,7 +136,7 @@ class AdminController extends Controller
         // Query the policies table to get the sum of premiums and count of records for the active companies
         $policyData = Policy::whereIn('company_id', $companyIds)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
-            ->selectRaw('company_id, SUM(premium) as total_premium, COUNT(*) as total_policies')
+            ->selectRaw('company_id, SUM(net_amount) as total_premium, COUNT(*) as total_policies')
             ->groupBy('company_id')
             ->get();
 
