@@ -17,55 +17,57 @@ class LoginController extends Controller
     public function agentlogin(Request $request)
     {
         try {
-            $email = $request->input('email');
+            $emailOrMobile = $request->input('email');
             $password = $request->input('password');
 
-            if (empty($password) || empty($email)) {
-                return response()->json(['message' => 'Password or email missing', 'status' => false, 'data' => []], 400);
+            if (empty($password) || empty($emailOrMobile)) {
+                return response()->json(['message' => 'Password or email/mobile number missing', 'status' => false, 'data' => []], 400);
             }
 
-            $credentials = $request->only('email', 'password');
-            $emailCredentials = $credentials;
-            $mobileCredentials = [
-                'mobile_number' => $email,
-                'password' => $password
-            ];
+            $users = User::where('email', $emailOrMobile)
+                        ->orWhere('mobile_number', $emailOrMobile)
+                        ->get();
 
-            if (Auth::attempt($emailCredentials) || Auth::attempt($mobileCredentials)) {
-                $user = Auth::user();
+            if ($users->isEmpty()) {
+                return response()->json(['message' => 'User not found', 'status' => false, 'data' => []], 404);
+            }
 
+            foreach ($users as $user) {
+                if (Hash::check($password, $user->password)) {
+                    if (!$user->status) {
+                        return response()->json(['message' => 'Your account is not active', 'status' => false, 'data' => []], 400);
+                    }
 
-                if (!$user->status) {
-                    return response()->json(['message' => 'Your account is not active', 'status' => false, 'data' => []], 400);
+                    $role = $user->getRoleNames();
+                    $record = [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'state' => $user->state,
+                        'city' => $user->city,
+                        'address' => $user->address,
+                        'mobile_number' => $user->mobile_number,
+                        'commission' => [],
+                        'roles' => $role[0],
+                        'aadhar_number' => $user->aadhar_number,
+                        'pan_number' => $user->pan_number
+                    ];
+
+                    $token = $user->createToken('MyApp')->accessToken;
+
+                    return response()->json([
+                        'status' => true,
+                        'data' => $record,
+                        'token' => $token
+                    ], 200);
                 }
-                $role = $user->getRoleNames();
-                $record = [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'state' => $user->state,
-                    'city' => $user->city,
-                    'address' => $user->address,
-                    'mobile_number' => $user->mobile_number,
-                    'commission' => [],
-                    'roles' => $role[0],
-                    'aadhar_number' => $user->aadhar_number,  // Add aadhaar_number
-                    'pan_number' => $user->pan_number           // Add pan_number
-                ];
-
-                $token = $user->createToken('MyApp')->accessToken;
-
-                return response()->json([
-                    'status' => true,
-                    'data' => $record,
-                    'token' => $token
-                ], 200);
             }
 
-            return response()->json(['message' => 'User not found', 'status' => false, 'data' => []], 404);
+            return response()->json(['message' => 'Invalid credentials', 'status' => false, 'data' => []], 401);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => false, 'data' => []], 500);
         }
     }
+
 
 
     public function agentSignUp(Request $request)
