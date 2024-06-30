@@ -106,7 +106,7 @@ class AdminController extends Controller
         $policyCount = $policy->count('policy_no');
         $amount = $transactions->sum('amount');
         $status = $policy->pluck('payment_by');
-        $premiums = $policy->sum('premium');
+        $premiums = $policy->sum('net_amount');
 
         $premium = Policy::where('payment_by', 'SELF')->sum('premium');
 
