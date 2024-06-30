@@ -19,35 +19,31 @@ class ExcelImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        $existingRecord = Policy::firstOrNew([
-            'policy_no' => $row['policy_no'],
-        ]);
+        $existingRecord = Policy::firstOrNew(['policy_no' => $row['policy_no']]);
 
         Log::info($row);
 
-        if (!empty($this->importDate)) {
-            $existingRecord->policy_start_date = Carbon::parse($this->importDate);
-        } else {
-            $existingRecord->policy_start_date = $this->parseDate($row['policy_start_date']);
-        }
+        $existingRecord->policy_start_date = !empty($this->importDate)
+            ? Carbon::parse($this->importDate)
+            : $this->parseDate($row['policy_start_date']);
+
         $existingRecord->policy_end_date = $existingRecord->policy_start_date->copy()->addYear();
-        $net_amount = isset($row['premium']) ? $row['premium'] - $row['premium'] * 0.1525 : null;
+
+        $premium = $row['premium'] ?? null;
+        $net_amount = $premium ? $premium * 0.8475 : null;
         $discount = $row['discount'] ?? null;
+        $effectiveDiscount = $row['payout'] ?? null;
+        $payout = ($net_amount && $effectiveDiscount) ? round($net_amount * $effectiveDiscount / 100, 2) : null;
 
-
-        // Consider 59% discount if discount is null or 0 for payout calculation
-        $effectiveDiscount = (!isset($discount) || $discount == 0) ? 59 : $discount;
-        $payout = (isset($net_amount) && isset($effectiveDiscount)) ? ($net_amount * $effectiveDiscount / 100) : null;
-        $payout = isset($payout) ? round($payout, 2) : null;
         $existingRecord->fill([
             'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
             'company_id' => isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null,
             'customername' => $row['customername'] ?? null,
             'discount' => $discount,
             'agent_id' => isset($row['commission_code']) ? getAgentId($row['commission_code']) : null,
-            'premium' => $row['premium'] ?? null,
-            'gst' => isset($row['premium']) ? $row['premium'] * 0.1525 : null,
-            'agent_commission' => isset($row['commission_code']) ? getCommission($row['commission_code'], $row['premium']) : null,
+            'premium' => $premium,
+            'gst' => $premium ? $premium * 0.1525 : null,
+            'agent_commission' => isset($row['commission_code']) ? getCommission($row['commission_code'], $premium) : null,
             'net_amount' => $net_amount,
             'payout' => $payout,
         ]);

@@ -52,6 +52,8 @@ class AdminController extends Controller
 
         return redirect()->route('login')->with('error', 'Invalid login credentials');
     }
+
+
     public function dashboard(Request $request)
     {
 
@@ -107,6 +109,7 @@ class AdminController extends Controller
         $amount = $transactions->sum('amount');
         $status = $policy->pluck('payment_by');
         $premiums = $policy->sum('net_amount');
+        $payout = $policy->sum('payout');
 
         $premium = Policy::where('payment_by', 'SELF')->sum('premium');
 
@@ -136,7 +139,7 @@ class AdminController extends Controller
         // Query the policies table to get the sum of premiums and count of records for the active companies
         $policyData = Policy::whereIn('company_id', $companyIds)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
-            ->selectRaw('company_id, SUM(net_amount) as total_premium, COUNT(*) as total_policies')
+            ->selectRaw('company_id, SUM(net_amount) as total_premium, COUNT(*) as total_policies,SUM(payout) as total_payout')
             ->groupBy('company_id')
             ->get();
 
@@ -145,12 +148,13 @@ class AdminController extends Controller
             $policy = $policyData->firstWhere('company_id', $company->id);
             $company->total_premium = $policy ? $policy->total_premium : 0;
             $company->total_policies = $policy ? $policy->total_policies : 0;
+            $company->total_payout = $policy ? $policy->total_payout : 0;
             return $company;
         });
 
 
         $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'datausers', 'policy', 'companies');
+        $data = compact('agent', 'policyCount', 'paymentby', 'premiums','payout','datausers', 'policy', 'companies');
         return view('admin.dashboard', ['data' => $data]);
     }
 
