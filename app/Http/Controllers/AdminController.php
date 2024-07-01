@@ -56,7 +56,6 @@ class AdminController extends Controller
 
     public function dashboard(Request $request)
     {
-
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
         // Define the transaction and policy queries
@@ -96,23 +95,20 @@ class AdminController extends Controller
             ->groupBy('insurance_company')
             ->pluck('count', 'insurance_company');
 
-        $royalCount = $counts->get('ROYAL', 0);
-        $tataCount = $counts->get('TATA', 0) + $counts->get('tata', 0);
-        $futureCount = $counts->get('FUTURE', 0);
-
+        $royalCount = round($counts->get('ROYAL', 0));
+        $tataCount = round($counts->get('TATA', 0) + $counts->get('tata', 0));
+        $futureCount = round($counts->get('FUTURE', 0));
 
         $transaction = $transactions->get();
-
         $policy = $policy->get();
 
-        $policyCount = $policy->count('policy_no');
-        $amount = $transactions->sum('amount');
+        $policyCount = round($policy->count('policy_no'));
+        $amount = round($transactions->sum('amount'));
         $status = $policy->pluck('payment_by');
-        $premiums = $policy->sum('net_amount');
-        $payout = $policy->sum('payout');
+        $premiums = round($policy->sum('net_amount'));
+        $payout = round($policy->sum('payout'));
 
-        $premium = Policy::where('payment_by', 'SELF')->sum('premium');
-
+        $premium = round(Policy::where('payment_by', 'SELF')->sum('premium'));
 
         $agentIdsWithCutAndPay = User::where('cut_and_pay', 1)->pluck('id');
 
@@ -127,9 +123,8 @@ class AdminController extends Controller
             $sumCommission->where('agent_id', $agent_id);
         }
 
-        $sumCommissioncutandpay = $sumCommission->sum('agent_commission');
-        $paymentby = $premium - $amount - $sumCommissioncutandpay;
-
+        $sumCommissioncutandpay = round($sumCommission->sum('agent_commission'));
+        $paymentby = round($premium - $amount - $sumCommissioncutandpay);
 
         $companies = Company::where('status', 1)->get();
 
@@ -139,22 +134,21 @@ class AdminController extends Controller
         // Query the policies table to get the sum of premiums and count of records for the active companies
         $policyData = Policy::whereIn('company_id', $companyIds)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
-            ->selectRaw('company_id, SUM(net_amount) as total_premium, COUNT(*) as total_policies,SUM(payout) as total_payout')
+            ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
             ->groupBy('company_id')
             ->get();
 
         // Combine the company data with the policy data
         $companies = $companies->map(function ($company) use ($policyData) {
             $policy = $policyData->firstWhere('company_id', $company->id);
-            $company->total_premium = $policy ? $policy->total_premium : 0;
-            $company->total_policies = $policy ? $policy->total_policies : 0;
-            $company->total_payout = $policy ? $policy->total_payout : 0;
+            $company->total_premium = $policy ? round($policy->total_premium) : 0;
+            $company->total_policies = $policy ? round($policy->total_policies) : 0;
+            $company->total_payout = $policy ? round($policy->total_payout) : 0;
             return $company;
         });
 
-
         $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums','payout','datausers', 'policy', 'companies');
+        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'payout', 'datausers', 'policy', 'companies');
         return view('admin.dashboard', ['data' => $data]);
     }
 
