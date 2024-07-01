@@ -27,15 +27,20 @@ class ConvertNullToEmptyString
     }
 
     /**
-     * Recursively convert null values to empty strings in an array.
+     * Recursively convert null values to empty strings and numbers to integers in an array.
      *
      * @param array|null $array
-     * @return array|string
+     * @return array|string|int
      */
     protected function convertNullToEmptyString($array)
     {
         if (!is_array($array)) {
-            return $array === null ? '' : $array;
+            if ($array === null) {
+                return '';
+            } elseif (is_numeric($array)) {
+                return (int) $array;
+            }
+            return $array;
         }
 
         foreach ($array as $key => $value) {
