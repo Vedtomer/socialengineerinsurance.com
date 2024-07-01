@@ -17,53 +17,31 @@ class ConvertNullToEmptyString
     {
         $response = $next($request);
 
-        $content = $response->getContent();
-
-        // Try to decode JSON content
-        $decoded = json_decode($content, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            // If it's valid JSON, process it
-            $processed = $this->convertNullToEmptyString($decoded);
-            $response->setContent(json_encode($processed));
-        } else {
-            // If it's not JSON, process it as a string
-            $processed = $this->convertNullToEmptyString($content);
-            $response->setContent($processed);
+        if ($response->headers->get('Content-Type') === 'application/json') {
+            $content = json_decode($response->getContent(), true);
+            $content = $this->convertNullToEmptyString($content);
+            $response->setContent(json_encode($content));
         }
 
         return $response;
     }
 
     /**
-     * Recursively convert null values to empty strings and whole numbers to integers.
+     * Recursively convert null values to empty strings in an array.
      *
-     * @param mixed $data
-     * @return mixed
+     * @param array|null $array
+     * @return array|string
      */
-    protected function convertNullToEmptyString($data)
+    protected function convertNullToEmptyString($array)
     {
-        if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key] = $this->convertNullToEmptyString($value);
-            }
-        } elseif (is_null($data)) {
-            return '';
-        } elseif (is_numeric($data)) {
-            $float_value = (float) $data;
-            if ($float_value == (int) $float_value) {
-                return (int) $float_value;
-            }
-            return $float_value;
-        } elseif (is_string($data)) {
-            // Process string content (e.g., HTML)
-            return preg_replace_callback('/\bnull\b|\b\d+(\.\d+)?\b/', function($matches) {
-                if ($matches[0] === 'null') return '';
-                $float_value = (float) $matches[0];
-                return ($float_value == (int) $float_value) ? (int) $float_value : $float_value;
-            }, $data);
+        if (!is_array($array)) {
+            return $array === null ? '' : $array;
         }
 
-        return $data;
+        foreach ($array as $key => $value) {
+            $array[$key] = $this->convertNullToEmptyString($value);
+        }
+
+        return $array;
     }
 }
