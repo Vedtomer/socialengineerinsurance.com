@@ -68,6 +68,9 @@ class ApiController extends Controller
                 'total_premium_paid' => round($totalPremiumPaid),
                 'pending_premium' => round($pendingPremium),
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
+                'claim' => Claim::where('users_id', $user->id)
+                ->whereBetween('claim_date', [$startDate, $endDate])
+                ->get(),
             ];
         } elseif ($user->hasRole('customer')) {
 
@@ -75,7 +78,9 @@ class ApiController extends Controller
 
             $dummyData = [
                 'insurance' => $data,
-                // 'claim' => [], // Assuming this is another type of data you might fetch later
+                'claim' => Claim::where('users_id', $user->id)
+                ->whereBetween('claim_date', [$startDate, $endDate])
+                ->get(),
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
             ];
         } else {
