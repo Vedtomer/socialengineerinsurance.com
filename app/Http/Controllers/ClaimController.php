@@ -80,7 +80,7 @@ class ClaimController extends Controller
         $claim->status = $request->input('status', 'Pending'); // Default status is 'Pending'
 
         if (!empty($request->query('policy-number'))) {
-            $claim->is_policy_exist = 0;
+            $claim->policy_exist = 0;
         }
 
         // Save the claim
