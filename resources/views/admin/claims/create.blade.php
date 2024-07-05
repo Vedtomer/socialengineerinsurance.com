@@ -28,8 +28,12 @@
                         <div class="col-md-12">
                             <label for="policy_number" class="form-label">Policy Number <span
                                     class="text-danger">*</span></label>
+                                    @if (empty($_GET['policy-number']))
                             <a href="{{ route('claims.create') }}?policy-number=1" class="text-primary ms-2">Click here if
                                 not found policy</a>
+                                @else
+                                <a href="{{ route('claims.create') }}" class="text-primary ms-2">Click here for search Policy</a>
+                                @endif
 
                             @if (empty($_GET['policy-number']))
                                 <input type="hidden" id="users_id" name="users_id">
