@@ -49,6 +49,9 @@ class ClaimController extends Controller
 
     public function store(Request $request)
     {
+        // Remove the early return statement
+        // return $request;
+
         $request->validate([
             'policy_number' => 'required',
             'claim_number' => 'required',
@@ -60,13 +63,8 @@ class ClaimController extends Controller
             'status' => 'required',
         ]);
 
-
-
         // Create a new claim instance
         $claim = new Claim();
-
-
-
 
         // Assign values from the request
         $claim->policy_number = $request->input('policy_number');
@@ -79,7 +77,8 @@ class ClaimController extends Controller
         $claim->amount_approved = $request->input('amount_approved');
         $claim->status = $request->input('status', 'Pending'); // Default status is 'Pending'
 
-        if (!empty($request->query('policy-number'))) {
+
+        if (!empty($request->policy_exist)) {
             $claim->policy_exist = 0;
         }
 

@@ -36,7 +36,8 @@
                                 @endif
 
                             @if (empty($_GET['policy-number']))
-                                <input type="hidden" id="users_id" name="users_id">
+
+                                 <input type="hidden" id="users_id" name="users_id">
                                 <select class="select2 form-select Policy_Number" id="policy_number" name="policy_number"
                                     aria-label="Default select example" required>
                                     <option value=""></option>
@@ -50,6 +51,7 @@
                                     @endforeach
                                 </select>
                             @else
+                            <input type="hidden" name="policy_exist" value="1">
                                 <input type="text" class="form-control" id="policy_number" name="policy_number"
                                     value="{{ old('policy_number') }}">
                             @endif
