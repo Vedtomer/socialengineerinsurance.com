@@ -22,32 +22,66 @@
                     </div>
                     <form class="row g-3" action="{{ route('claims.store') }}" method="post" autocomplete="off">
                         @csrf
-                        <input type="hidden" id="users_id" name="users_id">
+
+
+
                         <div class="col-md-12">
                             <label for="policy_number" class="form-label">Policy Number <span
                                     class="text-danger">*</span></label>
-                            <select class="select2 form-select Policy_Number" id="policy_number" name="policy_number"
-                                aria-label="Default select example" required>
-                                <option value=""></option>
-                                @foreach (getPolicy() as $item)
-                                    <option value="{{ $item['policy_no'] }}" data-customername="{{ $item['customername'] }}"
-                                        data-agent_name="{{ $item['agent_name'] }}" data-users_id="{{ $item['agent_id'] }}" >
-                                        {{ $item['policy_no'] }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <a href="{{ route('claims.create') }}?policy-number=1" class="text-primary ms-2">Click here if
+                                not found policy</a>
+
+                            @if (empty($_GET['policy-number']))
+                                <input type="hidden" id="users_id" name="users_id">
+                                <select class="select2 form-select Policy_Number" id="policy_number" name="policy_number"
+                                    aria-label="Default select example" required>
+                                    <option value=""></option>
+                                    @foreach (getPolicy() as $item)
+                                        <option value="{{ $item['policy_no'] }}"
+                                            data-customername="{{ $item['customername'] }}"
+                                            data-agent_name="{{ $item['agent_name'] }}"
+                                            data-users_id="{{ $item['agent_id'] }}">
+                                            {{ $item['policy_no'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <input type="text" class="form-control" id="policy_number" name="policy_number"
+                                    value="{{ old('policy_number') }}">
+                            @endif
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="agent" class="form-label">Agent</label>
-                            <input type="text" class="form-control" id="agent_name" name="agent_name"
-                                value="{{ old('agent_name') }}" readonly>
-                        </div>
+
+
+
+                        @if (empty($_GET['policy-number']))
+                            <div class="col-md-6">
+                                <label for="agent" class="form-label">Agent</label>
+                                <input type="text" class="form-control" id="agent_name" name="agent_name"
+                                    value="{{ old('agent_name') }}" readonly>
+                            </div>
+                        @else
+                            <div class="col-md-6">
+                                <label for="policy_number" class="form-label">Select Agent <span
+                                        class="text-danger">*</span></label>
+
+                                <select class="select2 form-select js-example-basic-single" id="policy_number"
+                                    name="users_id" aria-label="Default select example" required>
+                                    <option value=""></option>
+                                    @foreach (getAgents() as $item)
+                                        <option value="{{ $item['id'] }}">
+                                            {{ $item['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        @endif
 
                         <div class="col-md-6">
                             <label for="customer_name" class="form-label">Customer Name</label>
                             <input type="text" class="form-control" id="customer_name" name="customer_name"
-                                value="{{ old('customer_name') }}" readonly>
+                                value="{{ old('customer_name') }}" @if (empty($_GET['policy-number'])) readonly @endif>
                         </div>
                         <div class="col-md-12">
                             <label for="claim_number" class="form-label">Claim Number</label>
@@ -80,14 +114,21 @@
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
                                 <option value="">Select Status</option>
-                                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                                <option value="in_review" {{ old('status') == 'in_review' ? 'selected' : '' }}>In Review</option>
+                                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved
+                                </option>
+                                <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected
+                                </option>
+                                <option value="in_review" {{ old('status') == 'in_review' ? 'selected' : '' }}>In Review
+                                </option>
                                 <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Closed</option>
-                                <option value="awaiting_documents" {{ old('status') == 'awaiting_documents' ? 'selected' : '' }}>Awaiting Documents</option>
+                                <option value="awaiting_documents"
+                                    {{ old('status') == 'awaiting_documents' ? 'selected' : '' }}>Awaiting Documents
+                                </option>
                                 <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
-                                <option value="escalated" {{ old('status') == 'escalated' ? 'selected' : '' }}>Escalated</option>
+                                <option value="escalated" {{ old('status') == 'escalated' ? 'selected' : '' }}>Escalated
+                                </option>
                             </select>
                         </div>
 
@@ -100,5 +141,7 @@
             </div>
         </div>
     </div>
+
+
 
 @endsection
