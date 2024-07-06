@@ -74,9 +74,10 @@ class ApiController extends Controller
             ];
         } elseif ($user->hasRole('customer')) {
 
-            $data = InsuranceProduct::with(['customer_policies' => function($query) use ($agent_id) {
+            $data = InsuranceProduct::whereHas('customer_policies', function ($query) use ($agent_id) {
                 $query->where('user_id', $agent_id);
-            }])->get();
+            })->with('customer_policies')->get();
+
 
 
             $dummyData = [
