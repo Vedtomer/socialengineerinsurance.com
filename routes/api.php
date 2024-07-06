@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\ApiCustomerController;
 
 Route::prefix('agent')->group(function () {
     Route::post('login', [LoginController::class, 'agentLogin']);
-    Route::post('signup', [LoginController::class, 'agentSignUp']);
+    Route::post('signup', [LoginController::class, 'customerSignUp']);
 
     // Logout route accessible to any authenticated user
     Route::middleware(['auth:api'])->post('logout', [LoginController::class, 'agentLogout']);

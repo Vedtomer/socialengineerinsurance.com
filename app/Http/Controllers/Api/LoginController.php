@@ -3,12 +3,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -25,8 +25,8 @@ class LoginController extends Controller
             }
 
             $users = User::where('email', $emailOrMobile)
-                        ->orWhere('mobile_number', $emailOrMobile)
-                        ->get();
+                ->orWhere('mobile_number', $emailOrMobile)
+                ->get();
 
             if ($users->isEmpty()) {
                 return response()->json(['message' => 'User not found', 'status' => false, 'data' => []], 404);
@@ -70,14 +70,13 @@ class LoginController extends Controller
 
 
 
-    public function agentSignUp(Request $request)
+    public function customerSignUp(Request $request)
     {
-        // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:agents',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'mobile_number' => 'required|string|max:15|unique:agents',
+            'mobile_number' => 'required|string|max:15|unique:users',
             'address' => 'nullable|string|max:255', // Assuming address is optional
         ]);
 
@@ -89,26 +88,45 @@ class LoginController extends Controller
 
         try {
             // Create new agent
-            $agent = new Agent();
-            $agent->name = $request->name;
-            $agent->email = $request->email;
-            $agent->password = Hash::make($request->password);
-            $agent->address = $request->address;
-            $agent->mobile_number = $request->mobile_number;
-            $agent->save();
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->address = $request->address;
+            $user->mobile_number = $request->mobile_number;
+            $user->save();
 
-            // Generate a token for the newly created agent
-            $token = $agent->createToken('MyApp')->accessToken;
+            // Assign the 'customer' role to the new user
+            $user->assignRole('customer');
+            $role = $user->getRoleNames();
+            $token = $user->createToken('MyApp')->accessToken;
+
+            $role = $user->getRoleNames();
+            $record = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'state' => $user->state,
+                'city' => $user->city,
+                'address' => $user->address,
+                'mobile_number' => $user->mobile_number,
+                'commission' => [],
+                'roles' => $role[0],
+                'aadhar_number' => $user->aadhar_number,
+                'pan_number' => $user->pan_number
+            ];
+
 
             return response()->json([
                 'status' => true,
-                'data' => $agent,
+                'data' => $record,
                 'token' => $token
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => false], 500);
         }
     }
+
+
 
     public function agentlogout()
     {
