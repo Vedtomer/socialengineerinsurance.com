@@ -15,6 +15,7 @@ use App\Models\PointRedemption;
 use Illuminate\Support\Facades\DB;
 use App\Models\CustomerPolicy;
 use App\Models\InsuranceProduct;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Validator;
 
@@ -559,5 +560,19 @@ class ApiController extends Controller
             'data' => $data,
             'message' => 'get claim listing successfully'
         ]);
+    }
+
+    public function approvePointsRedemption(Request $request)
+    {
+        // Log all received request information
+        Log::info('Received points redemption approval request', [
+            'request_data' => $request->all(),
+        ]);
+
+        // Your logic for approving points redemption goes here
+        // Example: Update database, send notifications, etc.
+
+        // Return JSON response with status true
+        return response()->json(['status' => true, 'message' => 'Points Redemption Approved Successfully']);
     }
 }
