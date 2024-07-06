@@ -29,9 +29,9 @@ class ApiController extends Controller
         $endDate = !empty($endDate) ? Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay() : Carbon::now();
 
         $user = auth()->guard('api')->user();
-
+        $agent_id = $user->id;
         if ($user->hasRole('agent')) {
-            $agent_id = $user->id;
+
             $cutAndPayTrue = $user->cut_and_pay;
 
             $totalCommission = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
@@ -74,7 +74,10 @@ class ApiController extends Controller
             ];
         } elseif ($user->hasRole('customer')) {
 
-            $data = InsuranceProduct::with('customer_policies')->get();
+            $data = InsuranceProduct::with(['customer_policies' => function($query) use ($agent_id) {
+                $query->where('user_id', $agent_id);
+            }])->get();
+
 
             $dummyData = [
                 'insurance' => $data,
