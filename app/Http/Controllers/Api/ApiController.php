@@ -562,17 +562,18 @@ class ApiController extends Controller
         ]);
     }
 
-    public function approvePointsRedemption(Request $request)
+    public function approvePointsRedemption(Request $request, $id)
     {
-        // Log all received request information
+        // Log all received request information and the id
         Log::info('Received points redemption approval request', [
             'request_data' => $request->all(),
+            'id' => $id,
         ]);
 
         // Your logic for approving points redemption goes here
         // Example: Update database, send notifications, etc.
 
         // Return JSON response with status true
-        return response()->json(['status' => true, 'message' => 'Points Redemption Approved Successfully']);
+        return response()->json(['status' => true, 'message' => 'Points Redemption Approved Successfully', 'id' => $id]);
     }
 }

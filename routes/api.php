@@ -11,7 +11,7 @@ Route::prefix('agent')->group(function () {
 
     // Logout route accessible to any authenticated user
     Route::middleware(['auth:api'])->post('logout', [LoginController::class, 'agentLogout']);
-    Route::match(['get', 'post'], '/aprove-points-redemption', [ApiController::class, 'approvePointsRedemption']);
+    Route::match(['get', 'post'], '/approve-points-redemption/{id}', [ApiController::class, 'approvePointsRedemption']);
     // Routes restricted to users with the 'agent' role
     Route::middleware(['auth:api', 'role:agent|customer'])->group(function () {
         Route::match(['get', 'post'], '/home', [ApiController::class, 'index']);
