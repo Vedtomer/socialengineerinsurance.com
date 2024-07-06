@@ -87,6 +87,12 @@ class CustomerPolicyController extends Controller
         // Validate and update a specific customer policy
         $customerPolicy = CustomerPolicy::findOrFail($id);
 
+        if ($request->hasFile('policy_document')) {
+            $panFile = $request->file('policy_document');
+            $panFileName = $customerPolicy->policy_no . '.' . $panFile->getClientOriginalExtension();
+            $panFile->storeAs('public/customer_policies', $panFileName);
+        }
+
         $validatedData = $request->validate([
             'policy_no' => 'required',
             'policy_start_date' => 'required|date',
