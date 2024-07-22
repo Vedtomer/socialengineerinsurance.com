@@ -160,11 +160,18 @@ if (!function_exists('prepareDashboardData')) {
         $end_date = Carbon::now()->toDateString();
 
         if ($date_range) {
-            // Split the date range string into start and end dates
-            $dates = explode(' to ', $date_range);
-            if (count($dates) == 2) {
-                $start_date = Carbon::parse($dates[0])->toDateString();
-                $end_date = Carbon::parse($dates[1])->toDateString();
+            // Check if the date_range contains a "to" separator
+            if (strpos($date_range, ' to ') !== false) {
+                // Split the date range string into start and end dates
+                $dates = explode(' to ', $date_range);
+                if (count($dates) == 2) {
+                    $start_date = Carbon::parse($dates[0])->toDateString();
+                    $end_date = Carbon::parse($dates[1])->toDateString();
+                }
+            } else {
+                // If there's no "to" separator, set both start and end dates to the single date
+                $start_date = Carbon::parse($date_range)->toDateString();
+                $end_date = $start_date;
             }
         } elseif ($date == "year") {
             $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();

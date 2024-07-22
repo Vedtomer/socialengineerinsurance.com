@@ -255,7 +255,28 @@
 
    <script src="{{ asset('asset/admin/src/plugins/src/flatpickr/flatpickr.js ') }}"></script>
 
-   <script src="{{ asset('asset/admin/src/plugins/src/flatpickr/custom-flatpickr.js ') }}"></script>
+   {{-- <script src="{{ asset('asset/admin/src/plugins/src/flatpickr/custom-flatpickr.js ') }}"></script> --}}
    <!-- END PAGE LEVEL SCRIPTS -->
 
 
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var dateRange = urlParams.get('date_range');
+
+        if (dateRange) {
+            document.getElementById('rangeCalendarFlatpickr').value = dateRange;
+        }
+
+        flatpickr("#rangeCalendarFlatpickr", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            defaultDate: dateRange ? dateRange.split(' to ') : null,
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    filterData();
+                }
+            }
+        });
+    });
+    </script>

@@ -63,7 +63,7 @@
                                 <option value="3">Organic</option>
                             </select> --}}
                             <div id="range_calendar">
-                                <input id="rangeCalendarFlatpickr" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Select Custom Date" >
+                                <input id="rangeCalendarFlatpickr" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Select Custom Date" value="">
                             </div>
 
                         </div>
