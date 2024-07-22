@@ -64,8 +64,8 @@ class AdminController extends Controller
 
         // Apply date range filter to transactions and policies
         if (!empty($start_date) && !empty($end_date)) {
-            $transactions->whereBetween('payment_date', [$start_date, $end_date]);
-            $policy->whereBetween('policy_start_date', [$start_date, $end_date]);
+            $transactions->where('payment_date', '>=', $start_date)->where('payment_date', '<=', $end_date);
+            $policy->where('policy_start_date', '>=', $start_date)->where('policy_start_date', '<=', $end_date);
         }
 
         // Apply agent_id filter if provided
@@ -76,7 +76,7 @@ class AdminController extends Controller
 
         // Get the count of policies for each user
         $datausers = User::withCount(['Policy as policy_count' => function ($query) use ($start_date, $end_date) {
-            $query->whereBetween('policy_start_date', [$start_date, $end_date]);
+            $query->where('policy_start_date', '>=', $start_date)->where('policy_start_date', '<=', $end_date);
         }])
         ->having('policy_count', '<', 10)
         ->orderBy('policy_count', 'asc')
@@ -86,7 +86,8 @@ class AdminController extends Controller
         ->get();
 
         // Get the count of policies for each insurance company
-        $counts = Policy::whereBetween('policy_start_date', [$start_date, $end_date])
+        $counts = Policy::where('policy_start_date', '>=', $start_date)
+            ->where('policy_start_date', '<=', $end_date)
             ->whereIn('insurance_company', ['ROYAL', 'FUTURE', 'TATA', 'tata'])
             ->when(!empty($agent_id), function ($query) use ($agent_id) {
                 $query->where('agent_id', $agent_id);
@@ -116,7 +117,8 @@ class AdminController extends Controller
             ->whereIn('agent_id', $agentIdsWithCutAndPay);
 
         if (!empty($start_date) && !empty($end_date)) {
-            $sumCommission->whereBetween('policy_start_date', [$start_date, $end_date]);
+            $sumCommission->where('policy_start_date', '>=', $start_date)
+                          ->where('policy_start_date', '<=', $end_date);
         }
 
         if (!empty($agent_id)) {
@@ -133,7 +135,8 @@ class AdminController extends Controller
 
         // Query the policies table to get the sum of premiums and count of records for the active companies
         $policyData = Policy::whereIn('company_id', $companyIds)
-            ->whereBetween('policy_start_date', [$start_date, $end_date])
+            ->where('policy_start_date', '>=', $start_date)
+            ->where('policy_start_date', '<=', $end_date)
             ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
             ->groupBy('company_id')
             ->get();

@@ -8,9 +8,16 @@
 //     dateFormat: "Y-m-d H:i",
 //     defaultDate: new Date()
 // });
+
 var f3 = flatpickr(document.getElementById('rangeCalendarFlatpickr'), {
     mode: "range",
+    onChange: function(selectedDates, dateStr, instance) {
+        if (selectedDates.length === 2) {
+            filterData();
+        }
+    }
 });
+
 // var f4 = flatpickr(document.getElementById('timeFlatpickr'), {
 //     enableTime: true,
 //     noCalendar: true,

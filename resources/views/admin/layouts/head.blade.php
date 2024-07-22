@@ -65,6 +65,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
 
+     <!-- BEGIN THEME GLOBAL STYLES -->
+     <link href="{{ asset('asset/admin/src/plugins/src/flatpickr/flatpickr.css') }}" rel="stylesheet" type="text/css">
+     <link href="{{ asset('asset/admin/src/plugins/src/noUiSlider/nouislider.min.css') }}" rel="stylesheet" type="text/css">
+     <!-- END THEME GLOBAL STYLES -->
+
+     <!--  BEGIN CUSTOM STYLE FILE  -->
+
+     <link href="{{ asset('asset/admin/src/plugins/css/light/flatpickr/custom-flatpickr.css') }}" rel="stylesheet" type="text/css">
+     <link href="{{ asset('asset/admin/src/plugins/css/dark/flatpickr/custom-flatpickr.css') }}" rel="stylesheet" type="text/css">
+     <!--  END CUSTOM STYLE FILE  -->
+
+
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 

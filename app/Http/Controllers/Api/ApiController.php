@@ -70,8 +70,8 @@ class ApiController extends Controller
                 'pending_premium' => round($pendingPremium),
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
                 'claim' => Claim::where('users_id', $user->id)
-                ->whereBetween('claim_date', [$startDate, $endDate])
-                ->get(),
+                    ->whereBetween('claim_date', [$startDate, $endDate])
+                    ->get(),
             ];
         } elseif ($user->hasRole('customer')) {
 
@@ -84,8 +84,8 @@ class ApiController extends Controller
             $dummyData = [
                 'insurance' => $data,
                 'claim' => Claim::where('users_id', $user->id)
-                ->whereBetween('claim_date', [$startDate, $endDate])
-                ->get(),
+                    ->whereBetween('claim_date', [$startDate, $endDate])
+                    ->get(),
                 'sliders' => Slider::where('status', 1)->pluck('image')->toArray(),
             ];
         } else {
@@ -234,6 +234,9 @@ class ApiController extends Controller
         }
 
         $tds = 0.05 * $points;
+        if ($agent_id == "10001") {
+            $tds = 0;
+        }
         $amountToBePaid = $points - $tds;
 
         $pointRedemption = new PointRedemption();

@@ -154,11 +154,19 @@ if (!function_exists('prepareDashboardData')) {
     {
         $agent_id = $request->input('agent_id', "");
         $date = $request->input('date', "");
+        $date_range = $request->input('date_range', "");
 
         $start_date = Carbon::now()->firstOfMonth()->toDateString();
         $end_date = Carbon::now()->toDateString();
 
-        if ($date == "year") {
+        if ($date_range) {
+            // Split the date range string into start and end dates
+            $dates = explode(' to ', $date_range);
+            if (count($dates) == 2) {
+                $start_date = Carbon::parse($dates[0])->toDateString();
+                $end_date = Carbon::parse($dates[1])->toDateString();
+            }
+        } elseif ($date == "year") {
             $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();
         } elseif (is_numeric($date)) {
             $month = intval($date);
