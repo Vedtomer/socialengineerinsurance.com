@@ -138,4 +138,23 @@ class LoginController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function DeleteAccount()
+    {
+        try {
+            $user = auth()->guard('api')->user();
+            $user->delete(); // This will soft delete the user
+            $user->tokens()->delete(); // Delete all tokens associated with the user
+
+            return response()->json([
+                'message' => 'Account deleted successfully',
+                'status' => true,
+                'data' => []
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
 }

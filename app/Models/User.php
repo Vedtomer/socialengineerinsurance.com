@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
-    use HasApiTokens,HasFactory, Notifiable, HasRoles;
+    use HasApiTokens,HasFactory, Notifiable, HasRoles,SoftDeletes;
 
    /**
      * The attributes that are mass assignable.
@@ -92,7 +93,7 @@ class User extends Authenticatable
             }
             $agent_id =  auth()->guard('api')->user()->id;
 
-            
+
           $royalData = Policy::
                 whereBetween('policy_start_date', [$startDate, $endDate])
            ->where('agent_id', $agent_id)
