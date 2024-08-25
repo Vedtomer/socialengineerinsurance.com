@@ -11,21 +11,21 @@
             <div class="hero-section-wrapper">
                 <div class="hero-content-block">
                     <div class="hero-header-block">
-                        <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:0"
+                        <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:1"
                             class="sub-title-wrap"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b79812ab0af18673227bc2_Badge%20Logo.png"
                                 loading="lazy" alt="Welcome Shape" class="hero-sub-title-image" />
                             <div class="hero-sub-title">Welcome to Insurbes</div>
                         </div>
-                        <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:0"
+                        <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:1"
                             class="hero-heading">In Minutes, You&#x27;ll Find Your Perfect <span
                                 class="heading-highlight-text">Insurance</span> Plan</h1>
                     </div>
-                    <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:0"
+                    <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:1"
                         class="hero-excerpt">Insurbes company is provide financial protection and risk
                         management to individuals, businesses &amp; other entities in exchange for premiums.
                         This can include coverage for as home, family, health and more.</p>
-                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:0"
+                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:1"
                         class="newsletter-form-wrap">
                         <div class="newsletter-form-block w-form">
                             <form id="newsletter-email-form" name="email-form" data-name="Email Form"
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div id="w-node-d8b7b9a4-9846-4f96-d345-53159bb96423-2401686d" class="hero-image-block">
-                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96425" style="opacity:0"
+                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96425" style="opacity:1"
                         class="hero-image-inner relative"><img
                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image.jpg"
                             loading="lazy"
@@ -60,7 +60,7 @@
                             alt="Hero Image"
                             srcset="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image-p-500.jpg 500w, https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image.jpg 532w"
                             class="hero-image-version-two" />
-                        <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:0"
+                        <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:1"
                             class="hero-customer-image-wrap"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1ffb7139efde81a0a2022_Happy%20Customer.png"
                                 loading="lazy" alt="Hero Customer Image" class="hero-customer-image" /></div>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                     </div>
-                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96429" style="opacity:0"
+                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96429" style="opacity:1"
                         class="hero-shape-image lower-shape-image"><img
                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b867606ba5973c24a6a24e_Hero%20Shape.png"
                             loading="lazy" data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9642a" alt="Hero Shape"
@@ -84,7 +84,7 @@
         </div>
     </section>
     <section class="brand-logo-section">
-        <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:0" class="brand-logo-flex">
+        <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:1" class="brand-logo-flex">
             <div style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                 class="brand-logo-wrap">
                 <div class="brand-logo-block"><img
@@ -148,18 +148,18 @@
             <div class="unique-feature-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap unique-feature-title-max-width">
-                        <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:0"
+                        <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:1"
                             class="section-title">What Makes Us <span
                                 class="heading-highlight-text">Different</span> From Others?</h2>
                     </div>
                     <div class="section-sub-title-wrap unique-feature-sub-title-max-width">
-                        <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:0"
+                        <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1"
                             class="section-sub-title">Insurbes companies work to sense more security &amp;
                             peace they have insurance coverage challenging times.</div>
                     </div>
                 </div>
                 <div class="unique-feature-grid">
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:0"
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:1"
                         class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d0a308217ff5cd6478fa_Makes%20Us%20Different%20Image%20One.png"
@@ -171,7 +171,7 @@
                                 then safely.</div>
                         </div>
                     </div>
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:0"
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:1"
                         class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d26df1501f2c18dd05dc_Makes%20Us%20Different%20Image%20Two.png"
@@ -183,7 +183,7 @@
                                 then safely.</div>
                         </div>
                     </div>
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:0"
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:1"
                         class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d2a0a1f1aa34965db483_Makes%20Us%20Different%20Image%20Three.png"
@@ -203,7 +203,7 @@
         class="why-choose-us-section section-bottom-gap">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="why-choose-us-wrapper">
-                <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:0"
+                <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:1"
                     class="why-choose-us-image-block">
                     <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac37"
                         class="why-choose-us-image-wrap version-two"><img class="why-choose-us-image"
@@ -224,7 +224,7 @@
                         </div>
                     </div><img
                         src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1b7caa0a0c5f27cd098f9_Infurrance%20Profit%20Imag.png"
-                        loading="lazy" style="opacity:0" data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac39"
+                        loading="lazy" style="opacity:1" data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac39"
                         alt="Why Choose Us Profit Image" class="why-choose-us-profit-image change-position" />
                     <div class="why-choose-us-shape-one change-position"></div>
                     <div class="why-choose-us-shape-two change-position"></div>
@@ -232,17 +232,17 @@
                 <div class="why-choose-us-content-block">
                     <div class="section-heading-wrap">
                         <div class="section-title-wrap why-choose-us-title-max-width">
-                            <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:0"
+                            <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:1"
                                 class="section-title">What Makes Our <span
                                     class="heading-highlight-text">Services</span> Reliable?</h2>
                         </div>
                         <div class="section-sub-title-wrap why-choose-us-sub-title-max-width">
-                            <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:0"
+                            <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:1"
                                 class="section-sub-title">Insurbes companies work to sense more security &amp;
                                 peace they have insurance coverage challenging times.</div>
                         </div>
                     </div>
-                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:0"
+                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:1"
                         class="why-choose-us-grid">
                         <div class="why-choose-us-card">
                             <div class="why-choose-us-icon-wrap"><img
@@ -293,7 +293,7 @@
             </div>
         </div>
     </section>
-    <section data-w-id="fefa0a19-0653-41a5-ddc2-9a090a72fc8f" style="opacity:0" class="fun-fact-section">
+    <section data-w-id="fefa0a19-0653-41a5-ddc2-9a090a72fc8f" style="opacity:1" class="fun-fact-section">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="funfact-wrapper">
                 <div class="section-heading-wrap align-left">
@@ -380,18 +380,18 @@
             <div class="insurance-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap insurance-title-max-width">
-                        <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:0"
+                        <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:1"
                             class="section-title">We Provide Insurance <span
                                 class="heading-highlight-text">Solutions</span> to Meet Your Needs</h2>
                     </div>
                     <div class="section-sub-title-wrap insurance-sub-title-max-width">
-                        <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:0"
+                        <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:1"
                             class="section-sub-title">Insurance companies aim to help individuals and
                             businesses mitigate the financial impact of unforeseen events or risks.</div>
                     </div>
                 </div>
                 <div class="insurance-content-wrap">
-                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:0"
+                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:1"
                         class="insurance-shape-wrap"><a href="#pricePlan"
                             class="insurance-shape-link w-inline-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b88503f7188521c90f4f19_Scroll%20Now.png"
@@ -408,7 +408,7 @@
                             <div role="list" class="insurance-collection-list w-dyn-items">
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                        style="background-color:#caf2f8;opacity:0" class="insurance-card">
+                                        style="background-color:#caf2f8;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">25% Savings</div>
@@ -439,7 +439,7 @@
                                 </div>
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                        style="background-color:#EBD7FD;opacity:0" class="insurance-card">
+                                        style="background-color:#EBD7FD;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">20% Savings</div>
@@ -470,7 +470,7 @@
                                 </div>
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                        style="background-color:#FFDCCD;opacity:0" class="insurance-card">
+                                        style="background-color:#FFDCCD;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">20% Savings</div>
@@ -503,7 +503,7 @@
                                 </div>
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                        style="background-color:#F5FAD4;opacity:0" class="insurance-card">
+                                        style="background-color:#F5FAD4;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">25% Savings</div>
@@ -536,7 +536,7 @@
                             </div>
                         </div>
                     </div>
-                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:0"
+                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:1"
                         class="insurance-button-wrapper"><a href="/all-insurance"
                             class="primary-button w-button">View All Insurance</a></div>
                 </div>
@@ -548,13 +548,13 @@
             <div class="app-content-block">
                 <div class="app-content">
                     <div class="app-heading-wrap">
-                        <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:0"
+                        <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:1"
                             class="app-title">Take a Look at the Insurbes Mobile App</h2>
-                        <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:0"
+                        <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:1"
                             class="app-sub-title">Insurbes companies work to sense more security and peace they
                             have insurance coverage</div>
                     </div>
-                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:0"
+                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:1"
                         class="app-link-wrap"><a href="https://play.google.com/store/apps?hl=en&amp;gl=US"
                             class="app-link w-inline-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9dd51ca197f45ab2c2c81_Badge%20Android.png"
@@ -580,12 +580,12 @@
             <div class="insurance-price-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap insurance-price-title-max-width">
-                        <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:0"
+                        <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:1"
                             class="section-title">We’ve Got an Awesome <span
                                 class="heading-highlight-text">Price</span> Plan For Your Insurance</h2>
                     </div>
                     <div class="section-sub-title-wrap insurance-price-sub-title-max-width">
-                        <div data-w-id="1d0150f3-c970-f95a-51d2-c5de322322bc" style="opacity:0"
+                        <div data-w-id="1d0150f3-c970-f95a-51d2-c5de322322bc" style="opacity:1"
                             class="section-sub-title">Insurance companies need to maintain financial stability
                             to fulfill their obligations to policyholders.</div>
                     </div>
