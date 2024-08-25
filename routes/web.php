@@ -19,12 +19,23 @@ Route::get('/', function () {
 
 Route::get('/about', function () {
     return view('pages.website.about');
-});
-Route::get('/policies/privacy-policy', function () {
-    return view('pages.website.privacy_policy');
+})->name("about-us");
+
+Route::get('/contact-us', function () {
+    return view('pages.website.contact');
+})->name("contact-us");
+
+Route::prefix('policies')->group(function () {
+    Route::get('/privacy-policy', function () {
+        return view('pages.website.privacy_policy');
+    })->name('privacy-policy');
+    Route::get('/terms-of-service', function () {
+        return view('pages.website.terms_of_service');
+    })->name('terms-of-service');
 });
 
-// [PagesController::class, 'PrivacyPolicy'])->name('privacy.policy');
+
+
 
 
 Route::prefix('admin')->group(function () {
@@ -96,6 +107,5 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], 'customers/{customer}/change-password', [CustomerController::class, 'changePassword'])->name('customers.changePassword');
         Route::resource('customer-policies', CustomerPolicyController::class);
         Route::resource('insurance-products', InsuranceProductController::class);
-
     });
 });
