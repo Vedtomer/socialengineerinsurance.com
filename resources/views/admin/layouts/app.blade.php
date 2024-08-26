@@ -40,7 +40,11 @@
                         </nav>
 
                     </div>
+
+                   @if( !route("admin.dashboard"))
+
                     <div class="row ">
+
                         <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
                             <select class=" select2   form-select js-example-basic-single"
                                 aria-label="Default select example" onchange="filterData()" id="agent">
@@ -90,6 +94,7 @@
                         </div>
 
                     </div>
+                    @endif
                     <!-- /BREADCRUMB -->
 
                     <!-- CONTENT AREA -->

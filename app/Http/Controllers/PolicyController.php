@@ -44,7 +44,7 @@ class PolicyController extends Controller
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-        $query = Policy::with('agent','company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
+        $query = Policy::with('agent', 'company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
 
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
@@ -116,7 +116,7 @@ class PolicyController extends Controller
         if ($end_date !== null) {
             $end_date = Carbon::parse($end_date);
         }
-            $policy = DB::table('policies')
+        $policy = DB::table('policies')
             ->whereBetween('policy_start_date', [$start_date, $end_date])
             ->leftJoin('agents', function ($join) {
                 $join->on('policies.agent_id', '=', 'agents.id');
@@ -137,16 +137,57 @@ class PolicyController extends Controller
             )
             ->groupBy('policies.agent_id', 'agents.name', 'agents.cut_and_pay') // Group by cut_and_pay as well
             ->havingRaw('balance > 0')
-            ->orderBy('balance',"desc")
+            ->orderBy('balance', "desc")
             ->get();
 
 
         // Calculate sum for each column
         $totalPremium = $policy->sum('total_premium');
         $totalAmount = $policy->sum('total_amount');
-        $totalBalance = $policy->sum('balance')-$policy->sum('total_agent_commission');
+        $totalBalance = $policy->sum('balance') - $policy->sum('total_agent_commission');
 
         $agentData = Agent::get();
         return view('admin.agent_pandding_blance', compact('policy', 'agentData', 'totalPremium', 'totalAmount', 'totalBalance'));
     }
+
+    public function showPolicyRates()
+    {
+           $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
+        return view('admin.analytics.policy_rates', compact('policyRates'));
+    }
+
+    public function getMonthlyPolicyRates()
+    {
+        $policyRates = DB::table('policies')
+            ->join('users', 'policies.agent_id', '=', 'users.id')
+            ->select(
+                'users.name as agent_name',
+                'policies.agent_id',
+                DB::raw('YEAR(policies.created_at) as year'),
+                DB::raw('MONTH(policies.created_at) as month'),
+                DB::raw('COUNT(*) as policy_count')
+            )
+            ->groupBy('policies.agent_id', 'year', 'month', 'users.name')
+            ->get();
+
+        $formattedData = [];
+
+        foreach ($policyRates as $rate) {
+            // Initialize the agent's data if not already set
+            if (!isset($formattedData[$rate->agent_id])) {
+                $formattedData[$rate->agent_id] = [
+                    'agent_name' => $rate->agent_name,
+                    'labels' => [],
+                    'data' => []
+                ];
+            }
+
+            // Add the month-year label and policy count
+            $formattedData[$rate->agent_id]['labels'][] = $rate->month . '-' . $rate->year;
+            $formattedData[$rate->agent_id]['data'][] = $rate->policy_count;
+        }
+
+        return $formattedData;
+    }
+
 }
