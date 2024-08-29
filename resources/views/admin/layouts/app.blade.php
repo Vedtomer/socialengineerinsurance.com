@@ -41,24 +41,24 @@
 
                     </div>
 
-                   @if( !route("admin.dashboard"))
+                    @if (!classActivePath('policy-rates'))
 
-                    <div class="row ">
+                        <div class="row ">
 
-                        <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
-                            <select class=" select2   form-select js-example-basic-single"
-                                aria-label="Default select example" onchange="filterData()" id="agent">
-                                <option value=""></option>
-                                @foreach (getAgents() as $item)
-                                    <option value="{{ $item['id'] }}"
-                                        {{ (!empty($_GET['agent_id']) && $_GET['agent_id'] == $item['id']) ? 'selected' : '' }}>
-                                        {{ $item['name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
-                            {{-- <select class="form-select form-select" aria-label="Default select example">
+                            <div class="col-lg-3 col-md-3 col-sm-3 mb-4">
+                                <select class=" select2   form-select js-example-basic-single"
+                                    aria-label="Default select example" onchange="filterData()" id="agent">
+                                    <option value=""></option>
+                                    @foreach (getAgents() as $item)
+                                        <option value="{{ $item['id'] }}"
+                                            {{ !empty($_GET['agent_id']) && $_GET['agent_id'] == $item['id'] ? 'selected' : '' }}>
+                                            {{ $item['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+                                {{-- <select class="form-select form-select" aria-label="Default select example">
                                 <option selected="">All Category</option>
                                 <option value="3">Apperal</option>
                                 <option value="1">Electronics</option>
@@ -66,34 +66,38 @@
                                 <option value="3">Accessories</option>
                                 <option value="3">Organic</option>
                             </select> --}}
-                            <div id="range_calendar">
-                                <input id="rangeCalendarFlatpickr" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Select Custom Date" value="">
+                                <div id="range_calendar">
+                                    <input id="rangeCalendarFlatpickr"
+                                        class="form-control flatpickr flatpickr-input active" type="text"
+                                        placeholder="Select Custom Date" value="">
+                                </div>
+
+                            </div>
+
+                            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
+
+                                <select class="select2 form-select no-search" id="date"
+                                    aria-label="Default select example" onchange="filterData()">
+                                    <option disabled>Select Option</option>
+                                    @php
+                                        $data = getMonthsFromAprilToCurrent();
+                                    @endphp
+                                    @foreach ($data['months'] as $month)
+                                        <option value="{{ $month['value'] }}"
+                                            @if (isset($_GET['date']) && $_GET['date'] == $month['value']) selected
+                                        @elseif(empty($_GET['date']) && $month['value'] == $data['currentMonth']) selected @endif>
+                                            {{ $month['name'] }}
+                                        </option>
+                                    @endforeach
+                                    <option value="year"
+                                        {{ !empty($_GET['date']) && $_GET['date'] == 'year' ? 'selected' : '' }}>
+                                        {{ $data['currentYear'] }}</option>
+                                </select>
+
+
                             </div>
 
                         </div>
-
-                        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
-
-                            <select class="select2 form-select no-search" id="date" aria-label="Default select example" onchange="filterData()">
-                                <option disabled>Select Option</option>
-                                @php
-                                    $data = getMonthsFromAprilToCurrent();
-                                @endphp
-                                @foreach ($data['months'] as $month)
-                                    <option value="{{ $month['value'] }}"
-                                        @if (isset($_GET['date']) && $_GET['date'] == $month['value']) selected
-                                        @elseif(empty($_GET['date']) && $month['value'] == $data['currentMonth']) selected @endif>
-                                        {{ $month['name'] }}
-                                    </option>
-                                @endforeach
-                                <option value="year" {{ (!empty($_GET['date']) &&  $_GET['date'] == 'year') ? 'selected' : '' }}>
-                                    {{ $data['currentYear'] }}</option>
-                            </select>
-
-
-                        </div>
-
-                    </div>
                     @endif
                     <!-- /BREADCRUMB -->
 
