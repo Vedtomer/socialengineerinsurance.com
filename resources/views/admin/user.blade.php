@@ -47,32 +47,16 @@
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $user->name }}</td>
                             <td>
-                                @php
-                                $policyCount = count($user->Policy);
-                                @endphp
-                                <span class="mb-2 mr-2">{{ $policyCount }}</span>
+
+                                <span class="mb-2 mr-2">{{ $user->totalPolicies}}</span>
                             </td>
                             <td>
-                                @php
-                                $totalagentpremium = 0;
-                                @endphp
-                                @foreach ($user->Policy as $record)
-                                @php
-                                $totalagentpremium += $record->premium;
-                                @endphp
-                                @endforeach
-                                <span class="mb-2 mr-2">{{ $totalagentpremium }}</span>
+
+                                <span class="mb-2 mr-2">{{ $user->totalPremium }}</span>
                             </td>
                             <td>
-                                @php
-                                $totalagentcommission = 0;
-                                @endphp
-                                @foreach ($user->Policy as $record)
-                                @php
-                                $totalagentcommission += $record->agent_commission;
-                                @endphp
-                                @endforeach
-                                <span class="mb-2 ml-2 mr-2 d-flex "><i class="fa fa-rupee pr-2" style="font-size:20px"></i> {{ $totalagentcommission }}</span>
+
+                                <span class="mb-2 ml-2 mr-2 d-flex "><i class="fa fa-rupee pr-2" style="font-size:20px"></i> {{ $user->totalEarnPoints }}</span>
                             </td>
                             {{-- <td>{{ $user->email }}</td> --}}
                             <td>{{ $user->city }}</td>

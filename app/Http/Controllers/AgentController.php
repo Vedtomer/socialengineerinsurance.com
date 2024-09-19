@@ -46,48 +46,41 @@ class AgentController extends Controller
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-        if (!isset($agent_id)) {
+        // Ensure start_date and end_date are Carbon instances
+       // $start_date = $start_date ? Carbon::parse($start_date)->startOfDay() : now()->startOfMonth()->startOfDay();
+  //  return    $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
 
-            if (!isset($start_date) || !$start_date instanceof Carbon) {
-                $start_date = now()->startOfMonth();
+        $query = User::role('agent')->withCount([
+            'Policy as totalPolicies' => function ($query) use ($start_date, $end_date) {
+                $query->whereDate('policy_start_date', '>=', $start_date)
+                      ->whereDate('policy_start_date', '<', $end_date);
             }
-
-            if (!isset($end_date) || !$end_date instanceof Carbon) {
-                $end_date = now()->endOfDay();
+        ])->withSum([
+            'Policy as totalPremium' => function ($query) use ($start_date, $end_date) {
+                $query->whereDate('policy_start_date', '>=', $start_date)
+                      ->whereDate('policy_start_date', '<', $end_date);
             }
-        }
-
-        if (isset($agent_id)) {
-            $agent = User::find($agent_id);
-
-            if ($start_date !== null) {
-                $start_date = Carbon::parse($start_date);
-            } else {
-                $start_date = now()->startOfMonth();
+        ], 'premium')
+        ->withSum([
+            'Policy as totalEarnPoints' => function ($query) use ($start_date, $end_date) {
+                $query->whereDate('policy_start_date', '>=', $start_date)
+                      ->whereDate('policy_start_date', '<', $end_date);
             }
-
-            if ($end_date !== null) {
-                $end_date = Carbon::parse($end_date);
-            } else {
-                $end_date = now()->endOfDay();
-            }
-        }
-
-
-        $query = User::role('agent')->with([
-            'Policy' => function ($query) use ($start_date, $end_date) {
-                $query->whereBetween('policy_start_date', [$start_date, $end_date]);
-            }
-        ])->orderBy('created_at', 'desc');
+        ], 'payout')
+        ->orderBy('created_at', 'desc');
 
         if (!empty($agent_id)) {
             $query->where('id', $agent_id);
         }
 
         $users = $query->get();
+
         $agent = User::role('agent')->get();
 
-        return view('admin.user', ['data' => $users, 'agent' => $agent]);
+        return view('admin.user', [
+            'data' => $users,
+            'agent' => $agent
+        ]);
     }
 
     #transaction
