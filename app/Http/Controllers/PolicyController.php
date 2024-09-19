@@ -163,8 +163,8 @@ class PolicyController extends Controller
             ->select(
                 'users.name as agent_name',
                 'policies.agent_id',
-                DB::raw('YEAR(policies.created_at) as year'),
-                DB::raw('MONTH(policies.created_at) as month'),
+                DB::raw('YEAR(policies.policy_start_date) as year'),
+                DB::raw('MONTH(policies.policy_start_date) as month'),
                 DB::raw('COUNT(*) as policy_count')
             )
             ->groupBy('policies.agent_id', 'year', 'month', 'users.name')
