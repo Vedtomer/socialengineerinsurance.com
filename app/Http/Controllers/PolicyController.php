@@ -152,7 +152,7 @@ class PolicyController extends Controller
 
     public function showPolicyRates()
     {
-          $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
+    return  $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
         return view('admin.analytics.policy_rates', compact('policyRates'));
     }
 
@@ -194,12 +194,14 @@ class PolicyController extends Controller
     {
         // Get today's date as a timestamp at the start of the day
         $today = strtotime(date('Y-m-d'));
+
         // Get the latest policy date for each agent
         $latestPolicyDates = DB::table('policies')
             ->select('agent_id', DB::raw('MAX(DATE(policy_start_date)) as last_policy_date'))
             ->groupBy('agent_id')
             ->get()
             ->keyBy('agent_id');
+
         foreach ($formattedData as $agentId => &$agentData) {
             if (isset($latestPolicyDates[$agentId])) {
                 // Convert the last policy date to a timestamp
@@ -215,6 +217,28 @@ class PolicyController extends Controller
                 $agentData['days_since_last_policy'] = 9999;
             }
         }
+
+        // Debugging: Check the structure before sorting
+        // Log the unsorted data to see if days_since_last_policy is being set correctly
+        foreach ($formattedData as $agentId => $agentData) {
+            // echo "Agent ID: $agentId, Days Since Last Policy: " . $agentData['days_since_last_policy'] . "\n";
+            // echo "<br>";
+        }
+
+        // Sort the $formattedData array by days_since_last_policy in descending order
+        uasort($formattedData, function ($a, $b) {
+            // Debugging: Log the values being compared
+            // echo "Comparing {$a['days_since_last_policy']} with {$b['days_since_last_policy']}\n";
+            // echo "<br>";
+            return $b['days_since_last_policy'] <=> $a['days_since_last_policy'];
+            // Use spaceship operator
+        });
+
+        // Debugging: Check the sorted structure
+        // foreach ($formattedData as $agentId => $agentData) {
+        //     echo "After Sorting - Agent ID: $agentId, Days Since Last Policy: " . $agentData['days_since_last_policy'] . "\n";
+        //     echo "<br>";
+        // }
 
         return $formattedData;
     }
