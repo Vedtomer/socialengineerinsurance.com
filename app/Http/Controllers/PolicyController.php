@@ -152,7 +152,7 @@ class PolicyController extends Controller
 
     public function showPolicyRates()
     {
-           $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
+          $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
         return view('admin.analytics.policy_rates', compact('policyRates'));
     }
 
@@ -187,7 +187,35 @@ class PolicyController extends Controller
             $formattedData[$rate->agent_id]['data'][] = $rate->policy_count;
         }
 
-        return $formattedData;
+        return $this->addDaysSinceLastPolicy($formattedData);
     }
 
+    public function addDaysSinceLastPolicy($formattedData)
+    {
+        // Get today's date as a timestamp at the start of the day
+        $today = strtotime(date('Y-m-d'));
+        // Get the latest policy date for each agent
+        $latestPolicyDates = DB::table('policies')
+            ->select('agent_id', DB::raw('MAX(DATE(policy_start_date)) as last_policy_date'))
+            ->groupBy('agent_id')
+            ->get()
+            ->keyBy('agent_id');
+        foreach ($formattedData as $agentId => &$agentData) {
+            if (isset($latestPolicyDates[$agentId])) {
+                // Convert the last policy date to a timestamp
+                $lastPolicyDate = strtotime($latestPolicyDates[$agentId]->last_policy_date);
+
+                // Calculate the difference in days
+                $daysDifference = ($today - $lastPolicyDate) / (60 * 60 * 24);
+
+                // Ensure the difference is not negative
+                $agentData['days_since_last_policy'] = max(0, (int)$daysDifference);
+            } else {
+                // If no policy found for the agent, set a high number or handle as needed
+                $agentData['days_since_last_policy'] = 9999;
+            }
+        }
+
+        return $formattedData;
+    }
 }
