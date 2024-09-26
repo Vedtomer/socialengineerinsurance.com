@@ -152,7 +152,7 @@ class PolicyController extends Controller
 
     public function showPolicyRates()
     {
-    return  $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
+      $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
         return view('admin.analytics.policy_rates', compact('policyRates'));
     }
 
