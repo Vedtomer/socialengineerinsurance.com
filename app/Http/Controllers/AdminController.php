@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Validator;
+use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -33,22 +34,22 @@ class AdminController extends Controller
         }
 
         // Handle POST request (authenticate the user)
-        if ($request->isMethod('post')) {
-            $credentials = $request->only('email', 'password');
+        // if ($request->isMethod('post')) {
+        //     $credentials = $request->only('email', 'password');
 
-            if (Auth::attempt($credentials, $request->filled('remember'))) {
-                // Authenticate and check if the user has the 'admin' role
-                $user = Auth::user();
-                if ($user->hasRole('admin')) {
-                    return redirect()->intended(route('admin.dashboard'));
-                } else {
-                    Auth::logout();
-                    return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-                }
-            }
+        //     if (Auth::attempt($credentials, $request->filled('remember'))) {
+        //         // Authenticate and check if the user has the 'admin' role
+        //         $user = Auth::user();
+        //         if ($user->hasRole('admin')) {
+        //             return redirect()->intended(route('admin.dashboard'));
+        //         } else {
+        //             Auth::logout();
+        //             return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
+        //         }
+        //     }
 
-            return redirect()->route('login')->with('error', 'Invalid login credentials');
-        }
+        //     return redirect()->route('login')->with('error', 'Invalid login credentials');
+        // }
 
         return redirect()->route('login')->with('error', 'Invalid login credentials');
     }
@@ -78,12 +79,12 @@ class AdminController extends Controller
         $datausers = User::withCount(['Policy as policy_count' => function ($query) use ($start_date, $end_date) {
             $query->where('policy_start_date', '>=', $start_date)->where('policy_start_date', '<=', $end_date);
         }])
-        ->having('policy_count', '<', 10)
-        ->orderBy('policy_count', 'asc')
-        ->when(!empty($agent_id), function ($query) use ($agent_id) {
-            $query->where('id', $agent_id);
-        })
-        ->get();
+            ->having('policy_count', '<', 10)
+            ->orderBy('policy_count', 'asc')
+            ->when(!empty($agent_id), function ($query) use ($agent_id) {
+                $query->where('id', $agent_id);
+            })
+            ->get();
 
         // Get the count of policies for each insurance company
         $counts = Policy::where('policy_start_date', '>=', $start_date)
@@ -118,7 +119,7 @@ class AdminController extends Controller
 
         if (!empty($start_date) && !empty($end_date)) {
             $sumCommission->where('policy_start_date', '>=', $start_date)
-                          ->where('policy_start_date', '<=', $end_date);
+                ->where('policy_start_date', '<=', $end_date);
         }
 
         if (!empty($agent_id)) {
@@ -154,6 +155,8 @@ class AdminController extends Controller
         $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'payout', 'datausers', 'policy', 'companies');
         return view('admin.dashboard', ['data' => $data]);
     }
+
+
 
 
     public function Transaction(Request $request, $id = null)
@@ -307,5 +310,114 @@ class AdminController extends Controller
 
         // Redirect to the login page
         return redirect()->route('login');
+    }
+
+
+    public function sendOtp(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'phone_number' => 'required|string',
+        ]);
+
+        $phoneNumber = $request->input('phone_number');
+
+        // Check if user exists
+        $user = User::where('mobile_number', $phoneNumber)->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Twilio credentials
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $serviceSid = env('TWILIO_VERIFY_SID');
+
+        // Initialize Twilio client
+        $twilio = new Client($sid, $token);
+
+        try {
+            // Send OTP via Twilio
+            $verification = $twilio->verify->v2->services($serviceSid)
+                ->verifications
+                ->create("+91" . $phoneNumber, "sms");
+
+            // Update user record to indicate OTP has been sent
+            $user->otp_sent_at = Carbon::now();
+            $user->save();
+
+            return response()->json([
+                'message' => 'OTP sent successfully',
+                'verification_sid' => $verification->sid
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'phone_number' => 'required|string',
+            'otp' => 'required|string',
+        ]);
+
+        $phoneNumber = $request->input('phone_number');
+        $otp = $request->input('otp');
+
+        $user = User::where('mobile_number', $phoneNumber)->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Check if OTP has expired (default Twilio expiration is 10 minutes)
+        $otpSentTime = $user->otp_sent_at;
+        if ($otpSentTime->addMinutes(10)->isPast()) {
+            return response()->json(['error' => 'OTP has expired'], 400);
+        }
+
+        // Twilio credentials
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $serviceSid = env('TWILIO_VERIFY_SID');
+
+        // Initialize Twilio client
+        $twilio = new Client($sid, $token);
+
+        try {
+            $verificationCheck = $twilio->verify->v2->services($serviceSid)
+                ->verificationChecks
+                ->create([
+                    'to' => "+91" . $phoneNumber,
+                    'code' => $otp
+                ]);
+
+            if ($verificationCheck->status === 'approved') {
+                // OTP is valid
+                $user->phone_verified_at = Carbon::now();
+                $user->save();
+
+                // Check if user has admin role
+                if (!$user->hasRole('admin')) {
+                    return response()->json(['error' => 'Access denied. User is not an admin.'], 403);
+                }
+
+                // Authenticate the user
+                Auth::login($user);
+
+                // Generate a new API token if using Laravel Sanctum
+                // $token = $user->createToken('auth_token')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'OTP verified successfully',
+                    'user' => $user,
+                    // 'token' => $token
+                ]);
+            } else {
+                return response()->json(['error' => 'Invalid OTP'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

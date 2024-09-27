@@ -57,6 +57,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'otp_sent_at' => 'datetime',
     ];
 
     public function commissions(): HasMany
@@ -122,4 +123,5 @@ class User extends Authenticatable
 
         return null; // see the note above in Gate::before about why null must be returned here.
     }
+
 }

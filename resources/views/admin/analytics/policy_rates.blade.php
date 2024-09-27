@@ -106,7 +106,7 @@
             const daysSinceLastPolicy = agentData.days_since_last_policy;
             nameCell.innerHTML = `
                 <span style="color: #ffffff; font-weight: bold;">${agentData.agent_name}</span>
-                <span style="font-size: 0.9em; color: #a0a0a0;"> (${total})</span><br>
+                <span style="font-size: 0.9em; color: #a0a0a0;"> (${total})</span>
                  <span style="font-size: 0.8em; color: #ff9800;">Last policy: ${daysSinceLastPolicy} days ago</span>
             `;
             nameCell.style.width = '15%';

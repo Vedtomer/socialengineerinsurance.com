@@ -44,6 +44,8 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('login');
+    Route::post('/send-otp', [AdminController::class, 'SendOtp'])->name('admin.SendOtp');
+    Route::post('/verify-otp', [AdminController::class, 'verifyOtp'])->name('admin.verifyOtp');
     Route::middleware(['role:admin', 'auth'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
