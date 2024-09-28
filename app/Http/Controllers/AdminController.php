@@ -66,7 +66,8 @@ class AdminController extends Controller
         // Apply date range filter to transactions and policies
         if (!empty($start_date) && !empty($end_date)) {
             $transactions->where('payment_date', '>=', $start_date)->where('payment_date', '<=', $end_date);
-            $policy->where('policy_start_date', '>=', $start_date)->where('policy_start_date', '<=', $end_date);
+            $policy->whereRaw('DATE(policy_start_date) >= ?', [$start_date])
+                ->whereRaw('DATE(policy_start_date) <= ?', [$end_date]);
         }
 
         // Apply agent_id filter if provided
@@ -75,38 +76,13 @@ class AdminController extends Controller
             $policy->where('agent_id', $agent_id);
         }
 
-        // Get the count of policies for each user
-        $datausers = User::withCount(['Policy as policy_count' => function ($query) use ($start_date, $end_date) {
-            $query->where('policy_start_date', '>=', $start_date)->where('policy_start_date', '<=', $end_date);
-        }])
-            ->having('policy_count', '<', 10)
-            ->orderBy('policy_count', 'asc')
-            ->when(!empty($agent_id), function ($query) use ($agent_id) {
-                $query->where('id', $agent_id);
-            })
-            ->get();
 
-        // Get the count of policies for each insurance company
-        $counts = Policy::where('policy_start_date', '>=', $start_date)
-            ->where('policy_start_date', '<=', $end_date)
-            ->whereIn('insurance_company', ['ROYAL', 'FUTURE', 'TATA', 'tata'])
-            ->when(!empty($agent_id), function ($query) use ($agent_id) {
-                $query->where('agent_id', $agent_id);
-            })
-            ->selectRaw('insurance_company, COUNT(*) as count')
-            ->groupBy('insurance_company')
-            ->pluck('count', 'insurance_company');
 
-        $royalCount = round($counts->get('ROYAL', 0));
-        $tataCount = round($counts->get('TATA', 0) + $counts->get('tata', 0));
-        $futureCount = round($counts->get('FUTURE', 0));
 
-        $transaction = $transactions->get();
-        $policy = $policy->get();
+           $policy = $policy->get();
 
         $policyCount = round($policy->count('policy_no'));
         $amount = round($transactions->sum('amount'));
-        $status = $policy->pluck('payment_by');
         $premiums = round($policy->sum('net_amount'));
         $payout = round($policy->sum('payout'));
 
@@ -152,7 +128,7 @@ class AdminController extends Controller
         });
 
         $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'payout', 'datausers', 'policy', 'companies');
+        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'payout', 'policy', 'companies');
         return view('admin.dashboard', ['data' => $data]);
     }
 
