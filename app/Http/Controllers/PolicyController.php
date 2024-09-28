@@ -172,6 +172,32 @@ class PolicyController extends Controller
 
         $formattedData = [];
 
+        // Get the current month and year
+        $currentDate = now();
+        $currentYear = $currentDate->year;
+        $currentMonth = $currentDate->month;
+
+        switch($currentMonth) {
+            case 1:
+                $indexcount = 10;
+                break;
+            case 2:
+                $indexcount = 11;
+                break;
+            case 3:
+                $indexcount = 12;
+                break;
+            default:
+                $indexcount = $currentMonth - 3;
+                break;
+        }
+
+
+        // Calculate the start month and year (4 months ago)
+        $startDate = $currentDate->subMonths(5);
+        $startYear = $startDate->year;
+        $startMonth = $startDate->month;
+
         foreach ($policyRates as $rate) {
             // Initialize the agent's data if not already set
             if (!isset($formattedData[$rate->agent_id])) {
@@ -180,11 +206,23 @@ class PolicyController extends Controller
                     'labels' => [],
                     'data' => []
                 ];
+
+                // Initialize all months with 0 count
+                for ($m = 0; $m < $indexcount; $m++) {
+                    $date = $startDate->copy()->addMonths($m);
+                    $formattedData[$rate->agent_id]['labels'][] = $date->format('n-Y');
+                    $formattedData[$rate->agent_id]['data'][] = 0;
+                }
             }
 
-            // Add the month-year label and policy count
-            $formattedData[$rate->agent_id]['labels'][] = $rate->month . '-' . $rate->year;
-            $formattedData[$rate->agent_id]['data'][] = $rate->policy_count;
+            // Check if the rate's month-year is within our 4-month range
+            if (($rate->year > $startYear || ($rate->year == $startYear && $rate->month >= $startMonth)) &&
+                ($rate->year < $currentYear || ($rate->year == $currentYear && $rate->month <= $currentMonth))) {
+                $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
+                if ($index >= 0 && $index < $indexcount) {
+                    $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
+                }
+            }
         }
 
         return $this->addDaysSinceLastPolicy($formattedData);
@@ -192,10 +230,8 @@ class PolicyController extends Controller
 
     public function addDaysSinceLastPolicy($formattedData)
     {
-        // Get today's date as a timestamp at the start of the day
-        $today = strtotime(date('Y-m-d'));
 
-        // Get the latest policy date for each agent
+        $today = strtotime(date('Y-m-d'));
         $latestPolicyDates = DB::table('policies')
             ->select('agent_id', DB::raw('MAX(DATE(policy_start_date)) as last_policy_date'))
             ->groupBy('agent_id')
@@ -204,7 +240,6 @@ class PolicyController extends Controller
 
         foreach ($formattedData as $agentId => &$agentData) {
             if (isset($latestPolicyDates[$agentId])) {
-                // Convert the last policy date to a timestamp
                 $lastPolicyDate = strtotime($latestPolicyDates[$agentId]->last_policy_date);
 
                 // Calculate the difference in days
@@ -218,27 +253,10 @@ class PolicyController extends Controller
             }
         }
 
-        // Debugging: Check the structure before sorting
-        // Log the unsorted data to see if days_since_last_policy is being set correctly
-        foreach ($formattedData as $agentId => $agentData) {
-            // echo "Agent ID: $agentId, Days Since Last Policy: " . $agentData['days_since_last_policy'] . "\n";
-            // echo "<br>";
-        }
-
-        // Sort the $formattedData array by days_since_last_policy in descending order
         uasort($formattedData, function ($a, $b) {
-            // Debugging: Log the values being compared
-            // echo "Comparing {$a['days_since_last_policy']} with {$b['days_since_last_policy']}\n";
-            // echo "<br>";
             return $b['days_since_last_policy'] <=> $a['days_since_last_policy'];
-            // Use spaceship operator
-        });
 
-        // Debugging: Check the sorted structure
-        // foreach ($formattedData as $agentId => $agentData) {
-        //     echo "After Sorting - Agent ID: $agentId, Days Since Last Policy: " . $agentData['days_since_last_policy'] . "\n";
-        //     echo "<br>";
-        // }
+        });
 
         return $formattedData;
     }
