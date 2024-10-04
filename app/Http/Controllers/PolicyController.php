@@ -194,7 +194,7 @@ class PolicyController extends Controller
 
 
         // Calculate the start month and year (4 months ago)
-        $startDate = $currentDate->subMonths(5);
+        $startDate = $currentDate->subMonths(6);
         $startYear = $startDate->year;
         $startMonth = $startDate->month;
 
