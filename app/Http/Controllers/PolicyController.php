@@ -152,8 +152,10 @@ class PolicyController extends Controller
 
     public function showPolicyRates()
     {
-          $policyRates = $this->getMonthlyPolicyRates(); // Assuming getMonthlyPolicyRates is in the same controller
-        return view('admin.analytics.policy_rates', compact('policyRates'));
+        $policyData = $this->getMonthlyPolicyRates();
+        $policyRates = $policyData['agentData'];
+        $monthlySummary = $policyData['monthlySummary'];
+        return view('admin.analytics.policy_rates', compact('policyRates', 'monthlySummary'));
     }
 
     public function getMonthlyPolicyRates()
@@ -171,6 +173,7 @@ class PolicyController extends Controller
             ->get();
 
         $formattedData = [];
+        $monthlySummary = [];
 
         // Get the current month and year
         $currentDate = now();
@@ -192,11 +195,17 @@ class PolicyController extends Controller
                 break;
         }
 
-
-        // Calculate the start month and year (4 months ago)
+        // Calculate the start month and year (6 months ago)
         $startDate = $currentDate->subMonths(6);
         $startYear = $startDate->year;
         $startMonth = $startDate->month;
+
+        // Initialize monthly summary
+        for ($m = 0; $m < $indexcount; $m++) {
+            $date = $startDate->copy()->addMonths($m);
+            $monthKey = $date->format('n-Y');
+            $monthlySummary[$monthKey] = 0;
+        }
 
         foreach ($policyRates as $rate) {
             // Initialize the agent's data if not already set
@@ -215,17 +224,35 @@ class PolicyController extends Controller
                 }
             }
 
-            // Check if the rate's month-year is within our 4-month range
+            // Check if the rate's month-year is within our 6-month range
             if (($rate->year > $startYear || ($rate->year == $startYear && $rate->month >= $startMonth)) &&
                 ($rate->year < $currentYear || ($rate->year == $currentYear && $rate->month <= $currentMonth))) {
                 $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
                 if ($index >= 0 && $index < $indexcount) {
                     $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
+
+                    // Add to monthly summary
+                    $monthKey = $rate->month . '-' . $rate->year;
+                    $monthlySummary[$monthKey] += $rate->policy_count;
                 }
             }
         }
 
-        return $this->addDaysSinceLastPolicy($formattedData);
+        $formattedData = $this->addDaysSinceLastPolicy($formattedData);
+
+        // Convert monthly summary to array of objects
+        $monthlySummaryArray = [];
+        foreach ($monthlySummary as $month => $count) {
+            $monthlySummaryArray[] = [
+                'month' => $month,
+                'count' => $count
+            ];
+        }
+
+        return [
+            'agentData' => $formattedData,
+            'monthlySummary' => $monthlySummaryArray
+        ];
     }
 
     public function addDaysSinceLastPolicy($formattedData)
