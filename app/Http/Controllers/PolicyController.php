@@ -154,12 +154,13 @@ class PolicyController extends Controller
     {
         $policyData = $this->getMonthlyPolicyRates();
         $policyRates = $policyData['agentData'];
-        $monthlySummary = $policyData['monthlySummary'];
-        return view('admin.analytics.policy_rates', compact('policyRates', 'monthlySummary'));
+        $chartData = $policyData['chartData'];
+        return view('admin.analytics.policy_rates', compact('policyRates', 'chartData'));
     }
 
     public function getMonthlyPolicyRates()
     {
+        // Query the database to get policy rates
         $policyRates = DB::table('policies')
             ->join('users', 'policies.agent_id', '=', 'users.id')
             ->select(
@@ -173,14 +174,16 @@ class PolicyController extends Controller
             ->get();
 
         $formattedData = [];
-        $monthlySummary = [];
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $policyCounts = array_fill(0, 12, 0); // Initialize counts for all 12 months with 0
 
-        // Get the current month and year
+        // Get the current date
         $currentDate = now();
         $currentYear = $currentDate->year;
         $currentMonth = $currentDate->month;
 
-        switch($currentMonth) {
+        // Determine the number of months to show based on the current month
+        switch ($currentMonth) {
             case 1:
                 $indexcount = 10;
                 break;
@@ -195,17 +198,10 @@ class PolicyController extends Controller
                 break;
         }
 
-        // Calculate the start month and year (6 months ago)
+        // Calculate the start date (6 months ago)
         $startDate = $currentDate->subMonths(6);
         $startYear = $startDate->year;
         $startMonth = $startDate->month;
-
-        // Initialize monthly summary
-        for ($m = 0; $m < $indexcount; $m++) {
-            $date = $startDate->copy()->addMonths($m);
-            $monthKey = $date->format('n-Y');
-            $monthlySummary[$monthKey] = 0;
-        }
 
         foreach ($policyRates as $rate) {
             // Initialize the agent's data if not already set
@@ -226,32 +222,37 @@ class PolicyController extends Controller
 
             // Check if the rate's month-year is within our 6-month range
             if (($rate->year > $startYear || ($rate->year == $startYear && $rate->month >= $startMonth)) &&
-                ($rate->year < $currentYear || ($rate->year == $currentYear && $rate->month <= $currentMonth))) {
+                ($rate->year < $currentYear || ($rate->year == $currentYear && $rate->month <= $currentMonth))
+            ) {
                 $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
                 if ($index >= 0 && $index < $indexcount) {
                     $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
 
-                    // Add to monthly summary
-                    $monthKey = $rate->month . '-' . $rate->year;
-                    $monthlySummary[$monthKey] += $rate->policy_count;
+                    // Update the policy counts array for the chart
+                    $monthIndex = $rate->month - 1; // Convert to 0-based index
+                    $policyCounts[$monthIndex] += $rate->policy_count;
                 }
             }
         }
 
+        // Add days since last policy (assuming this method exists)
         $formattedData = $this->addDaysSinceLastPolicy($formattedData);
 
-        // Convert monthly summary to array of objects
-        $monthlySummaryArray = [];
-        foreach ($monthlySummary as $month => $count) {
-            $monthlySummaryArray[] = [
-                'month' => $month,
-                'count' => $count
-            ];
-        }
+        // Prepare the data for the chart
+        $chartData = [
+            'categories' => $monthNames,
+            'data' => $policyCounts,
+            'series' => [
+                [
+                    'name' => 'Policy',
+                    'data' => $policyCounts
+                ]
+            ]
+        ];
 
         return [
             'agentData' => $formattedData,
-            'monthlySummary' => $monthlySummaryArray
+            'chartData' => $chartData
         ];
     }
 
@@ -282,7 +283,6 @@ class PolicyController extends Controller
 
         uasort($formattedData, function ($a, $b) {
             return $b['days_since_last_policy'] <=> $a['days_since_last_policy'];
-
         });
 
         return $formattedData;

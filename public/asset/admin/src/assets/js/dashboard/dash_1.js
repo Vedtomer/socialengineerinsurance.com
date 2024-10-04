@@ -12,22 +12,22 @@ window.addEventListener("load", function(){
       Apex.tooltip = {
           theme: Theme
       }
-      
+
       /**
         ==============================
         |    @Options Charts Script   |
         ==============================
       */
-      
+
       /*
         ======================================
             Visitor Statistics | Options
         ======================================
       */
-      
-      
+
+
       // Total Visits
-      
+
       var spark1 = {
       chart: {
           id: 'unique-visits',
@@ -121,12 +121,12 @@ window.addEventListener("load", function(){
             },
           },
       }
-      
+
       ]
       }
-      
+
       // Paid Visits
-      
+
       var spark2 = {
       chart: {
         id: 'total-users',
@@ -222,114 +222,114 @@ window.addEventListener("load", function(){
       }
       ]
       }
-      
-      
+
+
       /*
         ===================================
-            Unique Visitors | Options
+            Unique Visitors | Options | Dark mode
         ===================================
       */
-      
-      var d_1options1 = {
-      chart: {
-          height: 350,
-          type: 'bar',
-          toolbar: {
-            show: false,
-          }
-      },
-      colors: ['#622bd7', '#ffbb44'],
-      plotOptions: {
-          bar: {
-              horizontal: false,
-              columnWidth: '55%',
-              endingShape: 'rounded',
-              borderRadius: 10,
-      
-          },
-      },
-      dataLabels: {
-          enabled: false
-      },
-      legend: {
-          position: 'bottom',
-          horizontalAlign: 'center',
-          fontSize: '14px',
-          markers: {
-              width: 10,
-              height: 10,
-              offsetX: -5,
-              offsetY: 0
-          },
-          itemMargin: {
-              horizontal: 10,
-              vertical: 8
-          }
-      },
-      grid: {
-        borderColor: '#191e3a',
-      },
-      stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-      },
-      series: [{
-          name: 'Direct',
-          data: [58, 44, 55, 57, 56, 61, 58, 63, 60, 66, 56, 63]
-      }, {
-          name: 'Organic',
-          data: [91, 76, 85, 101, 98, 87, 105, 91, 114, 94, 66, 70]
-      }],
-      xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shade: Theme,
-          type: 'vertical',
-          shadeIntensity: 0.3,
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 0.8,
-          stops: [0, 100]
-        }
-      },
-      tooltip: {
-          marker : {
-              show: false,
-          },
-          theme: Theme,
-          y: {
-              formatter: function (val) {
-                  return val
-              }
-          }
-      },
-      responsive: [
-          { 
-              breakpoint: 767,
-              options: {
-                  plotOptions: {
-                      bar: {
-                          borderRadius: 0,
-                          columnWidth: "50%"
-                      }
-                  }
-              }
-          },
-      ]
-      }
-      
+
+    //   var d_1options1 = {
+    //   chart: {
+    //       height: 350,
+    //       type: 'bar',
+    //       toolbar: {
+    //         show: false,
+    //       }
+    //   },
+    //   colors: ['#622bd7', '#ffbb44'],
+    //   plotOptions: {
+    //       bar: {
+    //           horizontal: false,
+    //           columnWidth: '55%',
+    //           endingShape: 'rounded',
+    //           borderRadius: 10,
+
+    //       },
+    //   },
+    //   dataLabels: {
+    //       enabled: false
+    //   },
+    //   legend: {
+    //       position: 'bottom',
+    //       horizontalAlign: 'center',
+    //       fontSize: '14px',
+    //       markers: {
+    //           width: 10,
+    //           height: 10,
+    //           offsetX: -5,
+    //           offsetY: 0
+    //       },
+    //       itemMargin: {
+    //           horizontal: 10,
+    //           vertical: 8
+    //       }
+    //   },
+    //   grid: {
+    //     borderColor: '#191e3a',
+    //   },
+    //   stroke: {
+    //       show: true,
+    //       width: 2,
+    //       colors: ['transparent']
+    //   },
+    //   series: [{
+    //       name: 'Direct',
+    //       data: [58, 44, 55, 57, 56, 61, 58, 63, 60, 66, 56, 63]
+    //   }, {
+    //       name: 'Organic',
+    //       data: [91, 76, 85, 101, 98, 87, 105, 91, 114, 94, 66, 70]
+    //   }],
+    //   xaxis: {
+    //       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    //   },
+    //   fill: {
+    //     type: 'gradient',
+    //     gradient: {
+    //       shade: Theme,
+    //       type: 'vertical',
+    //       shadeIntensity: 0.3,
+    //       inverseColors: false,
+    //       opacityFrom: 1,
+    //       opacityTo: 0.8,
+    //       stops: [0, 100]
+    //     }
+    //   },
+    //   tooltip: {
+    //       marker : {
+    //           show: false,
+    //       },
+    //       theme: Theme,
+    //       y: {
+    //           formatter: function (val) {
+    //               return val
+    //           }
+    //       }
+    //   },
+    //   responsive: [
+    //       {
+    //           breakpoint: 767,
+    //           options: {
+    //               plotOptions: {
+    //                   bar: {
+    //                       borderRadius: 0,
+    //                       columnWidth: "50%"
+    //                   }
+    //               }
+    //           }
+    //       },
+    //   ]
+    //   }
+
       /*
         ==============================
             Statistics | Options
         ==============================
       */
-      
+
       // Followers
-      
+
       var d_1options3 = {
       chart: {
         id: 'sparkline1',
@@ -368,7 +368,7 @@ window.addEventListener("load", function(){
           top: 5,
           right: 0,
           left: 0
-          }, 
+          },
       },
       fill: {
         type:"gradient",
@@ -382,9 +382,9 @@ window.addEventListener("load", function(){
         }
       }
       }
-      
+
       // Referral
-      
+
       var d_1options4 = {
       chart: {
         id: 'sparkline1',
@@ -423,7 +423,7 @@ window.addEventListener("load", function(){
           top: 5,
           right: 0,
           left: 0
-          }, 
+          },
       },
       fill: {
         type:"gradient",
@@ -437,9 +437,9 @@ window.addEventListener("load", function(){
         }
       }
       }
-      
+
       // Engagement Rate
-      
+
       var d_1options5 = {
         chart: {
           id: 'sparkline1',
@@ -481,7 +481,7 @@ window.addEventListener("load", function(){
             top: 5,
             right: 0,
             left: 0
-            }, 
+            },
         },
         fill: {
           type:"gradient",
@@ -495,31 +495,31 @@ window.addEventListener("load", function(){
           }
         }
       }
-      
+
 
     } else {
-      
+
       var Theme = 'dark';
-      
+
       Apex.tooltip = {
           theme: Theme
       }
-      
+
       /**
         ==============================
         |    @Options Charts Script   |
         ==============================
       */
-      
+
       /*
         ======================================
             Visitor Statistics | Options
         ======================================
       */
-      
-      
+
+
       // Total Visits
-      
+
       var spark1 = {
       chart: {
           id: 'unique-visits',
@@ -613,12 +613,12 @@ window.addEventListener("load", function(){
             },
           },
       }
-      
+
       ]
       }
-      
+
       // Paid Visits
-      
+
       var spark2 = {
       chart: {
         id: 'total-users',
@@ -714,14 +714,14 @@ window.addEventListener("load", function(){
       }
       ]
       }
-      
-      
+
+
       /*
         ===================================
             Unique Visitors | Options
         ===================================
       */
-      
+console.log("xxxxxxxxxxxxxxxxxxxx"+ chartData.data);
       var d_1options1 = {
       chart: {
           height: 350,
@@ -737,7 +737,7 @@ window.addEventListener("load", function(){
               columnWidth: '55%',
               endingShape: 'rounded',
               borderRadius: 10,
-      
+
           },
       },
       dataLabels: {
@@ -766,15 +766,14 @@ window.addEventListener("load", function(){
           width: 2,
           colors: ['transparent']
       },
-      series: [{
-          name: 'Direct',
-          data: [58, 44, 55, 57, 56, 61, 58, 63, 60, 66, 56, 63]
-      }, {
-          name: 'Organic',
-          data: [91, 76, 85, 101, 98, 87, 105, 91, 114, 94, 66, 70]
+      series: [
+
+       {
+          name: "Total Policy",
+          data: chartData.data
       }],
       xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          categories: chartData.categories,
       },
       fill: {
         type: 'gradient',
@@ -800,7 +799,7 @@ window.addEventListener("load", function(){
           }
       },
       responsive: [
-          { 
+          {
               breakpoint: 767,
               options: {
                   plotOptions: {
@@ -813,15 +812,15 @@ window.addEventListener("load", function(){
           },
       ]
       }
-      
+
       /*
         ==============================
             Statistics | Options
         ==============================
       */
-      
+
       // Followers
-      
+
       var d_1options3 = {
       chart: {
         id: 'sparkline1',
@@ -860,7 +859,7 @@ window.addEventListener("load", function(){
           top: 5,
           right: 0,
           left: 0
-          }, 
+          },
       },
       fill: {
         type:"gradient",
@@ -874,9 +873,9 @@ window.addEventListener("load", function(){
         }
       }
       }
-      
+
       // Referral
-      
+
       var d_1options4 = {
       chart: {
         id: 'sparkline1',
@@ -915,7 +914,7 @@ window.addEventListener("load", function(){
           top: 5,
           right: 0,
           left: 0
-          }, 
+          },
       },
       fill: {
         type:"gradient",
@@ -929,9 +928,9 @@ window.addEventListener("load", function(){
         }
       }
       }
-      
+
       // Engagement Rate
-      
+
       var d_1options5 = {
         chart: {
           id: 'sparkline1',
@@ -973,7 +972,7 @@ window.addEventListener("load", function(){
             top: 5,
             right: 0,
             left: 0
-            }, 
+            },
         },
         fill: {
           type:"gradient",
@@ -989,7 +988,7 @@ window.addEventListener("load", function(){
       }
 
     }
-      
+
       /**
           ==============================
           |    @Render Charts Script    |
@@ -1078,26 +1077,26 @@ window.addEventListener("load", function(){
               |    @Re-Render Charts Script    |
               ==============================
           */
-      
+
           /*
               ===================================
                   Unique Visitors | Script
               ===================================
           */
-      
+
           d_1C_3.updateOptions({
           grid: {
                   borderColor: '#191e3a',
               },
           })
-          
+
           /*
               ==============================
                   Statistics | Script
               ==============================
           */
-      
-      
+
+
           // Followers
 
           d_1C_5.updateOptions({
@@ -1108,7 +1107,7 @@ window.addEventListener("load", function(){
                   }
               }
           })
-      
+
           // Referral
 
           d_1C_6.updateOptions({
@@ -1119,7 +1118,7 @@ window.addEventListener("load", function(){
                   }
               }
           })
-      
+
           // Engagement Rate
 
           d_1C_7.updateOptions({
@@ -1130,34 +1129,34 @@ window.addEventListener("load", function(){
                   }
               }
           })
-          
+
       } else {
-          
+
           /*
               ==============================
               |    @Re-Render Charts Script    |
               ==============================
           */
-      
+
           /*
               ===================================
                   Unique Visitors | Script
               ===================================
           */
-      
+
           d_1C_3.updateOptions({
           grid: {
                   borderColor: '#e0e6ed',
               },
           })
-        
+
           /*
               ==============================
                   Statistics | Script
               ==============================
           */
-      
-      
+
+
           // Followers
 
           d_1C_5.updateOptions({
@@ -1168,7 +1167,7 @@ window.addEventListener("load", function(){
                   }
               }
           })
-      
+
           // Referral
 
           d_1C_6.updateOptions({
@@ -1179,7 +1178,7 @@ window.addEventListener("load", function(){
                   }
               }
           })
-      
+
           // Engagement Rate
 
           d_1C_7.updateOptions({
@@ -1192,7 +1191,7 @@ window.addEventListener("load", function(){
           })
 
       }
-     
+
   })
 
 
