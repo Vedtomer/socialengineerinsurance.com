@@ -74,9 +74,11 @@
                                             <span class="badge badge-light-primary  me-2">
                                                 {{ array_sum($agentData['data']) }}
                                             </span>
-                                            <span class="badge badge-light-danger  me-2">
-                                                {{ $agentData['days_since_last_policy'] }}
-                                            </span>
+<br>
+                                                <span class="" style="color: #e0a82a; font-size:10px">
+                                                    Last policy: {{ $agentData['days_since_last_policy'] }} days ago
+                                                </span>
+
                                         </td>
 
                                         <!-- Monthly Data for Each Agent -->
