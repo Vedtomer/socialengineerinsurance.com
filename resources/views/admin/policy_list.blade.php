@@ -34,6 +34,7 @@
                             <th>Payment By</th>
                             <th>Discount</th>
                             <th>Payout</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,6 +87,10 @@
                             <td>
                                 {{ $user->payout }}
                             </td>
+                            <td>
+                                <button class="btn btn-danger" onclick="policyDelete('{{$user->policy_no}}')" >Delete</button>
+                                {{-- <button class="btn btn-danger">Delete</button> --}}
+                            </td>
                         </tr>
                     @endforeach
 
@@ -99,3 +104,45 @@
 </div>
 
 @endsection
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+     function policyDelete(policy_no) {
+         Swal.fire({
+             title: "Please confirm to Delete",
+             text: "Do you want to proceed?",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonText: "Yes, Proceed",
+             cancelButtonText: "Cancel",
+
+         }).then((result) => {
+             if (result.isConfirmed) {
+                 var token = '{{ csrf_token() }}';
+                 $.ajaxSetup({
+                     headers: {
+                         'X-CSRF-TOKEN': token
+                     }
+                 });
+
+                 $.post('/admin/policy-list/delete/' + policy_no)
+                     .done(function(response) {
+                         location.reload();
+                     })
+                     .fail(function(error) {
+                         console.error(error);
+                         Swal.fire({
+                             title: "Error",
+                             text: "An error occurred while processing your request.",
+                             icon: "error",
+                             showConfirmButton: false,
+                             timer: 4000
+                         });
+                     });
+             }
+         });
+     }
+
+ </script>

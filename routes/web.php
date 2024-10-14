@@ -67,6 +67,8 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], '/policy-list', [PolicyController::class, 'PolicyList'])->name('admin.policy_list');
         Route::get('/royalsundaram/{id?}', [AdminController::class, 'royalsundaram'])->name('royalsundaram');
         Route::match(['get', 'post'], '/policy-pdf-upload', [PolicyController::class, 'policyUpload'])->name('admin.policy_pdf_upload');
+        Route::post('/policy-list/delete/{policy_no}', [PolicyController::class, 'policyDelete']);
+
 
 
         #Slider Routes

@@ -44,7 +44,7 @@ class PolicyController extends Controller
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-        $query = Policy::with('agent', 'company')->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
+        $query = Policy::with('agent', 'company')->where('is_deleted', 1)->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
 
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
@@ -57,7 +57,13 @@ class PolicyController extends Controller
     }
 
 
-
+    public function policyDelete(Request $request, $policy_no)
+    {
+        $policyDelete = Policy::where('policy_no', $policy_no)->firstOrFail();
+        $policyDelete->is_deleted = 0;
+        $policyDelete->save();
+        return response()->json(['message' => 'Policy Delete successful.']);
+    }
 
 
     public function policyUpload(Request $request)
