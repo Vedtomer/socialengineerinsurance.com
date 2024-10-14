@@ -75,8 +75,8 @@
                                                 {{ array_sum($agentData['data']) }}
                                             </span>
 <br>
-                                                <span class="" style="color: #e0a82a; font-size:10px">
-                                                    Last policy: {{ $agentData['days_since_last_policy'] }} days ago
+                                                <span class="" style="color: #e0a82a; font-weight: 50;">
+                                                    Last policy:{{ $agentData['days_since_last_policy'] }} days ago
                                                 </span>
 
                                         </td>

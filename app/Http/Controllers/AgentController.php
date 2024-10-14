@@ -48,9 +48,9 @@ class AgentController extends Controller
 
         // Ensure start_date and end_date are Carbon instances
        // $start_date = $start_date ? Carbon::parse($start_date)->startOfDay() : now()->startOfMonth()->startOfDay();
-  //  return    $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
+      // return    $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
 
-        $query = User::role('agent')->withCount([
+        $query = User::role('agent')->where('status', '=', 1)->withCount([
             'Policy as totalPolicies' => function ($query) use ($start_date, $end_date) {
                 $query->whereDate('policy_start_date', '>=', $start_date)
                       ->whereDate('policy_start_date', '<', $end_date);
@@ -258,6 +258,7 @@ class AgentController extends Controller
             $agent->city = $request->city;
             $agent->address = $request->address;
             $agent->cut_and_pay = $request->cut_and_pay;
+            $agent->status = $request->active;
 
 
             $agent->mobile_number = $request->mobile_number;
