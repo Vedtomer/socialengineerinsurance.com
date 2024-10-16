@@ -88,7 +88,7 @@
                                 {{ $user->payout }}
                             </td>
                             <td>
-                                <button class="btn btn-danger" onclick="policyDelete('{{$user->policy_no}}')" >Delete</button>
+                                <button class="btn btn-danger" onclick="policyDelete('{{$user->id}}')" >Delete</button>
                                 {{-- <button class="btn btn-danger">Delete</button> --}}
                             </td>
                         </tr>
@@ -109,7 +109,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <script>
-     function policyDelete(policy_no) {
+     function policyDelete(id) {
          Swal.fire({
              title: "Please confirm to Delete",
              text: "Do you want to proceed?",
@@ -127,7 +127,7 @@
                      }
                  });
 
-                 $.post('/admin/policy-list/delete/' + policy_no)
+                 $.post('/admin/policy-list/delete/' + id)
                      .done(function(response) {
                          location.reload();
                      })

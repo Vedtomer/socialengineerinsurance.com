@@ -18,6 +18,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-app/Http/Controllers/AgentController.php
+AdminController.php
+/app/Http/Controllers/AgentController.php
 
 

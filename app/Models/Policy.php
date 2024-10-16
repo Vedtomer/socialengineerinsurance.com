@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Policy extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'policy_no',
         'policy_start_date',
@@ -28,6 +29,8 @@ class Policy extends Model
         'discount',
         'payout'
     ];
+
+    protected $dates = ['deleted_at'];
     protected $appends = ['policy_link'];
     public function agent(): BelongsTo
     {
