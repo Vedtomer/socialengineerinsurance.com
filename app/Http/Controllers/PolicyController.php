@@ -64,7 +64,7 @@ class PolicyController extends Controller
         // $policyDelete->save();
         $policy = Policy::findOrFail($id);
         $policy->delete(); // Soft delete the policy
-        return response()->json(['message' => 'Policy Delete successful.']);
+        return response()->json(['success' => 'Policy Delete successful.']);
     }
 
 
