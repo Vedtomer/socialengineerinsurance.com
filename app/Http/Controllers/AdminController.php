@@ -21,6 +21,40 @@ class AdminController extends Controller
 {
 
 
+    public function login(Request $request)
+    {
+        // Check if the user is already authenticated and has the 'admin' role
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Handle GET request (show the login form)
+        if ($request->isMethod('get')) {
+            return view('admin.login');
+        }
+
+        // Handle POST request (authenticate the user)
+        if ($request->isMethod('post')) {
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::attempt($credentials, $request->filled('remember'))) {
+                // Authenticate and check if the user has the 'admin' role
+                $user = Auth::user();
+                if ($user->hasRole('admin')) {
+                    return redirect()->intended(route('admin.dashboard'));
+                } else {
+                    Auth::logout();
+                    return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
+                }
+            }
+
+            return redirect()->route('login')->with('error', 'Invalid login credentials');
+        }
+
+        return redirect()->route('login')->with('error', 'Invalid login credentials');
+    }
+
+
     // public function login(Request $request)
     // {
     //     // Check if the user is already authenticated and has the 'admin' role
@@ -29,9 +63,26 @@ class AdminController extends Controller
     //     }
 
     //     // Handle GET request (show the login form)
-    //     if ($request->isMethod('get')) {
-    //         return view('admin.login');
+    //         // Handle GET request (show the login form or auto-login if credentials match)
+    // if ($request->isMethod('get')) {
+    //     // If the user is not authenticated, attempt to auto-login
+    //     $credentials = ['email' => 'admin@admin.com', 'password' => 'admin'];
+
+    //     if (Auth::attempt($credentials)) {
+    //         // Check if the user has the 'admin' role
+    //         $user = Auth::user();
+    //         if ($user->hasRole('admin')) {
+    //             return redirect()->route('admin.dashboard');
+    //         } else {
+    //             Auth::logout();
+    //             return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
+    //         }
     //     }
+
+    //     // If the auto-login fails, show the login form
+    //     return view('admin.login')->with('error', 'Auto-login failed. Please log in manually.');
+    // }
+
 
     //     // Handle POST request (authenticate the user)
     //     // if ($request->isMethod('post')) {
@@ -53,57 +104,6 @@ class AdminController extends Controller
 
     //     return redirect()->route('login')->with('error', 'Invalid login credentials');
     // }
-
-
-    public function login(Request $request)
-    {
-        // Check if the user is already authenticated and has the 'admin' role
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
-            return redirect()->route('admin.dashboard');
-        }
-
-        // Handle GET request (show the login form)
-            // Handle GET request (show the login form or auto-login if credentials match)
-    if ($request->isMethod('get')) {
-        // If the user is not authenticated, attempt to auto-login
-        $credentials = ['email' => 'admin@admin.com', 'password' => 'admin'];
-
-        if (Auth::attempt($credentials)) {
-            // Check if the user has the 'admin' role
-            $user = Auth::user();
-            if ($user->hasRole('admin')) {
-                return redirect()->route('admin.dashboard');
-            } else {
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-            }
-        }
-
-        // If the auto-login fails, show the login form
-        return view('admin.login')->with('error', 'Auto-login failed. Please log in manually.');
-    }
-
-
-        // Handle POST request (authenticate the user)
-        // if ($request->isMethod('post')) {
-        //     $credentials = $request->only('email', 'password');
-
-        //     if (Auth::attempt($credentials, $request->filled('remember'))) {
-        //         // Authenticate and check if the user has the 'admin' role
-        //         $user = Auth::user();
-        //         if ($user->hasRole('admin')) {
-        //             return redirect()->intended(route('admin.dashboard'));
-        //         } else {
-        //             Auth::logout();
-        //             return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-        //         }
-        //     }
-
-        //     return redirect()->route('login')->with('error', 'Invalid login credentials');
-        // }
-
-        return redirect()->route('login')->with('error', 'Invalid login credentials');
-    }
 
 
 
