@@ -266,26 +266,21 @@ class ApiController extends Controller
 
         $data = [
             'messaging_product' => 'whatsapp',
-            'to' => "+919802244899",
+            'to' => "+91" . env('Whatsapp_admin_phone'),
             'type' => 'template',
             'template' => [
-                'name' => 'agent_reedem_req',
+                'name' => 'points_redemption_request',
                 'language' => [
                     'code' => 'en'
                 ],
                 'components' => [
                     [
-                        'type' => 'header',
+                        'type' => 'body',
                         'parameters' => [
                             [
                                 'type' => 'text',
                                 'text' => $agent->name
-                            ]
-                        ]
-                    ],
-                    [
-                        'type' => 'body',
-                        'parameters' => [
+                            ],
                             [
                                 'type' => 'text',
                                 'text' => (string)$pointRedemption->points
@@ -296,15 +291,15 @@ class ApiController extends Controller
                             ],
                             [
                                 'type' => 'text',
-                                'text' => $pointRedemption->created_at->format('Y-m-d')
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => number_format($pointRedemption->amount_to_be_paid, 2)
+                                'text' => $pointRedemption->created_at->format('d M Y')
                             ],
                             [
                                 'type' => 'text',
                                 'text' => number_format($pointRedemption->tds, 2)
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => number_format($pointRedemption->amount_to_be_paid, 2)
                             ]
                         ]
                     ]
@@ -313,7 +308,7 @@ class ApiController extends Controller
         ];
 
         $headers = [
-            'Authorization: Bearer EAA3XwYmTGBUBOwypHZAqfoJZCyHnQYAPRVdRS4ZCoR14ZAEvf0szFWQ2yCWXFOvsz8sDZBwivcc6yq5PzrbZA3gTLIhK41kQhW7Y2rT3n6wkVPZBNHufJfAxn3UZAwzjgLragMA2uZAtFSOrVXMEQlZBEZCcpM3fpLZA63ThQfvZBvRcVScj4wxNB7tBpck90Q17Q0huO',
+            'Authorization: Bearer ' . env('FACEBOOK_ACCESS_TOKEN'),
             'Content-Type: application/json'
         ];
 
