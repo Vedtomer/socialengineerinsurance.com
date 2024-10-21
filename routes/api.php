@@ -39,45 +39,46 @@ Route::prefix('agent')->group(function () {
 
 // In routes/api.php
 Route::match(['get', 'post'], '/webhook', function (Request $request) {
-    // Verification logic
-    Log::info('Webhook Received');
-    $verifyToken = config('app.webhook_verify_token');
-    $mode = $request->query('hub_mode');
-    $token = $request->query('hub_verify_token');
-    $challenge = $request->query('hub_challenge');
+    // WhatsApp verification
+    Log::info('Webhook received');
+    if ($request->isMethod('get')) {
+        $mode = $request->query('hub_mode');
+        $token = $request->query('hub_verify_token');
+        $challenge = $request->query('hub_challenge');
 
-    if ($mode === 'subscribe' && $token === $verifyToken) {
-        Log::info('Webhook verified');
-        return response($challenge, 200);
+        if ($mode === 'subscribe' && $token === config('app.webhook_verify_token')) {
+            Log::info('WhatsApp webhook verified');
+            return response($challenge, 200);
+        }
+
+        return response('Verification failed', 403);
     }
 
-    // If not a verification request, process as a normal webhook
+    // Handle incoming webhook
     if ($request->isMethod('post')) {
         // Verify webhook signature
-        $signature = $request->header('X-Webhook-Signature');
+        $signature = $request->header('X-Hub-Signature-256');
         $payload = $request->getContent();
-        $calculatedSignature = hash_hmac('sha256', $payload, config('app.webhook_secret'));
+        $expectedSignature = 'sha256=' . hash_hmac('sha256', $payload, config('app.webhook_secret'));
 
-        if (!hash_equals($calculatedSignature, $signature)) {
+        if (!hash_equals($expectedSignature, $signature)) {
             Log::warning('Invalid webhook signature');
             return response('Invalid signature', 401);
         }
 
-        // Parse and log the event
-        $event = $request->json()->all();
+        // Process the webhook payload
+        $data = $request->json()->all();
+        Log::info('Webhook received', ['data' => $data]);
 
-        switch ($event['type'] ?? '') {
-            case 'message.received':
-                Log::info('New message received', ['data' => $event['data'] ?? null]);
-                break;
-            case 'message.status_update':
-                Log::info('Message status updated', ['data' => $event['data'] ?? null]);
-                break;
-            default:
-                Log::info('Unhandled event type', ['type' => $event['type'] ?? 'unknown']);
+        // Handle different types of messages or events here
+        // For example:
+        if (isset($data['entry'][0]['changes'][0]['value']['messages'][0])) {
+            $message = $data['entry'][0]['changes'][0]['value']['messages'][0];
+            Log::info('New message received', ['message' => $message]);
+            // Process the message
         }
 
-        return response('Webhook received', 200);
+        return response('Webhook processed', 200);
     }
 
     return response('Invalid request', 400);

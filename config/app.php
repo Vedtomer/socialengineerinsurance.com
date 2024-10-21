@@ -123,7 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-     /*
+    /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
@@ -135,14 +135,16 @@ return [
     */
     // 'providers' => [
     //     // Other Service Providers
-    
+
     //     /*
     //      * Package Service Providers...
     //      */
     //     Spatie\Permission\PermissionServiceProvider::class,
-    
+
     //     // More Service Providers
     // ],
-    
+
+    'webhook_secret' => env('WEBHOOK_SECRET'),
+    'webhook_verify_token' => env('WEBHOOK_VERIFY_TOKEN'),
 
 ];
