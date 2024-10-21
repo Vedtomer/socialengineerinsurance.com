@@ -37,32 +37,50 @@ Route::prefix('agent')->group(function () {
    
 });
 
-Route::post('/webhook', function (Request $request) {
-    // Verify webhook signature
-    $signature = $request->header('X-Webhook-Signature');
-    $payload = $request->getContent();
-    $calculatedSignature = hash_hmac('sha256', $payload, config('app.webhook_secret'));
+// In routes/api.php
+Route::match(['get', 'post'], '/webhook', function (Request $request) {
+    // Verification logic
+    Log::info('Webhook Received');
+    $verifyToken = config('app.webhook_verify_token');
+    $mode = $request->query('hub_mode');
+    $token = $request->query('hub_verify_token');
+    $challenge = $request->query('hub_challenge');
 
-    if (!hash_equals($calculatedSignature, $signature)) {
-        Log::warning('Invalid webhook signature');
-        return response('Invalid signature', 401);
+    if ($mode === 'subscribe' && $token === $verifyToken) {
+        Log::info('Webhook verified');
+        return response($challenge, 200);
     }
 
-    // Parse and log the event
-    $event = $request->json()->all();
+    // If not a verification request, process as a normal webhook
+    if ($request->isMethod('post')) {
+        // Verify webhook signature
+        $signature = $request->header('X-Webhook-Signature');
+        $payload = $request->getContent();
+        $calculatedSignature = hash_hmac('sha256', $payload, config('app.webhook_secret'));
 
-    switch ($event['type'] ?? '') {
-        case 'message.received':
-            Log::info('New message received', ['data' => $event['data'] ?? null]);
-            break;
-        case 'message.status_update':
-            Log::info('Message status updated', ['data' => $event['data'] ?? null]);
-            break;
-        default:
-            Log::info('Unhandled event type', ['type' => $event['type'] ?? 'unknown']);
+        if (!hash_equals($calculatedSignature, $signature)) {
+            Log::warning('Invalid webhook signature');
+            return response('Invalid signature', 401);
+        }
+
+        // Parse and log the event
+        $event = $request->json()->all();
+
+        switch ($event['type'] ?? '') {
+            case 'message.received':
+                Log::info('New message received', ['data' => $event['data'] ?? null]);
+                break;
+            case 'message.status_update':
+                Log::info('Message status updated', ['data' => $event['data'] ?? null]);
+                break;
+            default:
+                Log::info('Unhandled event type', ['type' => $event['type'] ?? 'unknown']);
+        }
+
+        return response('Webhook received', 200);
     }
 
-    return response('Webhook received', 200);
+    return response('Invalid request', 400);
 });
 
 // In app/Http/Middleware/VerifyCsrfToken.php
