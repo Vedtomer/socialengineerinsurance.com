@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use Twilio\Rest\Client;
+use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Claim;
 use Illuminate\Http\Request;
@@ -18,6 +18,8 @@ use App\Models\InsuranceProduct;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Exception\GuzzleException;
+
 
 class ApiController extends Controller
 {
@@ -247,7 +249,7 @@ class ApiController extends Controller
         $pointRedemption->amount_to_be_paid = $amountToBePaid;
         $pointRedemption->policy_period_month_year = Carbon::createFromFormat('d-m-Y', $request->input('start_date'))->startOfMonth();
         $pointRedemption->save();
-
+        $this->sendWhatsAppNotification($agent, $pointRedemption);
         $data = $this->points($request);
 
         return response()->json([
@@ -257,29 +259,110 @@ class ApiController extends Controller
         ], 200);
     }
 
-    public function sendWhatsAppMessage($points, $agent)
+
+    private function sendWhatsAppNotification($agent, $pointRedemption)
     {
-        try {
-            $sid = env('TWILIO_SID');
-            $token = env('TWILIO_AUTH_TOKEN');
-            $twilio = new Client($sid, $token);
+        $url = 'https://graph.facebook.com/v20.0/491697427350235/messages';
 
-            $messageBody = "$agent requested redeem of $points points.";
+        $data = [
+            'messaging_product' => 'whatsapp',
+            'to' => "+919802244899",
+            'type' => 'template',
+            'template' => [
+                'name' => 'agent_reedem_req',
+                'language' => [
+                    'code' => 'en'
+                ],
+                'components' => [
+                    [
+                        'type' => 'header',
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => $agent->name
+                            ]
+                        ]
+                    ],
+                    [
+                        'type' => 'body',
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => (string)$pointRedemption->points
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => $pointRedemption->policy_period_month_year->format('F')
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => $pointRedemption->created_at->format('Y-m-d')
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => number_format($pointRedemption->amount_to_be_paid, 2)
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => number_format($pointRedemption->tds, 2)
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
-            $message = $twilio->messages
-                ->create(
-                    "whatsapp:+919802244899",
-                    array(
-                        "from" => "whatsapp:+14155238886",
-                        "body" => $messageBody
-                    )
-                );
+        $headers = [
+            'Authorization: Bearer EAA3XwYmTGBUBOwypHZAqfoJZCyHnQYAPRVdRS4ZCoR14ZAEvf0szFWQ2yCWXFOvsz8sDZBwivcc6yq5PzrbZA3gTLIhK41kQhW7Y2rT3n6wkVPZBNHufJfAxn3UZAwzjgLragMA2uZAtFSOrVXMEQlZBEZCcpM3fpLZA63ThQfvZBvRcVScj4wxNB7tBpck90Q17Q0huO',
+            'Content-Type: application/json'
+        ];
 
-            return response()->json(['message' => 'WhatsApp message sent successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($httpCode == 200) {
+            \Log::info('WhatsApp notification sent successfully for point redemption ID: ' . $pointRedemption->id);
+            \Log::info('Response: ' . $response);
+        } else {
+            $error = curl_error($ch);
+            \Log::error('Failed to send WhatsApp notification. HTTP Code: ' . $httpCode . '. Error: ' . $error);
+            \Log::error('Response: ' . $response);
         }
+
+        curl_close($ch);
     }
+
+
+
+    // public function sendWhatsAppMessage($points, $agent)
+    // {
+    //     try {
+    //         $sid = env('TWILIO_SID');
+    //         $token = env('TWILIO_AUTH_TOKEN');
+    //         $twilio = new Client($sid, $token);
+
+    //         $messageBody = "$agent requested redeem of $points points.";
+
+    //         $message = $twilio->messages
+    //             ->create(
+    //                 "whatsapp:+919802244899",
+    //                 array(
+    //                     "from" => "whatsapp:+14155238886",
+    //                     "body" => $messageBody
+    //                 )
+    //             );
+
+    //         return response()->json(['message' => 'WhatsApp message sent successfully']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
 
     public function points(Request $request)
     {

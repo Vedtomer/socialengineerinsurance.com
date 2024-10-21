@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiCustomerController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -32,10 +34,39 @@ Route::prefix('agent')->group(function () {
 
 
 
-    // Route::middleware(['auth:api', 'role:customer'])->group(function () {
-    //     Route::match(['get', 'post'], '/home', [ApiCustomerController::class, 'home']);
-
-    // });
+   
 });
 
+Route::post('/webhook', function (Request $request) {
+    // Verify webhook signature
+    $signature = $request->header('X-Webhook-Signature');
+    $payload = $request->getContent();
+    $calculatedSignature = hash_hmac('sha256', $payload, config('app.webhook_secret'));
+
+    if (!hash_equals($calculatedSignature, $signature)) {
+        Log::warning('Invalid webhook signature');
+        return response('Invalid signature', 401);
+    }
+
+    // Parse and log the event
+    $event = $request->json()->all();
+
+    switch ($event['type'] ?? '') {
+        case 'message.received':
+            Log::info('New message received', ['data' => $event['data'] ?? null]);
+            break;
+        case 'message.status_update':
+            Log::info('Message status updated', ['data' => $event['data'] ?? null]);
+            break;
+        default:
+            Log::info('Unhandled event type', ['type' => $event['type'] ?? 'unknown']);
+    }
+
+    return response('Webhook received', 200);
+});
+
+// In app/Http/Middleware/VerifyCsrfToken.php
+// protected $except = [
+//     'api/webhook',
+// ];
 
