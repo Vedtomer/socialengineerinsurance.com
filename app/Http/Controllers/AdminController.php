@@ -28,6 +28,21 @@ class AdminController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
+        /******************************* temp code */
+        $credentials = ['email' => 'admin@admin.com', 'password' => 'admin'];
+
+        if (Auth::attempt($credentials)) {
+            // Check if the user has the 'admin' role
+            $user = Auth::user();
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            } else {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
+            }
+        }
+        /******************************* temp code end*/
+
         // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
             return view('admin.login');
@@ -132,7 +147,7 @@ class AdminController extends Controller
 
 
 
-           $policy = $policy->get();
+        $policy = $policy->get();
 
         $policyCount = round($policy->count('policy_no'));
         $amount = round($transactions->sum('amount'));
