@@ -13,11 +13,12 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class User extends Authenticatable
 {
-    use HasApiTokens,HasFactory, Notifiable, HasRoles,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
-   /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -31,7 +32,11 @@ class User extends Authenticatable
         'address',
         'mobile_number',
         'commission',
-        'status', 'agent_code','cut_and_pay'
+        'status',
+        'agent_code',
+        'cut_and_pay',
+        'otp',
+        'otp_sent_at'
     ];
 
     /**
@@ -48,7 +53,7 @@ class User extends Authenticatable
     {
         $data = ('/profile') . "/" . $value;
         if (Storage::disk('public')->has($data)) {
-            return asset('/storage/profile') . "/" .$value;
+            return asset('/storage/profile') . "/" . $value;
         } else {
             return "";
         }
@@ -95,12 +100,11 @@ class User extends Authenticatable
             $agent_id =  auth()->guard('api')->user()->id;
 
 
-          $royalData = Policy::
-                whereBetween('policy_start_date', [$startDate, $endDate])
-           ->where('agent_id', $agent_id)
-            ->select('policy_no', 'policy_start_date', 'policy_end_date', 'customername', 'premium', 'agent_commission','insurance_company')
-            ->get()
-            ->append('policy_link');
+            $royalData = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
+                ->where('agent_id', $agent_id)
+                ->select('policy_no', 'policy_start_date', 'policy_end_date', 'customername', 'premium', 'agent_commission', 'insurance_company')
+                ->get()
+                ->append('policy_link');
 
             return response([
                 'status' => true,
@@ -123,5 +127,4 @@ class User extends Authenticatable
 
         return null; // see the note above in Gate::before about why null must be returned here.
     }
-
 }

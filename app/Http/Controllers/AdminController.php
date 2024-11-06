@@ -28,21 +28,6 @@ class AdminController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        /******************************* temp code */
-        $credentials = ['email' => 'admin@admin.com', 'password' => 'admin'];
-
-        if (Auth::attempt($credentials)) {
-            // Check if the user has the 'admin' role
-            $user = Auth::user();
-            if ($user->hasRole('admin')) {
-                return redirect()->route('admin.dashboard');
-            } else {
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-            }
-        }
-        /******************************* temp code end*/
-
         // Handle GET request (show the login form)
         if ($request->isMethod('get')) {
             return view('admin.login');
@@ -147,7 +132,7 @@ class AdminController extends Controller
 
 
 
-        $policy = $policy->get();
+           $policy = $policy->get();
 
         $policyCount = round($policy->count('policy_no'));
         $amount = round($transactions->sum('amount'));
@@ -372,32 +357,96 @@ class AdminController extends Controller
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        // Twilio credentials
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $serviceSid = env('TWILIO_VERIFY_SID');
-
-        // Initialize Twilio client
-        $twilio = new Client($sid, $token);
+        // Generate 6-digit OTP
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         try {
-            // Send OTP via Twilio
-            $verification = $twilio->verify->v2->services($serviceSid)
-                ->verifications
-                ->create("+91" . $phoneNumber, "sms");
+            // Send WhatsApp message using cURL
+            $curl = curl_init();
 
-            // Update user record to indicate OTP has been sent
-            $user->otp_sent_at = Carbon::now();
-            $user->save();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => 'https://graph.facebook.com/v20.0/491697427350235/messages',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode([
+                    'messaging_product' => 'whatsapp',
+                    'to' => '+91' . $phoneNumber,
+                    'type' => 'template',
+                    'template' => [
+                        'name' => 'admin_authentication',
+                        'language' => [
+                            'code' => 'en_us'
+                        ],
+                        'components' => [
+                            [
+                                'type' => 'body',
+                                'parameters' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => $otp
+                                    ]
+                                ]
+                            ],
+                            [
+                                'type' => 'button',
+                                'sub_type' => 'url',
+                                'index' => 0,
+                                'parameters' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => 'verify-otp'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]),
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . env('FACEBOOK_ACCESS_TOKEN'),
+                    'Content-Type: application/json'
+                ],
+            ]);
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            // Decode the response
+            $responseData = json_decode($response, true);
+            
+            // Check for API errors
+            if (isset($responseData['error'])) {
+                throw new \Exception($responseData['error']['message']);
+            }
+
+            if ($err) {
+                throw new \Exception('cURL Error: ' . $err);
+            }
+
+            // Update user with new OTP and timestamp
+            $user->update([
+                'otp' => Hash::make($otp),
+                'otp_sent_at' => Carbon::now()
+            ]);
 
             return response()->json([
                 'message' => 'OTP sent successfully',
-                'verification_sid' => $verification->sid
+                'expires_in' => '5 minutes',
+                'debug_response' => $responseData // Remove this in production
             ]);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'debug_response' => json_decode($response ?? '', true) // Remove this in production
+            ], 500);
         }
     }
+
+
 
     public function verifyOtp(Request $request)
     {
@@ -409,57 +458,57 @@ class AdminController extends Controller
         $phoneNumber = $request->input('phone_number');
         $otp = $request->input('otp');
 
+        // Find user
         $user = User::where('mobile_number', $phoneNumber)->first();
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        // Check if OTP has expired (default Twilio expiration is 10 minutes)
-        $otpSentTime = $user->otp_sent_at;
-        if ($otpSentTime->addMinutes(10)->isPast()) {
+        // Check if OTP exists
+        if (!$user->otp || !$user->otp_sent_at) {
+            return response()->json(['error' => 'No OTP request found'], 400);
+        }
+
+        // Check if OTP has expired (5 minutes)
+        if (Carbon::parse($user->otp_sent_at)->addMinutes(5)->isPast()) {
+            // Clear expired OTP
+            $user->update([
+                'otp' => null,
+                'otp_sent_at' => null
+            ]);
             return response()->json(['error' => 'OTP has expired'], 400);
         }
 
-        // Twilio credentials
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $serviceSid = env('TWILIO_VERIFY_SID');
-
-        // Initialize Twilio client
-        $twilio = new Client($sid, $token);
-
         try {
-            $verificationCheck = $twilio->verify->v2->services($serviceSid)
-                ->verificationChecks
-                ->create([
-                    'to' => "+91" . $phoneNumber,
-                    'code' => $otp
-                ]);
-
-            if ($verificationCheck->status === 'approved') {
-                // OTP is valid
-                $user->phone_verified_at = Carbon::now();
-                $user->save();
-
-                // Check if user has admin role
-                if (!$user->hasRole('admin')) {
-                    return response()->json(['error' => 'Access denied. User is not an admin.'], 403);
-                }
-
-                // Authenticate the user
-                Auth::login($user);
-
-                // Generate a new API token if using Laravel Sanctum
-                // $token = $user->createToken('auth_token')->plainTextToken;
-
-                return response()->json([
-                    'message' => 'OTP verified successfully',
-                    'user' => $user,
-                    // 'token' => $token
-                ]);
-            } else {
+            // Verify OTP
+            if (!Hash::check($otp, $user->otp)) {
                 return response()->json(['error' => 'Invalid OTP'], 400);
             }
+
+            // OTP is valid - update user verification status
+            $user->update([
+                'phone_verified_at' => Carbon::now(),
+                'otp' => null, // Clear the OTP
+                'otp_sent_at' => null // Clear the timestamp
+            ]);
+
+            // Check if user has admin role
+            if (!$user->hasRole('admin')) {
+                return response()->json(['error' => 'Access denied. User is not an admin.'], 403);
+            }
+
+            // Authenticate the user
+            Auth::login($user);
+
+            // If you want to generate a token (uncomment if using Sanctum)
+            // $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'OTP verified successfully',
+                'user' => $user,
+                // 'token' => $token // Uncomment if using Sanctum
+            ]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
