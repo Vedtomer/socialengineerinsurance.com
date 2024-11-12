@@ -11,8 +11,7 @@ use App\Imports\ExcelImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
-
+use App\Jobs\SendWhatsAppMessages;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -37,6 +36,9 @@ class PolicyController extends Controller
         $importClass = new ExcelImport($request->date);
         $items = $request->file('excelFile')->store('temp');
         Excel::import($importClass, $items);
+
+        // Dispatch job to send WhatsApp messages
+        dispatch(new SendWhatsAppMessages());
         return redirect()->back()->with('success', 'Data imported successfully!');
     }
 
@@ -49,7 +51,6 @@ class PolicyController extends Controller
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
         }
-
         $data = $query->get();
         $agentData = User::role('agent')->get();
 
@@ -168,29 +169,31 @@ class PolicyController extends Controller
 
     public function getMonthlyPolicyRates()
     {
-        // Query the database to get policy rates
-        $policyRates = DB::table('policies')
-            ->join('users', 'policies.agent_id', '=', 'users.id')
+        // Get the current date
+        $currentDate = now();
+        $startDate = $currentDate->copy()->subMonths(6);
+
+        // Query the database to get policy rates using the Policy model
+        $policyRates = Policy::join('users', 'policies.agent_id', '=', 'users.id')
             ->select(
                 'users.name as agent_name',
                 'policies.agent_id',
                 DB::raw('YEAR(policies.policy_start_date) as year'),
                 DB::raw('MONTH(policies.policy_start_date) as month'),
-                DB::raw('COUNT(*) as policy_count')
-            )->where('users.status', '=', 1)
+                DB::raw('COUNT(DISTINCT policies.id) as policy_count') // Use DISTINCT to avoid duplicates
+            )
+            ->where('users.status', '=', 1)
+            ->where('policies.policy_start_date', '>=', $startDate)
+            ->where('policies.policy_start_date', '<=', $currentDate)
             ->groupBy('policies.agent_id', 'year', 'month', 'users.name')
             ->get();
 
         $formattedData = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $policyCounts = array_fill(0, 12, 0); // Initialize counts for all 12 months with 0
+        $policyCounts = array_fill(0, 12, 0);
 
-        // Get the current date
-        $currentDate = now();
-        $currentYear = $currentDate->year;
+        // Determine the number of months to show
         $currentMonth = $currentDate->month;
-
-        // Determine the number of months to show based on the current month
         switch ($currentMonth) {
             case 1:
                 $indexcount = 10;
@@ -206,13 +209,11 @@ class PolicyController extends Controller
                 break;
         }
 
-        // Calculate the start date (6 months ago)
-        $startDate = $currentDate->subMonths(6);
         $startYear = $startDate->year;
         $startMonth = $startDate->month;
 
+        // Initialize data structure for all agents
         foreach ($policyRates as $rate) {
-            // Initialize the agent's data if not already set
             if (!isset($formattedData[$rate->agent_id])) {
                 $formattedData[$rate->agent_id] = [
                     'agent_name' => $rate->agent_name,
@@ -228,25 +229,21 @@ class PolicyController extends Controller
                 }
             }
 
-            // Check if the rate's month-year is within our 6-month range
-            if (($rate->year > $startYear || ($rate->year == $startYear && $rate->month >= $startMonth)) &&
-                ($rate->year < $currentYear || ($rate->year == $currentYear && $rate->month <= $currentMonth))
-            ) {
-                $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
-                if ($index >= 0 && $index < $indexcount) {
-                    $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
+            // Calculate the correct index for this month's data
+            $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
+            if ($index >= 0 && $index < $indexcount) {
+                $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
 
-                    // Update the policy counts array for the chart
-                    $monthIndex = $rate->month - 1; // Convert to 0-based index
-                    $policyCounts[$monthIndex] += $rate->policy_count;
-                }
+                // Update the policy counts array for the chart
+                $monthIndex = $rate->month - 1;
+                $policyCounts[$monthIndex] = $rate->policy_count;
             }
         }
 
-        // Add days since last policy (assuming this method exists)
+        // Add days since last policy
         $formattedData = $this->addDaysSinceLastPolicy($formattedData);
 
-        // Prepare the data for the chart
+        // Prepare the chart data
         $chartData = [
             'categories' => $monthNames,
             'data' => $policyCounts,

@@ -27,7 +27,8 @@ class Policy extends Model
         'payment_by',
         'company_id',
         'discount',
-        'payout'
+        'payout',
+        'policy_type'
     ];
 
     protected $dates = ['deleted_at'];

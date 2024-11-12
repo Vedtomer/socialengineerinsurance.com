@@ -71,7 +71,7 @@
                             <input type="date" class="form-control" name="date" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Upload Excel <a href="/sample/sample-policy.xls" download>Download
+                            <label class="form-label">Upload Excel <a href="/sample/sample-policy.xls" download style="color:blue">Download
                                     sample file</a></label>
                             <input type="file" class="form-control" name="excelFile" id="excelFile" accept=".xls,.xlsx">
                             <small class="text-muted">Accepted file types: .xls, .xlsx</small>
