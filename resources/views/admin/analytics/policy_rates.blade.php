@@ -83,7 +83,7 @@ $monthMap = [
                                     @endforeach
 
                                 @endif
-                                <th style="background-color: red;color:white;font-weight:bold;width:0px !important"> Day</th>
+                                <th style="font-weight:bold"> Day</th>
 
                             </tr>
                         </thead>
