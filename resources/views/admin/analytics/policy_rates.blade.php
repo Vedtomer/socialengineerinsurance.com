@@ -112,31 +112,27 @@ $monthMap = [
                                         @foreach ($agentData['data'] as $index => $policyCount)
                                             <td>{{ $policyCount ?? 0 }}</td>
                                         @endforeach
-                                        <td style="
-    background-color: {{ 
-        $days = $agentData['days_since_last_policy'];
-        if ($days > 7) {
-            echo '#FF0000';  // Red for anything over 7 days
-        } elseif ($days >= 6) {
-            echo '#FFA500';  // Orange
-        } elseif ($days >= 4) {
-            echo '#FFD700';  // Golden Yellow
-        } elseif ($days >= 2) {
-            echo '#90EE90';  // Light Green
-        } else {
-            echo '#228B22';  // Forest Green
-        }
-    }};
-    color: {{ 
-        $days = $agentData['days_since_last_policy'];
-        if ($days > 7) {
-            echo 'white';    // White text for red background
-        } else {
-            echo 'black';    // Black text for other backgrounds
-        }
-    }};
-    font-weight: bold;
-">{{ $agentData['days_since_last_policy'] }}</td>
+                                     
+
+                                        <td style="background-color: @php
+    $days = $agentData['days_since_last_policy'];
+    if ($days > 7) {
+        echo '#FF0000';
+    } elseif ($days >= 6) {
+        echo '#FFA500';
+    } elseif ($days >= 4) {
+        echo '#FFD700';
+    } elseif ($days >= 2) {
+        echo '#90EE90';
+    } else {
+        echo '#228B22';
+    }
+@endphp; color: @php
+    echo ($days > 7) ? 'white' : 'black';
+@endphp; font-weight: bold;">
+    {{ $agentData['days_since_last_policy'] }}
+</td>
+
                                     </tr>
                                 @endif
                             @endforeach
