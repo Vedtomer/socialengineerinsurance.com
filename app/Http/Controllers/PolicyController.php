@@ -225,7 +225,13 @@ class PolicyController extends Controller
     
         // Prepare chart data
         $chartData = [
-            'categories' => array_slice($monthNames, 3, $currentDate->month - 3), // Only month names from April to the current month
+            'categories' => array_map(
+                function ($month, $count) {
+                    return "$month($count)";
+                },
+                array_slice($monthNames, 3, $currentDate->month - 3), // Extract month names from April to the current month
+                array_values($policyCounts) // Use corresponding policy counts
+            ),
             'data' => array_values($policyCounts), // Aggregate policy counts
             'series' => [
                 [
@@ -234,6 +240,7 @@ class PolicyController extends Controller
                 ]
             ]
         ];
+        
     
         return [
             'agentData' => $this->addDaysSinceLastPolicy($formattedData),
