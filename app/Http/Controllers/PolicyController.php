@@ -162,57 +162,42 @@ class PolicyController extends Controller
     public function showPolicyRates()
     {
         $policyData = $this->getMonthlyPolicyRates();
-        $policyRates = $policyData['agentData'];
-        $chartData = $policyData['chartData'];
+           $policyRates = $policyData['agentData'];
+           $chartData = $policyData['chartData'];
         return view('admin.analytics.policy_rates', compact('policyRates', 'chartData'));
     }
 
     public function getMonthlyPolicyRates()
     {
-        // Get the current date
         $currentDate = now();
-        $startDate = $currentDate->copy()->subMonths(6);
-
-        // Query the database to get policy rates using the Policy model
+    
+        // Start date: April of the current year or last year if before April
+        $startYear = $currentDate->month < 4 ? $currentDate->year - 1 : $currentDate->year;
+        $startDate = now()->setYear($startYear)->setMonth(4)->startOfMonth();
+    
         $policyRates = Policy::join('users', 'policies.agent_id', '=', 'users.id')
             ->select(
                 'users.name as agent_name',
                 'policies.agent_id',
                 DB::raw('YEAR(policies.policy_start_date) as year'),
                 DB::raw('MONTH(policies.policy_start_date) as month'),
-                DB::raw('COUNT(DISTINCT policies.id) as policy_count') // Use DISTINCT to avoid duplicates
+                DB::raw('COUNT(DISTINCT policies.id) as policy_count')
             )
             ->where('users.status', '=', 1)
             ->where('policies.policy_start_date', '>=', $startDate)
             ->where('policies.policy_start_date', '<=', $currentDate)
             ->groupBy('policies.agent_id', 'year', 'month', 'users.name')
             ->get();
-
+    
         $formattedData = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $policyCounts = array_fill(0, 12, 0);
-
-        // Determine the number of months to show
-        $currentMonth = $currentDate->month;
-        switch ($currentMonth) {
-            case 1:
-                $indexcount = 10;
-                break;
-            case 2:
-                $indexcount = 11;
-                break;
-            case 3:
-                $indexcount = 12;
-                break;
-            default:
-                $indexcount = $currentMonth - 3;
-                break;
+    
+        // Initialize aggregated policy counts for each month (April to the current month)
+        $policyCounts = [];
+        for ($m = $startDate->month; $m <= $currentDate->month; $m++) {
+            $policyCounts[$m] = 0; // Initialize with 0 count
         }
-
-        $startYear = $startDate->year;
-        $startMonth = $startDate->month;
-
-        // Initialize data structure for all agents
+    
         foreach ($policyRates as $rate) {
             if (!isset($formattedData[$rate->agent_id])) {
                 $formattedData[$rate->agent_id] = [
@@ -220,46 +205,43 @@ class PolicyController extends Controller
                     'labels' => [],
                     'data' => []
                 ];
-
-                // Initialize all months with 0 count
-                for ($m = 0; $m < $indexcount; $m++) {
-                    $date = $startDate->copy()->addMonths($m);
-                    $formattedData[$rate->agent_id]['labels'][] = $date->format('n-Y');
+    
+                // Initialize all months with 0 count for each agent
+                for ($m = $startDate->month; $m <= $currentDate->month; $m++) {
+                    $formattedData[$rate->agent_id]['labels'][] = "{$monthNames[$m - 1]}";
                     $formattedData[$rate->agent_id]['data'][] = 0;
                 }
             }
-
+    
             // Calculate the correct index for this month's data
-            $index = ($rate->year - $startYear) * 12 + $rate->month - $startMonth;
-            if ($index >= 0 && $index < $indexcount) {
+            $index = $rate->month - $startDate->month;
+            if ($index >= 0 && $index < count($formattedData[$rate->agent_id]['data'])) {
                 $formattedData[$rate->agent_id]['data'][$index] = $rate->policy_count;
-
-                // Update the policy counts array for the chart
-                $monthIndex = $rate->month - 1;
-                $policyCounts[$monthIndex] = $rate->policy_count;
+    
+                // Add to the aggregated policy counts
+                $policyCounts[$rate->month] += $rate->policy_count;
             }
         }
-
-        // Add days since last policy
-        $formattedData = $this->addDaysSinceLastPolicy($formattedData);
-
-        // Prepare the chart data
+    
+        // Prepare chart data
         $chartData = [
-            'categories' => $monthNames,
-            'data' => $policyCounts,
+            'categories' => array_slice($monthNames, 3, $currentDate->month - 3), // Only month names from April to the current month
+            'data' => array_values($policyCounts), // Aggregate policy counts
             'series' => [
                 [
-                    'name' => 'Policy',
-                    'data' => $policyCounts
+                    'name' => 'Policy Count',
+                    'data' => array_values($policyCounts)
                 ]
             ]
         ];
-
+    
         return [
-            'agentData' => $formattedData,
+            'agentData' => $this->addDaysSinceLastPolicy($formattedData),
             'chartData' => $chartData
         ];
     }
+    
+    
 
     public function addDaysSinceLastPolicy($formattedData)
     {

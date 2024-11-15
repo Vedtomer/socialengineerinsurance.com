@@ -50,14 +50,30 @@
 
                                 <!-- Dynamic Month Headers -->
                                 @if (!empty($policyRates))
+                                @php
+                                    // Extract month labels from the first agent's data (assuming all agents have the same months)
+                                    $monthLabels = collect($policyRates)->first()['labels'] ?? [];
+                            
+                                    // Mapping of month names to their numeric values
+                                    $monthMap = [
+                                        'Jan' => 1, 'Feb' => 2, 'Mar' => 3, 'Apr' => 4,
+                                        'May' => 5, 'Jun' => 6, 'Jul' => 7, 'Aug' => 8,
+                                        'Sep' => 9, 'Oct' => 10, 'Nov' => 11, 'Dec' => 12,
+                                    ];
+                                @endphp
+                                @foreach ($monthLabels as $monthYear)
                                     @php
-                                        // Extract month labels from the first agent's data (assuming all agents have the same months)
-                                   $monthLabels = collect($policyRates)->first()['labels'] ?? [];
+                                        // Extract month name and map it to its numeric value
+                                        $monthNumeric = $monthMap[explode('-', $monthYear)[0]] ?? null;
                                     @endphp
-                                    @foreach ($monthLabels as $monthYear)
-                                        <th>{{ date('M', mktime(0, 0, 0, explode('-', $monthYear)[0])) }}</th>
-                                    @endforeach
-                                @endif
+                                    @if ($monthNumeric)
+                                        <th>{{ date('M', mktime(0, 0, 0, $monthNumeric)) }}</th>
+                                    @else
+                                        <th>Invalid Month</th>
+                                    @endif
+                                @endforeach
+                            @endif
+                            
                             </tr>
                         </thead>
                         <tbody>
