@@ -113,25 +113,40 @@ $monthMap = [
                                             <td>{{ $policyCount ?? 0 }}</td>
                                         @endforeach
                                      
-
                                         <td style="background-color: @php
-    $days = $agentData['days_since_last_policy'];
-    if ($days > 7) {
-        echo '#FF0000';
-    } elseif ($days >= 6) {
-        echo '#FFA500';
-    } elseif ($days >= 4) {
-        echo '#FFD700';
-    } elseif ($days >= 2) {
-        echo '#90EE90';
-    } else {
-        echo '#228B22';
-    }
-@endphp; color: @php
-    echo ($days > 7) ? 'white' : 'black';
-@endphp; font-weight: bold;">
-    {{ $agentData['days_since_last_policy'] }}
-</td>
+                                        $days = $agentData['days_since_last_policy'];
+                                        if ($days > 365) {
+                                            echo '#8B0000';  // Dark Red
+                                        } elseif ($days > 300) {
+                                            echo '#B22222';  // Fire Brick Red
+                                        } elseif ($days > 240) {
+                                            echo '#CD0000';  // Deep Red
+                                        } elseif ($days > 180) {
+                                            echo '#DC143C';  // Crimson
+                                        } elseif ($days > 120) {
+                                            echo '#FF0000';  // Pure Red
+                                        } elseif ($days > 90) {
+                                            echo '#FF1493';  // Deep Pink
+                                        } elseif ($days > 60) {
+                                            echo '#FF4500';  // Orange Red
+                                        } elseif ($days > 30) {
+                                            echo '#FF6347';  // Tomato
+                                        } elseif ($days > 15) {
+                                            echo '#FF8C00';  // Dark Orange
+                                        } elseif ($days > 7) {
+                                            echo '#FFA500';  // Orange
+                                        } elseif ($days > 5) {
+                                            echo '#FFD700';  // Gold
+                                        } elseif ($days > 3) {
+                                            echo '#98FB98';  // Pale Green
+                                        } else {
+                                            echo '#228B22';  // Forest Green
+                                        }
+                                    @endphp; color: @php
+                                        echo ($days > 7) ? 'white' : 'black';
+                                    @endphp; font-weight: bold;">
+                                        {{ $agentData['days_since_last_policy'] }}
+                                    </td>
 
                                     </tr>
                                 @endif

@@ -159,6 +159,7 @@ class PolicyController extends Controller
         return view('admin.agent_pandding_blance', compact('policy', 'agentData', 'totalPremium', 'totalAmount', 'totalBalance'));
     }
 
+    
     public function showPolicyRates()
     {
         $policyData = $this->getMonthlyPolicyRates();
