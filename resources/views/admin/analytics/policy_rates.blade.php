@@ -50,30 +50,41 @@
 
                                 <!-- Dynamic Month Headers -->
                                 @if (!empty($policyRates))
-                                @php
-                                    // Extract month labels from the first agent's data (assuming all agents have the same months)
-                                    $monthLabels = collect($policyRates)->first()['labels'] ?? [];
-                            
-                                    // Mapping of month names to their numeric values
-                                    $monthMap = [
-                                        'Jan' => 1, 'Feb' => 2, 'Mar' => 3, 'Apr' => 4,
-                                        'May' => 5, 'Jun' => 6, 'Jul' => 7, 'Aug' => 8,
-                                        'Sep' => 9, 'Oct' => 10, 'Nov' => 11, 'Dec' => 12,
-                                    ];
-                                @endphp
-                                @foreach ($monthLabels as $monthYear)
                                     @php
-                                        // Extract month name and map it to its numeric value
-                                        $monthNumeric = $monthMap[explode('-', $monthYear)[0]] ?? null;
+                                        // Extract month labels from the first agent's data (assuming all agents have the same months)
+$monthLabels = collect($policyRates)->first()['labels'] ?? [];
+
+// Mapping of month names to their numeric values
+$monthMap = [
+    'Jan' => 1,
+    'Feb' => 2,
+    'Mar' => 3,
+    'Apr' => 4,
+    'May' => 5,
+    'Jun' => 6,
+    'Jul' => 7,
+    'Aug' => 8,
+    'Sep' => 9,
+    'Oct' => 10,
+    'Nov' => 11,
+    'Dec' => 12,
+                                        ];
                                     @endphp
-                                    @if ($monthNumeric)
-                                        <th>{{ date('M', mktime(0, 0, 0, $monthNumeric)) }}</th>
-                                    @else
-                                        <th>Invalid Month</th>
-                                    @endif
-                                @endforeach
-                            @endif
-                            
+                                    @foreach ($monthLabels as $monthYear)
+                                        @php
+                                            // Extract month name and map it to its numeric value
+                                            $monthNumeric = $monthMap[explode('-', $monthYear)[0]] ?? null;
+                                        @endphp
+                                        @if ($monthNumeric)
+                                            <th>{{ date('M', mktime(0, 0, 0, $monthNumeric)) }}</th>
+                                        @else
+                                            <th>Invalid Month</th>
+                                        @endif
+                                    @endforeach
+
+                                @endif
+                                <th style="background-color: red;color:white;font-weight:bold;width:0px !important"> Day</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -90,10 +101,10 @@
                                             <span class="badge badge-light-primary  me-2">
                                                 {{ array_sum($agentData['data']) }}
                                             </span>
-<br>
-                                                <span class="" style="color: #e0a82a; font-weight: 50;">
-                                                    Last policy:{{ $agentData['days_since_last_policy'] }} days ago
-                                                </span>
+                                            <br>
+                                            {{-- <span class="" style="color: #e0a82a; font-weight: 50;">
+                                                Last policy:{{ $agentData['days_since_last_policy'] }} days ago
+                                            </span> --}}
 
                                         </td>
 
@@ -101,6 +112,31 @@
                                         @foreach ($agentData['data'] as $index => $policyCount)
                                             <td>{{ $policyCount ?? 0 }}</td>
                                         @endforeach
+                                        <td style="
+    background-color: {{ 
+        $days = $agentData['days_since_last_policy'];
+        if ($days > 7) {
+            echo '#FF0000';  // Red for anything over 7 days
+        } elseif ($days >= 6) {
+            echo '#FFA500';  // Orange
+        } elseif ($days >= 4) {
+            echo '#FFD700';  // Golden Yellow
+        } elseif ($days >= 2) {
+            echo '#90EE90';  // Light Green
+        } else {
+            echo '#228B22';  // Forest Green
+        }
+    }};
+    color: {{ 
+        $days = $agentData['days_since_last_policy'];
+        if ($days > 7) {
+            echo 'white';    // White text for red background
+        } else {
+            echo 'black';    // Black text for other backgrounds
+        }
+    }};
+    font-weight: bold;
+">{{ $agentData['days_since_last_policy'] }}</td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -115,6 +151,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        let chartData= @json($chartData);
+        let chartData = @json($chartData);
     </script>
+
+<script>
+    $(document).ready(function() {
+        $('#html55-extension').DataTable({
+            "responsive": true,
+            "ordering": true,
+            "order": [[5, "desc"]],
+            "pageLength": -1,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+    });
+</script>
 @endsection

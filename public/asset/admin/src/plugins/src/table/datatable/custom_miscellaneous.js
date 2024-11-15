@@ -195,57 +195,55 @@ $(document).ready(function() {
         $('#html55-extension').DataTable({
             "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
             "<'table-responsive'tr>" +
-            "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-            buttons: {
-                buttons: [
-                    {
-                        extend: 'csv',
-                        className: 'btn',
-                        exportOptions: {
-                            columns: ':visible',
-                            format: {
-                                body: function (data, row, column, node) {
-                                    // For the agent name column, return the full name
-                                    if (column === 0) {
-                                        return $(node).find('.agent-name').data('full-name');
-                                    }
-                                    // For other columns, return the text content
-                                    return data;
+            "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i>>",
+            buttons: [
+                {
+                    extend: 'csv',
+                    className: 'btn',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                // For the agent name column, return the full name
+                                if (column === 0) {
+                                    return $(node).find('.agent-name').data('full-name');
                                 }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'btn',
-                        exportOptions: {
-                            columns: ':visible',
-                            format: {
-                                body: function (data, row, column, node) {
-                                    // For the agent name column, return the full name
-                                    if (column === 0) {
-                                        return $(node).find('.agent-name').data('full-name');
-                                    }
-                                    // For other columns, return the text content
-                                    return data;
-                                }
+                                // For other columns, return the text content
+                                return data;
                             }
                         }
                     }
-                ]
-            },
-            "oLanguage": {
-                "oPaginate": { "sPrevious": '', "sNext": '' },
-                "sInfo": "Showing page _PAGE_ of _PAGES_",
-                "sSearch": '',
-                "sSearchPlaceholder": "Search...",
-                "sLengthMenu": "Results :  _MENU_",
-            },
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                // For the agent name column, return the full name
+                                if (column === 0) {
+                                    return $(node).find('.agent-name').data('full-name');
+                                }
+                                // For other columns, return the text content
+                                return data;
+                            }
+                        }
+                    }
+                }
+            ],
+            // "oLanguage": {
+            //     // "oPaginate": { "sPrevious": '', "sNext": '' },
+            //     // "sInfo": "Showing page _PAGE_ of _PAGES_",
+            //     "sSearch": '',
+            //     "sSearchPlaceholder": "Search...",
+            //     "sLengthMenu": "Results :  _MENU_",
+            // },
             "stripeClasses": [],
-            "lengthMenu": [7, 10, 20, 50],
-            "pageLength": 125
+            "pageLength": -1,
+            "ordering": true,
+            "order": [[ 9, "desc" ]]
         });
-
 
 
 
