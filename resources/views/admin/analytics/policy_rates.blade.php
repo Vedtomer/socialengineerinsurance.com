@@ -115,32 +115,36 @@ $monthMap = [
                                      
                                         <td style="background-color: @php
                                         $days = $agentData['days_since_last_policy'];
-                                        if ($days > 365) {
+                                        if ($days > 180) {
+                                            echo '#780000';  // Deep Dark Red
+                                        } elseif ($days > 150) {
                                             echo '#8B0000';  // Dark Red
-                                        } elseif ($days > 300) {
-                                            echo '#B22222';  // Fire Brick Red
-                                        } elseif ($days > 240) {
-                                            echo '#CD0000';  // Deep Red
-                                        } elseif ($days > 180) {
-                                            echo '#DC143C';  // Crimson
                                         } elseif ($days > 120) {
-                                            echo '#FF0000';  // Pure Red
+                                            echo '#AA0000';  // Rich Red
                                         } elseif ($days > 90) {
-                                            echo '#FF1493';  // Deep Pink
+                                            echo '#CC0000';  // Medium Red
                                         } elseif ($days > 60) {
-                                            echo '#FF4500';  // Orange Red
+                                            echo '#E53E3E';  // Bright Red
+                                        } elseif ($days > 45) {
+                                            echo '#ED6464';  // Light Red
                                         } elseif ($days > 30) {
-                                            echo '#FF6347';  // Tomato
-                                        } elseif ($days > 15) {
-                                            echo '#FF8C00';  // Dark Orange
+                                            echo '#F56565';  // Coral Red
+                                        } elseif ($days > 21) {
+                                            echo '#FC8181';  // Salmon
+                                        } elseif ($days > 14) {
+                                            echo '#FEB2B2';  // Light Coral
+                                        } elseif ($days > 10) {
+                                            echo '#FF9933';  // Dark Orange
                                         } elseif ($days > 7) {
-                                            echo '#FFA500';  // Orange
+                                            echo '#FFB347';  // Medium Orange
                                         } elseif ($days > 5) {
                                             echo '#FFD700';  // Gold
                                         } elseif ($days > 3) {
-                                            echo '#98FB98';  // Pale Green
+                                            echo '#9ACD32';  // Yellow Green
+                                        } elseif ($days > 2) {
+                                            echo '#48BB78';  // Medium Green
                                         } else {
-                                            echo '#228B22';  // Forest Green
+                                            echo '#2F855A';  // Forest Green
                                         }
                                     @endphp; color: @php
                                         echo ($days > 7) ? 'white' : 'black';
