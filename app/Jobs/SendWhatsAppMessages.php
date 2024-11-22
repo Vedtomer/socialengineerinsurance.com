@@ -22,23 +22,23 @@ class SendWhatsAppMessages implements ShouldQueue
     public function handle(): void
     {
         try {
-            $dateRange = $this->getDateRange();
+            $date = $this->getDate();
             
             // Get users with their policy data
             $users = User::where('status', 1)
                 ->where('whatsapp_notification', 1)
                 ->withCount([
-                    'Policy as policy_count' => function ($query) use ($dateRange) {
-                        $query->whereBetween('policy_start_date', [$dateRange['start'], $dateRange['end']]);
+                    'Policy as policy_count' => function ($query) use ($date) {
+                        $query->whereBetween('created_at', $date);
                     }
                 ])
                 ->withSum([
-                    'Policy as total_commission' => function ($query) use ($dateRange) {
-                        $query->whereBetween('policy_start_date', [$dateRange['start'], $dateRange['end']]);
+                    'Policy as total_commission' => function ($query) use ($date) {
+                        $query->whereBetween('created_at', $date);
                     }
                 ], 'agent_commission')
                 ->get();
-
+                dd($users);
             foreach ($users as $user) {
                 try {
                     if ($user->policy_count === 0) {
@@ -67,24 +67,29 @@ class SendWhatsAppMessages implements ShouldQueue
     /**
      * Get date range based on current day
      */
-    private function getDateRange(): array
+    private function getDate(): string
     {
-        $today = Carbon::today();
-        
-        if ($today->isMonday()) {
-            return [
-                'start' => $today->copy()->subWeek()->startOfWeek(),
-                'end' => $today->copy()->subDay()->endOfDay(),
-                'period_name' => 'Weekend'
-            ];
-        }
-        
-        return [
-            'start' => $today->copy()->subDay()->startOfDay(),
-            'end' => $today->copy()->subDay()->endOfDay(),
-            'period_name' => "Yesterday's"
-        ];
+        return Carbon::today()->toDateString(); 
     }
+
+    // private function getDateRange(): array
+    // {
+    //     $today = Carbon::today();
+        
+    //     if ($today->isMonday()) {
+    //         return [
+    //             'start' => $today->copy()->subWeek()->startOfWeek(),
+    //             'end' => $today->copy()->subDay()->endOfDay(),
+    //             'period_name' => 'Weekend'
+    //         ];
+    //     }
+        
+    //     return [
+    //         'start' => $today->copy()->subDay()->startOfDay(),
+    //         'end' => $today->copy()->subDay()->endOfDay(),
+    //         'period_name' => "Yesterday's"
+    //     ];
+    // }
 
     /**
      * Get days since last policy
@@ -126,15 +131,11 @@ class SendWhatsAppMessages implements ShouldQueue
     private function prepareDailyPolicyTemplate($user, string $periodName): string
     {
         return "Dear {$user->name}! 🛺\n\n"
-            . "{$periodName} Update:\n"
-            . "✅ Policies Issued: {$user->policy_count}\n"
-            . "💰 Points Earned: ₹" . number_format($user->total_commission, 2) . "\n"
-            . "⭐ Keep up the great work!\n\n"
-            . "Quick Tips:\n"
-            . "📱 Every e-rickshaw inquiry = Our opportunity\n"
-            . "💫 Each policy increases your rewards\n"
-            . "⚡ Just 5 minutes per customer\n\n"
-            . "Let's aim higher tomorrow! 🎯";
+            . "Thank you for sharing {$user->policy_count}  with us on 📅: {$periodName}\n"
+            . ". For these policies, you have earned 🎯" . number_format($user->total_commission, 2) . "points\n"
+            . "We appreciate your efforts! 🙏\n\n"
+            . "For any queries, contact us at\n"
+            . " 📞 97287 86086.";
     }
 
     /**
@@ -143,16 +144,12 @@ class SendWhatsAppMessages implements ShouldQueue
     private function prepareNoPolicyTemplate($user, int $days): string
     {
         return "Dear {$user->name}! 🛺\n\n"
-            . "Policy Report Alert:\n"
-            . "⚠️ No policies in {$days} days\n"
-            . "💡 Your rewards are waiting!\n\n"
-            . "Remember:\n"
-            . "🎯 Every e-rickshaw owner needs protection\n"
-            . "⚡ Only 5 minutes to secure each policy\n"
-            . "💰 Daily policies = Regular income\n\n"
-            . "Ready to restart? We're here to help!\n"
-            . "Connect with Us for support.\n\n"
-            . "Together we achieve more! 🎯";
+            . "We noticed you haven’t shared any e-rickshaw insurance policies for the last {$days} days. 🚨\n"
+            . "Please send them at the earliest to ensure your customers remain covered and avoid any delays. ⏳\n"
+            . "Thanks for choosing Social Engineer Insurance! 🙏\n\n"
+            . "Looking forward to receiving Policy soon. 🤝\n\n"
+            . "Best regards, \n"
+            . "Contact: 97287 86086 📞\n";
     }
 
     /**

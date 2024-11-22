@@ -22,6 +22,7 @@
                         <tr>
                             <th>S No</th>
                             <th>Policy No.</th>
+                            <th>Policy Type</th>
                             <th>Customer Name</th>
                             <th>Policy Date</th>
                             <th>Net Amount</th>
@@ -43,6 +44,13 @@
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ $user->policy_no }}</td>
+                            <td>
+                                @if($user->policy_type == NULL)
+                                <span>E-Rickshaw</span>
+                                @else
+                                <span>{{ $user->policy_type }}</span>
+                                @endif
+                            </td>
                             <td>{{ $user->customername }}</td>
                             <td> {{ date('M d, Y', strtotime($user->policy_start_date)) }} </td>
                             <td>{{ $user->net_amount }}</td>

@@ -51,7 +51,12 @@
                             <label for="city" class="form-label">City</label>
                             <input type="text" class="form-control" id="city" name="city" value="{{ old('city') }}">
                         </div>
-
+                        <!--  -->
+                        <div class="col-md-12">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}">
+                        </div>
+                        <!--  -->
                         <div class="col-md-12">
                             <label for="address" class="form-label">Address</label>
                             <textarea class="form-control" id="address" name="address" rows="3">{{ old('address') }}</textarea>

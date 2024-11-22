@@ -35,6 +35,7 @@
                             <th>Premium</th>
                             <th>Earn Points</th>
                             <th>City</th>
+                            <th>Agent Status</th>
                             <th>Mobile</th>
                             <th>Cut And Pay</th>
                             <th>Action</th>
@@ -60,6 +61,13 @@
                             </td>
                             {{-- <td>{{ $user->email }}</td> --}}
                             <td>{{ $user->city }}</td>
+                            <td>
+                                @if ($user->status == 1)
+                                <span>Active</span>
+                                @else
+                                <span>Inactive</span>
+                                @endif
+                            </td>
                             <td>{{ $user->mobile_number }}</td>
                             <td>
                                 @if ($user->cut_and_pay == 1)

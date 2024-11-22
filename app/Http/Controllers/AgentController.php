@@ -50,7 +50,7 @@ class AgentController extends Controller
        // $start_date = $start_date ? Carbon::parse($start_date)->startOfDay() : now()->startOfMonth()->startOfDay();
       // return    $end_date = $end_date ? Carbon::parse($end_date)->endOfDay() : now()->endOfDay();
 
-        $query = User::role('agent')->where('status', '=', 1)->withCount([
+        $query = User::role('agent')->withCount([
             'Policy as totalPolicies' => function ($query) use ($start_date, $end_date) {
                 $query->whereDate('policy_start_date', '>=', $start_date)
                       ->whereDate('policy_start_date', '<', $end_date);

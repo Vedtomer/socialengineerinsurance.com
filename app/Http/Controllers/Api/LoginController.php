@@ -26,6 +26,7 @@ class LoginController extends Controller
 
             $users = User::where('email', $emailOrMobile)
                 ->orWhere('mobile_number', $emailOrMobile)
+                ->orWhere('username', $emailOrMobile)
                 ->get();
 
             if ($users->isEmpty()) {

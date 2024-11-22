@@ -48,6 +48,7 @@ class CustomerController extends Controller
             'state' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'address' => 'nullable|string',
+            'password' => 'required|string|min:8',
             'aadhar_document' => 'nullable|max:2048',
             'pan_document' => 'nullable|max:2048',
         ]);
@@ -84,7 +85,9 @@ class CustomerController extends Controller
         $user->address = $request->input('address');
         $user->aadhar_document = $aadharFileName;
         $user->pan_document = $panFileName;
-        $user->password = Hash::make($request->input('pan_number'));
+        $user->username = $request->input('pan_number');
+        $user->password = Hash::make($request->input('password'));
+        // $user->password = Hash::make($request->input('pan_number'));
         $user->save();
         $user->assignRole('customer');
         return redirect()->route('customers.index')->with('success', 'Customer added successfully.');
