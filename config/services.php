@@ -35,9 +35,8 @@ return [
         ],
     ],
 
-    'whatsapp' => [
-        'endpoint' => env('WHATSAPP_API_ENDPOINT', ''),
-        'token' => env('FACEBOOK_ACCESS_TOKEN', ''),
+    'facebook' => [
+        'access_token' => env('FACEBOOK_ACCESS_TOKEN'),
     ],
 
 ];

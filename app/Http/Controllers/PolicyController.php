@@ -38,7 +38,7 @@ class PolicyController extends Controller
         Excel::import($importClass, $items);
 
         // Dispatch job to send WhatsApp messages
-        dispatch(new SendWhatsAppMessages());
+        dispatch(new SendWhatsAppMessages($request->date));
         return redirect()->back()->with('success', 'Data imported successfully!');
     }
 
