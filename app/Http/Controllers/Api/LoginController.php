@@ -26,7 +26,7 @@ class LoginController extends Controller
 
             $users = User::where('email', $emailOrMobile)
                 ->orWhere('mobile_number', $emailOrMobile)
-                ->orWhere('username', $emailOrMobile)
+                ->orWhere('pan_number', $emailOrMobile)
                 ->get();
 
             if ($users->isEmpty()) {
@@ -156,6 +156,4 @@ class LoginController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
 }
