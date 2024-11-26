@@ -78,8 +78,8 @@ class ApiController extends Controller
         } elseif ($user->hasRole('customer')) {
 
             $data = InsuranceProduct::with(['customer_policies' => function ($query) use ($agent_id) {
-                    $query->where('user_id', $agent_id);
-                }])->get();
+                $query->where('user_id', $agent_id);
+            }])->where('status', 1)->get();
 
 
 
