@@ -20,37 +20,54 @@
                             @endforeach
                         @endif
                     </div>
-                    <form class="row g-3" action="{{ route('customers.update', $customer->id) }}" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <form class="row g-3" action="{{ route('customers.update', $customer->id) }}" method="post"
+                        enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('PUT')
                         <div class="col-md-6">
                             <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $customer->name) }}" required>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ old('name', $customer->name) }}" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="mobile_number" class="form-label">Mobile <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="{{ old('mobile_number', $customer->mobile_number) }}" required>
+                            <input type="text" class="form-control" id="mobile_number" name="mobile_number"
+                                value="{{ old('mobile_number', $customer->mobile_number) }}" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="aadhar_number" class="form-label">Aadhar Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="aadhar_number" name="aadhar_number" value="{{ old('aadhar_number', $customer->aadhar_number) }}" required>
+                            <label for="aadhar_number" class="form-label">Aadhar Number <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="aadhar_number" name="aadhar_number"
+                                value="{{ old('aadhar_number', $customer->aadhar_number) }}" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="pan_number" class="form-label">PAN Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="pan_number" name="pan_number" value="{{ old('pan_number', $customer->pan_number) }}" required>
+                            <input type="text" class="form-control" id="pan_number" name="pan_number"
+                                value="{{ old('pan_number', $customer->pan_number) }}" required>
                         </div>
+
+                        <!--  -->
+                        <div class="col-md-12">
+                            <label for="password" class="form-label">Password (only fill if you want to change the
+                                password)</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="xxxxxx"
+                                value="{{ old('password') }}">
+                        </div>
+                        <!--  -->
 
                         <div class="col-md-6">
                             <label for="state" class="form-label">State</label>
-                            <input type="text" class="form-control" id="state" name="state" value="{{ old('state', $customer->state) }}">
+                            <input type="text" class="form-control" id="state" name="state"
+                                value="{{ old('state', $customer->state) }}">
                         </div>
 
                         <div class="col-md-6">
                             <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $customer->city) }}">
+                            <input type="text" class="form-control" id="city" name="city"
+                                value="{{ old('city', $customer->city) }}">
                         </div>
 
                         <div class="col-md-12">
