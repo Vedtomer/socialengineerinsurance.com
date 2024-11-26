@@ -79,7 +79,9 @@ class ApiController extends Controller
 
             $data = InsuranceProduct::whereHas('customer_policies', function ($query) use ($agent_id) {
                 $query->where('user_id', $agent_id);
-            })->with('customer_policies')->get();
+            })->with(['customer_policies' => function ($query) use ($agent_id) {
+                $query->where('user_id', $agent_id);
+            }])->get();
 
 
 
