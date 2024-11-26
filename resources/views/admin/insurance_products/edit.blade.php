@@ -30,7 +30,7 @@
 
                     <div class="mb-3">
                         <label for="name">App Icon</label>
-                        <input type="file" class="form-control" name="icon" required>
+                        <input type="file" class="form-control" name="icon" >
                     </div>
 
                     <div class="mb-3">
