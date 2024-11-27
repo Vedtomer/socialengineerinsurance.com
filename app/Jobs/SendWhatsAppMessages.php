@@ -66,6 +66,12 @@ class SendWhatsAppMessages implements ShouldQueue
                 ->get();
 
             foreach ($users as $user) {
+                // Check if message has already been sent today
+                if ($this->hasMessageSentToday($user)) {
+                    Log::info('WhatsApp message already sent today for user: ' . $user->id);
+                    continue;
+                }
+
                 // Check and respect rate limiting
                 $this->checkAndWaitForRateLimit();
 
@@ -316,6 +322,14 @@ class SendWhatsAppMessages implements ShouldQueue
         }
 
         return Carbon::parse($lastPolicy->policy_start_date)->diffInDays(Carbon::today());
+    }
+
+    private function hasMessageSentToday($user): bool
+    {
+        return WhatsappMessageLog::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->where('is_successful', 1)
+            ->exists();
     }
 
     /**
