@@ -65,7 +65,7 @@
                     <table class="table table-bordered table-striped table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
+                                <th>Sr.No.</th>
                                 <th>User Name</th>
                                 <th>Mobile Number</th>
                                 <th>Message Type</th>
@@ -78,9 +78,10 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php $sr=1; @endphp
                             @forelse($messageLogs as $log)
                                 <tr class="{{ $log->is_successful ? 'table-success' : 'table-danger' }}">
-                                    <td>{{ $log->id }}</td>
+                                    <td>{{ $sr }}</td>
                                     <td>{{ $log->user->name ?? 'N/A' }}</td>
                                     <td>{{ $log->mobile_number }}</td>
                                     <td>
@@ -109,6 +110,7 @@
                                         </button>
                                     </td>
                                 </tr>
+                                @php $sr++ @endphp
                             @empty
                                 <tr>
                                     <td colspan="10" class="text-center">
