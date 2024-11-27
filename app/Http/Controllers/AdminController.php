@@ -529,8 +529,8 @@ class AdminController extends Controller
             // Select only the most recent log for each user
             ->groupBy('user_id')
             ->havingRaw('id = MAX(id)')
-            ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->orderBy('id', 'desc')->get();
+           
     
         // Pass the selected date back to the view
         return view('admin.whatsapp-logs.index', [
