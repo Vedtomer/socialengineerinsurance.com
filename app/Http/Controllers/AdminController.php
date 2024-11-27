@@ -530,7 +530,7 @@ class AdminController extends Controller
         })
         ->groupBy('user_id')
         ->orderBy('id', 'desc')
-        ->get()
+        ->paginate(150)
         ->map(function ($item) {
             // Fetch the full log entry for the selected max ID
             return WhatsappMessageLog::with('user')->find($item->id);
