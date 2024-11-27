@@ -520,15 +520,18 @@ class AdminController extends Controller
     {
         // If no date is provided, use today's date
         $date = $request->input('date_range', now()->format('Y-m-d'));
-
+    
         $messageLogs = WhatsappMessageLog::with('user')
             ->when($date, function ($query) use ($date) {
                 // Filter logs for the specific date
                 return $query->whereDate('created_at', $date);
             })
-            ->orderBy('message_type', 'desc')
+            // Select only the most recent log for each user
+            ->groupBy('user_id')
+            ->havingRaw('id = MAX(id)')
+            ->orderBy('id', 'desc')
             ->paginate(20);
-
+    
         // Pass the selected date back to the view
         return view('admin.whatsapp-logs.index', [
             'messageLogs' => $messageLogs,
