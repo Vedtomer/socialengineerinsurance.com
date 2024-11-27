@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 use Validator;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -522,19 +521,19 @@ class AdminController extends Controller
     // If no date is provided, use today's date
     $date = $request->input('date_range', now()->format('Y-m-d'));
 
-    $messageLogs = WhatsappMessageLog::select(DB::raw('MAX(id) as id'), 'user_id')
-        ->with('user')
+    $messageLogs = WhatsappMessageLog::with('user')
         ->when($date, function ($query) use ($date) {
             // Filter logs for the specific date
             return $query->whereDate('created_at', $date);
         })
-        ->groupBy('user_id')
-        ->orderBy('id', 'desc')
-        ->paginate(150)
-        ->map(function ($item) {
-            // Fetch the full log entry for the selected max ID
-            return WhatsappMessageLog::with('user')->find($item->id);
-        });
+        // Select the most recent log for each user
+        ->whereIn('id', function ($subquery) {
+            $subquery->select(\DB::raw('MAX(id)'))
+                ->from('whatsapp_message_logs')
+                ->groupBy('user_id');
+        })
+        ->orderBy('message_type', 'desc')
+        ->paginate(20);
 
     // Pass the selected date back to the view
     return view('admin.whatsapp-logs.index', [
