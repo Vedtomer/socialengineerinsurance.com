@@ -115,5 +115,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/policy-rates', [PolicyController::class, 'showPolicyRates'])->name('admin.dashboard');
 
+        
+
+        Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
+
     });
 });

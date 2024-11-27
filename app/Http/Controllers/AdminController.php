@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Policy;
+use App\Models\WhatsappMessageLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -132,7 +133,7 @@ class AdminController extends Controller
 
 
 
-           $policy = $policy->get();
+        $policy = $policy->get();
 
         $policyCount = round($policy->count('policy_no'));
         $amount = round($transactions->sum('amount'));
@@ -413,10 +414,10 @@ class AdminController extends Controller
 
             $response = curl_exec($curl);
             $err = curl_error($curl);
-            
+
             // Decode the response
             $responseData = json_decode($response, true);
-            
+
             // Check for API errors
             if (isset($responseData['error'])) {
                 throw new \Exception($responseData['error']['message']);
@@ -437,7 +438,6 @@ class AdminController extends Controller
                 'expires_in' => '5 minutes',
                 'debug_response' => $responseData // Remove this in production
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
@@ -508,9 +508,31 @@ class AdminController extends Controller
                 'user' => $user,
                 // 'token' => $token // Uncomment if using Sanctum
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+
+
+
+    public function WhatsappMessageLog(Request $request)
+    {
+        // If no date is provided, use today's date
+        $date = $request->input('date_range', now()->format('Y-m-d'));
+
+        $messageLogs = WhatsappMessageLog::with('user')
+            ->when($date, function ($query) use ($date) {
+                // Filter logs for the specific date
+                return $query->whereDate('created_at', $date);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        // Pass the selected date back to the view
+        return view('admin.whatsapp-logs.index', [
+            'messageLogs' => $messageLogs,
+            'selectedDate' => $date
+        ]);
     }
 }

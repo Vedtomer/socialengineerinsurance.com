@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use App\Models\WhatsappMessageLog;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,14 +12,27 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SendWhatsAppMessages implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    // Add missing constants 
+    private const WHATSAPP_API_VERSION = 'v20.0'; // Update with current WhatsApp API version
+    private const PHONE_NUMBER_ID = '491697427350235'; // Replace with your actual WhatsApp Phone Number ID
+
+    // Increase the number of times the job can be retried
+    public $tries = 3;
+    
+    // Increase timeout to handle slow connections
+    public $timeout = 180; // 3 minutes
+
+    // Configurable delay between messages
+    private const MESSAGE_DELAY_SECONDS = 5; // 5 seconds between messages
+    private const MAX_MESSAGES_PER_MINUTE = 20; // WhatsApp API rate limit
+
     protected $date;
-    private const WHATSAPP_API_VERSION = 'v20.0';
-    private const PHONE_NUMBER_ID = '491697427350235';
 
     public function __construct($date)
     {
@@ -32,6 +46,9 @@ class SendWhatsAppMessages implements ShouldQueue
     {
         try {
             $date = $this->date;
+
+            // Reset or initialize the message send tracking
+            $this->initializeMessageRateLimiting();
 
             // Get users with their policy data
             $users = User::where('status', 1)
@@ -49,22 +66,55 @@ class SendWhatsAppMessages implements ShouldQueue
                 ->get();
 
             foreach ($users as $user) {
+                // Check and respect rate limiting
+                $this->checkAndWaitForRateLimit();
+
                 try {
+                    $messageLog = $this->prepareMessageLog($user, $date);
+
                     if ($user->policy_count === 0) {
                         $lastPolicyDays = $this->getLastPolicyDays($user);
-                        $this->sendNoPolicyMessage($user, $lastPolicyDays);
+                        $payload = $this->prepareNoPolicyPayload($user, $lastPolicyDays);
+                        $messageLog->message_type = 'no_policy';
+                        $messageLog->days_since_last_policy = $lastPolicyDays;
                     } else {
-                        $this->sendPolicyUpdateMessage($user);
+                        $payload = $this->preparePolicyUpdatePayload($user, $date);
+                        $messageLog->message_type = 'daily_report';
+                        $messageLog->policy_count = $user->policy_count;
+                        $messageLog->total_commission = $user->total_commission;
                     }
 
-                    // Add small delay to prevent API rate limiting
-                    sleep(1);
+                    $messageLog->request_payload = json_encode($payload);
+                    $messageLog->save();
+
+                    // Send WhatsApp message
+                    $response = $this->sendWhatsAppMessage($payload);
+
+                    // Update log with response
+                    $messageLog->update([
+                        'is_successful' => true,
+                        'response_body' => $response->json(),
+                        'sent_at' => now()
+                    ]);
+
+                    // Increment message count
+                    $this->incrementMessageCount();
 
                     Log::info('WhatsApp message sent successfully for user: ' . $user->id);
+
                 } catch (\Exception $e) {
+                    // Update log with error details
+                    $messageLog->update([
+                        'is_successful' => false,
+                        'error_message' => $e->getMessage()
+                    ]);
+
                     Log::error('WhatsApp message failed for user: ' . $user->id . ' Error: ' . $e->getMessage());
                     continue;
                 }
+
+                // Standard delay between messages
+                sleep(self::MESSAGE_DELAY_SECONDS);
             }
         } catch (\Exception $e) {
             Log::error('Batch WhatsApp message job failed: ' . $e->getMessage());
@@ -73,27 +123,62 @@ class SendWhatsAppMessages implements ShouldQueue
     }
 
     /**
-     * Get days since last policy
+     * Initialize rate limiting tracking
      */
-    private function getLastPolicyDays($user): int
+    private function initializeMessageRateLimiting(): void
     {
-        $lastPolicy = $user->Policy()
-            ->latest('policy_start_date')
-            ->first();
-
-        if (!$lastPolicy) {
-            return 30; // If no policy found, return maximum days
-        }
-
-        return Carbon::parse($lastPolicy->policy_start_date)->diffInDays(Carbon::today());
+        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        
+        // Reset or initialize the message count for the day
+        Cache::put($cacheKey, 0, now()->addDay());
     }
 
     /**
-     * Send WhatsApp message for user with no policies
+     * Check and wait if rate limit is approaching
      */
-    private function sendNoPolicyMessage($user, int $days): void
+    private function checkAndWaitForRateLimit(): void
     {
-        $payload = [
+        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        $messageCount = Cache::get($cacheKey, 0);
+
+        // If messages are approaching the limit, wait
+        if ($messageCount >= self::MAX_MESSAGES_PER_MINUTE) {
+            Log::info('Waiting due to rate limit: ' . $messageCount . ' messages sent');
+            sleep(60); // Wait for a minute
+            
+            // Reset the count after waiting
+            $this->initializeMessageRateLimiting();
+        }
+    }
+
+    /**
+     * Increment message count
+     */
+    private function incrementMessageCount(): void
+    {
+        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        
+        // Increment the message count
+        Cache::increment($cacheKey);
+    }
+
+    /**
+     * Prepare message log entry
+     */
+    private function prepareMessageLog($user, $date): WhatsappMessageLog
+    {
+        return WhatsappMessageLog::create([
+            'user_id' => $user->id,
+            'mobile_number' => $user->mobile_number
+        ]);
+    }
+
+    /**
+     * Prepare payload for no policy message
+     */
+    private function prepareNoPolicyPayload($user, int $days): array
+    {
+        return [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
             'to' => $this->formatPhoneNumber($user->mobile_number),
@@ -120,16 +205,14 @@ class SendWhatsAppMessages implements ShouldQueue
                 ]
             ]
         ];
-
-        $this->sendWhatsAppMessage($payload);
     }
 
     /**
-     * Send WhatsApp message for user with policies
+     * Prepare payload for policy update message
      */
-    private function sendPolicyUpdateMessage($user): void
+    private function preparePolicyUpdatePayload($user, $date): array
     {
-        $payload = [
+        return [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
             'to' => $this->formatPhoneNumber($user->mobile_number),
@@ -153,7 +236,7 @@ class SendWhatsAppMessages implements ShouldQueue
                             ],
                             [
                                 'type' => 'text',
-                                'text' => Carbon::parse($this->date)->format('d M Y')
+                                'text' => Carbon::parse($date)->format('d M Y')
                             ],
                             [
                                 'type' => 'text',
@@ -164,14 +247,12 @@ class SendWhatsAppMessages implements ShouldQueue
                 ]
             ]
         ];
-
-        $this->sendWhatsAppMessage($payload);
     }
 
     /**
-     * Send WhatsApp message using HTTP client
+     * Send WhatsApp message using HTTP client with improved error handling
      */
-    private function sendWhatsAppMessage(array $payload): void
+    private function sendWhatsAppMessage(array $payload)
     {
         $apiEndpoint = sprintf(
             'https://graph.facebook.com/%s/%s/messages',
@@ -179,11 +260,25 @@ class SendWhatsAppMessages implements ShouldQueue
             self::PHONE_NUMBER_ID
         );
 
-        $response = Http::withToken(config('services.facebook.access_token'))
-            ->post($apiEndpoint, $payload);
+        try {
+            $response = Http::withToken(config('services.facebook.access_token'))
+                ->timeout(30) // Set a specific timeout for this request
+                ->connectTimeout(10) // Set connection timeout
+                ->post($apiEndpoint, $payload);
 
-        if (!$response->successful()) {
-            throw new \Exception('WhatsApp API request failed: ' . $response->body());
+            if (!$response->successful()) {
+                throw new \Exception('WhatsApp API request failed: ' . $response->body());
+            }
+
+            return $response;
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            // Handle connection timeout specifically
+            Log::error('WhatsApp API connection timeout: ' . $e->getMessage());
+            throw $e;
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            // Handle other request-related errors
+            Log::error('WhatsApp API request error: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -205,6 +300,22 @@ class SendWhatsAppMessages implements ShouldQueue
         }
 
         return $phone;
+    }
+
+    /**
+     * Get days since last policy
+     */
+    private function getLastPolicyDays($user): int
+    {
+        $lastPolicy = $user->Policy()
+            ->latest('policy_start_date')
+            ->first();
+
+        if (!$lastPolicy) {
+            return 30; // If no policy found, return maximum days
+        }
+
+        return Carbon::parse($lastPolicy->policy_start_date)->diffInDays(Carbon::today());
     }
 
     /**
