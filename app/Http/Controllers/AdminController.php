@@ -526,7 +526,7 @@ class AdminController extends Controller
                 // Filter logs for the specific date
                 return $query->whereDate('created_at', $date);
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('message_type', 'desc')
             ->paginate(20);
 
         // Pass the selected date back to the view
