@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Validator;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
