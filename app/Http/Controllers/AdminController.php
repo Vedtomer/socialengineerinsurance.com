@@ -533,7 +533,7 @@ class AdminController extends Controller
                 ->groupBy('user_id');
         })
         ->orderBy('message_type', 'asc')
-        ->paginate(20);
+        ->paginate(150);
 
     // Pass the selected date back to the view
     return view('admin.whatsapp-logs.index', [
