@@ -517,25 +517,28 @@ class AdminController extends Controller
 
 
     public function WhatsappMessageLog(Request $request)
-    {
-        // If no date is provided, use today's date
-        $date = $request->input('date_range', now()->format('Y-m-d'));
-    
-        $messageLogs = WhatsappMessageLog::with('user')
-            ->when($date, function ($query) use ($date) {
-                // Filter logs for the specific date
-                return $query->whereDate('created_at', $date);
-            })
-            // Select only the most recent log for each user
-            ->groupBy('user_id')
-            ->havingRaw('id = MAX(id)')
-            ->orderBy('id', 'desc')->get();
-           
-    
-        // Pass the selected date back to the view
-        return view('admin.whatsapp-logs.index', [
-            'messageLogs' => $messageLogs,
-            'selectedDate' => $date
-        ]);
-    }
+{
+    // If no date is provided, use today's date
+    $date = $request->input('date_range', now()->format('Y-m-d'));
+
+    $messageLogs = WhatsappMessageLog::select(DB::raw('MAX(id) as id'), 'user_id')
+        ->with('user')
+        ->when($date, function ($query) use ($date) {
+            // Filter logs for the specific date
+            return $query->whereDate('created_at', $date);
+        })
+        ->groupBy('user_id')
+        ->orderBy('id', 'desc')
+        ->get()
+        ->map(function ($item) {
+            // Fetch the full log entry for the selected max ID
+            return WhatsappMessageLog::with('user')->find($item->id);
+        });
+
+    // Pass the selected date back to the view
+    return view('admin.whatsapp-logs.index', [
+        'messageLogs' => $messageLogs,
+        'selectedDate' => $date
+    ]);
+}
 }
