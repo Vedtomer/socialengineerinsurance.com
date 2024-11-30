@@ -85,7 +85,7 @@ class CustomerController extends Controller
         $user->address = $request->input('address');
         $user->aadhar_document = $aadharFileName;
         $user->pan_document = $panFileName;
-        $user->username = $request->input('pan_number');
+       // $user->username = $request->input('pan_number');
         $user->password = Hash::make($request->input('password'));
         // $user->password = Hash::make($request->input('pan_number'));
         $user->save();
