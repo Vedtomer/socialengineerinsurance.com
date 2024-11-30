@@ -51,6 +51,7 @@ class CustomerController extends Controller
             'password' => 'required|string',
             'aadhar_document' => 'nullable|max:2048',
             'pan_document' => 'nullable|max:2048',
+             'username' => 'required|string|unique:users,username|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -85,7 +86,7 @@ class CustomerController extends Controller
         $user->address = $request->input('address');
         $user->aadhar_document = $aadharFileName;
         $user->pan_document = $panFileName;
-        // $user->username = $request->input('pan_number');
+        $user->username = $request->input('username');
         $user->password = Hash::make($request->input('password'));
         // $user->password = Hash::make($request->input('pan_number'));
         $user->save();
@@ -135,6 +136,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
             'pan_document' => 'nullable|file|max:2048',
+            
             // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
         ]);
 
