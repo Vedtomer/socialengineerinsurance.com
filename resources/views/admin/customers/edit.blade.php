@@ -49,6 +49,11 @@
                                 value="{{ old('pan_number', $customer->pan_number) }}" required>
                         </div>
 
+                        <div class="col-md-12">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $customer->username) }}" >
+                        </div>
+
                         <!--  -->
                         <div class="col-md-12">
                             <label for="password" class="form-label">Password (only fill if you want to change the

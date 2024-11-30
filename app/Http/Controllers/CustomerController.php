@@ -136,7 +136,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
             'pan_document' => 'nullable|file|max:2048',
-            
+             'username' => 'required|max:255'
             // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
         ]);
 
