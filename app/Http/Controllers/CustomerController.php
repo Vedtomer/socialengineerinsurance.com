@@ -172,6 +172,7 @@ class CustomerController extends Controller
         $customer->address = $request->input('address');
         $customer->aadhar_document = $aadharFileName;
         $customer->pan_document = $panFileName;
+        $customer->username = $request->input('username');
 
         // Update password if provided
         if ($request->filled('password')) {
