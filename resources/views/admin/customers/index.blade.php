@@ -25,6 +25,7 @@
                             <tr>
                                 <th>Sr.No.</th>
                                 <th>Name</th>
+                                <th>UserName</th>
                                 <th>Mobile</th>
                                 <th>Aadhar No.</th>
                                 <th>PAN No.</th>
@@ -39,6 +40,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $user->name }}</td>
+                                    <td>{{ $user->username }}</td>
                                     <td>{{ $user->mobile_number }}</td>
                                     <td>
                                         {{ $user->aadhar_number }}
