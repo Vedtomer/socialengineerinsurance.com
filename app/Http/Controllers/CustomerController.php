@@ -17,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = User::role('customer')->get();
+        $customers = User::role('customer')->orderBy("id", "desc")->get();
         return view('admin.customers.index', compact('customers'));
     }
 
@@ -48,7 +48,7 @@ class CustomerController extends Controller
             'state' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'address' => 'nullable|string',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
             'aadhar_document' => 'nullable|max:2048',
             'pan_document' => 'nullable|max:2048',
         ]);
@@ -85,7 +85,7 @@ class CustomerController extends Controller
         $user->address = $request->input('address');
         $user->aadhar_document = $aadharFileName;
         $user->pan_document = $panFileName;
-       // $user->username = $request->input('pan_number');
+        // $user->username = $request->input('pan_number');
         $user->password = Hash::make($request->input('password'));
         // $user->password = Hash::make($request->input('pan_number'));
         $user->save();
@@ -135,7 +135,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
             'pan_document' => 'nullable|file|max:2048',
-           // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
+            // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
         ]);
 
         if ($validator->fails()) {
@@ -216,5 +216,4 @@ class CustomerController extends Controller
 
         return view('admin.customers.change-password', compact('customer'));
     }
-
 }
