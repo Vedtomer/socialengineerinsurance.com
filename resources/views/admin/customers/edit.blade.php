@@ -55,14 +55,14 @@
                                 value="{{ old('username', $customer->username) }}">
                         </div>
 
-                        <!--  -->
                         <div class="col-md-12">
-                            <label for="password" class="form-label">Password (only fill if you want to change the
-                                password)</label>
+                            <label for="password" class="form-label">
+                                Password (only fill if you want to change the password)
+                            </label>
                             <input type="password" class="form-control" id="password" name="password" placeholder="xxxxxx"
-                                value="{{ old('password') }}">
+                                 autocomplete="off">
                         </div>
-                        <!--  -->
+
 
                         <div class="col-md-6">
                             <label for="state" class="form-label">State</label>
