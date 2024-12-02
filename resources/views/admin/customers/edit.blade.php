@@ -60,10 +60,21 @@
                                 Password (only fill if you want to change the password)
                             </label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password"
-                                    placeholder="xxxxxx" value="{{ old('password') }}" autocomplete="off">
-                                <button type="button" class="btn btn-secondary" id="setPasswordBtn">
-                                    Set Password
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="xxxxxx" 
+                                    value="{{ old('password') }}" 
+                                    autocomplete="off" 
+                                    disabled
+                                >
+                                <button 
+                                    type="button" 
+                                    class="btn btn-secondary" 
+                                    id="enablePasswordBtn">
+                                    Enable Input
                                 </button>
                             </div>
                         </div>
@@ -116,9 +127,11 @@
 
 
     <script>
-        document.getElementById('setPasswordBtn').addEventListener('click', function() {
-            // Set the desired value for the password field
-            document.getElementById('password').value = 'defaultPassword123';
+        document.getElementById('enablePasswordBtn').addEventListener('click', function () {
+            // Enable the password field
+            document.getElementById('password').disabled = false;
+            // Optionally, focus on the field to improve UX
+            document.getElementById('password').focus();
         });
     </script>
 
