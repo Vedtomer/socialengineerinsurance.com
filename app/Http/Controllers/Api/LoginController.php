@@ -146,7 +146,7 @@ class LoginController extends Controller
     {
         try {
             $user = auth()->guard('api')->user();
-            $user->delete(); // This will soft delete the user
+           // $user->delete(); // This will soft delete the user
             $user->tokens()->delete(); // Delete all tokens associated with the user
 
             return response()->json([
