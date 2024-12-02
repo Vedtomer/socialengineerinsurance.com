@@ -74,7 +74,7 @@
                                     type="button" 
                                     class="btn btn-secondary" 
                                     id="enablePasswordBtn">
-                                    Enable Input
+                                    Change Password
                                 </button>
                             </div>
                         </div>
