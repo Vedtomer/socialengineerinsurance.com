@@ -39,7 +39,7 @@
 
                         <div class="col-md-6">
                             <label for="pan_number" class="form-label">PAN Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="pan_number" name="pan_number" value="{{ old('pan_number') }}" required>
+                            <input type="text" class="form-control" id="pan_number" name="pan_number" value="{{ old('pan_number') }}" >
                         </div>
 
                         <div class="col-md-6">

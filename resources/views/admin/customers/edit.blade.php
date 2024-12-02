@@ -46,12 +46,13 @@
                         <div class="col-md-6">
                             <label for="pan_number" class="form-label">PAN Number <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="pan_number" name="pan_number"
-                                value="{{ old('pan_number', $customer->pan_number) }}" required>
+                                value="{{ old('pan_number', $customer->pan_number) }}">
                         </div>
 
                         <div class="col-md-12">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $customer->username) }}" >
+                            <input type="text" class="form-control" id="username" name="username"
+                                value="{{ old('username', $customer->username) }}">
                         </div>
 
                         <!--  -->
