@@ -15,7 +15,7 @@ class Slider extends Model
 
         $data = ('/slider') . "/" . $value;
 
-        if (Storage::disk('public')->exists($data)) {
+        if (Storage::disk('public')->has($data)) {
             return asset('/storage/slider') . "/" .$value;
         } else {
             return "";

@@ -112,7 +112,6 @@ class AdminController extends Controller
     public function dashboard(Request $request)
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
-
         // Define the transaction and policy queries
         $transactions = Transaction::orderBy('id', 'ASC');
         $policy = Policy::orderBy('id', 'ASC');

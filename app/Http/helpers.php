@@ -126,24 +126,30 @@ if (!function_exists('getPolicy')) {
 if (!function_exists('getMonthsFromAprilToCurrent')) {
     function getMonthsFromAprilToCurrent()
     {
-        $currentDate = now();
-        $currentYear = $currentDate->year;
-        $currentMonth = $currentDate->month;
-
-        // Generate months list from April to the current month
-        $months = [];
-        for ($month = 4; $month <= $currentMonth; $month++) {
-            $months[] = [
-                'name' => Carbon::create()->month($month)->format('F'),
-                'value' => $month,
+        $current_selection = now()->subYear()->format('F, Y');
+        $years = $months = [];
+        $current_year = now()->format('Y');
+        $years[] = $current_year;
+        $current_month_number = now()->format('m');
+        $months = array_merge($months,array_map(function($month_number)use($current_year){
+            $target_date = now()->parse($current_year.'-'.sprintf('%02d',$month_number).'-01');
+            return [
+                'name' => $target_date->format('F, Y'),
+                'value' => strtolower($target_date->format('Y-m-d'))
             ];
+        },range(1,$current_month_number)));
+        if($current_month_number <= 4){
+            $last_year = now()->subYear()->format('Y');
+            $years[] = $last_year;
+            $months = array_merge($months,array_map(function($month_number)use($last_year){
+                $target_date = now()->parse($last_year.'-'.sprintf('%02d',$month_number).'-01');
+                return [
+                    'name' => $target_date->format('F, Y'),
+                    'value' => strtolower($target_date->format('Y-m-d'))
+                ];
+            },range(12,4)));
         }
-
-        return [
-            'months' => $months,
-            'currentYear' => $currentYear,
-            'currentMonth' => $currentMonth
-        ];
+        return compact('years','months','current_selection');
     }
 }
 
@@ -173,12 +179,14 @@ if (!function_exists('prepareDashboardData')) {
                 $start_date = Carbon::parse($date_range)->toDateString();
                 $end_date = $start_date;
             }
-        } elseif ($date == "year") {
-            $start_date = Carbon::now()->startOfYear()->addMonths(3)->toDateString();
-        } elseif (is_numeric($date)) {
-            $month = intval($date);
-            $start_date = Carbon::create(null, $month, 1)->toDateString();
-            $end_date = Carbon::create(null, $month, 1)->endOfMonth()->toDateString();
+        }elseif(!empty($date)){
+            if (strlen($date) == 4) {
+                $start_date = Carbon::parse($date.'-01-01')->toDateString();
+                $end_date = Carbon::parse($date.'-12-31')->endOfYear()->toDateString();
+            } else {
+                $start_date = Carbon::parse($date)->toDateString();
+                $end_date = Carbon::parse($date)->endOfMonth()->toDateString();
+            }
         }
 
         return [$agent_id, $start_date, $end_date];

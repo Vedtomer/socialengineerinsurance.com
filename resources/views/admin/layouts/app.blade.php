@@ -76,22 +76,17 @@
 
                             <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
 
-                                <select class="select2 form-select no-search" id="date"
-                                    aria-label="Default select example" onchange="filterData()">
+                                <select class="select2 form-select no-search" id="date" aria-label="Default select example" onchange="filterData()">
                                     <option disabled>Select Option</option>
                                     @php
                                         $data = getMonthsFromAprilToCurrent();
                                     @endphp
-                                    @foreach ($data['months'] as $month)
-                                        <option value="{{ $month['value'] }}"
-                                            @if (isset($_GET['date']) && $_GET['date'] == $month['value']) selected
-                                        @elseif(empty($_GET['date']) && $month['value'] == $data['currentMonth']) selected @endif>
-                                            {{ $month['name'] }}
-                                        </option>
+                                    @foreach($data['months'] as $month)
+                                        <option value="{{ $month['value'] }}" @selected((request()->query('date') == $month['value']) || (empty(request()->query('date')) && $month['name'] == $data['current_selection']))>{{ $month['name'] }}</option>
                                     @endforeach
-                                    <option value="year"
-                                        {{ !empty($_GET['date']) && $_GET['date'] == 'year' ? 'selected' : '' }}>
-                                        {{ $data['currentYear'] }}</option>
+                                    @foreach($data['years'] as $year)
+                                    <option value="{{ $year }}" @selected((request()->query('date') ?? '') == $year)>{{ $year }}</option>
+                                    @endforeach
                                 </select>
 
 
