@@ -229,6 +229,7 @@ class PolicyController extends Controller
             $monthNames,
             $policyCounts
         ),
+        'data' => $policyCounts,
         'series' => [
             [
                 'name' => 'Policy Count',

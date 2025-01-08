@@ -112,7 +112,7 @@ $monthMap = [
                                         @foreach ($agentData['data'] as $index => $policyCount)
                                             <td>{{ $policyCount ?? 0 }}</td>
                                         @endforeach
-                                     
+
                                         <td style="background-color: @php
                                         $days = $agentData['days_since_last_policy'];
                                         if ($days > 180) {
@@ -167,17 +167,8 @@ $monthMap = [
 
     <script>
         let chartData = @json($chartData);
+        // console.log(chartData.series[0].data);
     </script>
 
-<script>
-    $(document).ready(function() {
-        $('#html55-extension').DataTable({
-            "responsive": true,
-            "ordering": true,
-            "order": [[5, "desc"]],
-            "pageLength": -1,
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
-        });
-    });
-</script>
+
 @endsection
