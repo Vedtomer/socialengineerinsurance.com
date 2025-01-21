@@ -14,45 +14,68 @@ class CustomTask extends Command
     protected $description = 'Execute the custom task';
     private $maxLength = 900; // Safe limit below WhatsApp's 1024 limit
 
+
+
     public function handle()
     {
         try {
             Log::info('Custom task ran at: ' . now());
 
+            // Calculate date ranges
             $today = Carbon::now();
-            $lastWeek = Carbon::now()->subWeek();
+            $currentWeekStart = $today->copy()->startOfWeek()->startOfDay();
+            $lastWeekStart = $currentWeekStart->copy()->subWeek();
+
+            // Calculate end dates
+            $currentWeekEnd = $today->copy()->endOfDay();
+            $lastWeekEnd = $lastWeekStart->copy()->endOfWeek()->endOfDay();
+
+            Log::info('Date Ranges:', [
+                'Current Week' => [
+                    'Start' => $currentWeekStart->format('Y-m-d'),
+                    'End' => $currentWeekEnd->format('Y-m-d')
+                ],
+                'Last Week' => [
+                    'Start' => $lastWeekStart->format('Y-m-d'),
+                    'End' => $lastWeekEnd->format('Y-m-d')
+                ]
+            ]);
+
             $agents = User::role('agent')->get();
 
             $groupedAgents = [
-                'up' => [],
-                'down' => [],
+                'changes' => [],
                 'same' => [],
                 'dead' => []
             ];
 
             foreach ($agents as $agent) {
                 $thisWeekCount = Policy::where('agent_id', $agent->id)
-                    ->whereDate('policy_start_date', $today->format('Y-m-d'))
+                    ->whereDate('policy_start_date', '>=', $currentWeekStart->format('Y-m-d'))
+                    ->whereDate('policy_start_date', '<=', $currentWeekEnd->format('Y-m-d'))
                     ->count();
 
                 $lastWeekCount = Policy::where('agent_id', $agent->id)
-                    ->whereDate('policy_start_date', $lastWeek->format('Y-m-d'))
+                    ->whereDate('policy_start_date', '>=', $lastWeekStart->format('Y-m-d'))
+                    ->whereDate('policy_start_date', '<=', $lastWeekEnd->format('Y-m-d'))
                     ->count();
+
+                // Log for debugging
+                Log::info("Agent Counts: {$agent->name}", [
+                    'This Week' => $thisWeekCount,
+                    'Last Week' => $lastWeekCount
+                ]);
 
                 if ($thisWeekCount == 0 && $lastWeekCount == 0) {
                     $groupedAgents['dead'][] = [
                         'name' => $agent->name,
                         'message' => "{$agent->name}"
                     ];
-                } elseif ($thisWeekCount > $lastWeekCount) {
-                    $groupedAgents['up'][] = [
+                } elseif ($thisWeekCount != $lastWeekCount) {
+                    $trend = $thisWeekCount > $lastWeekCount ? "up" : "down";
+                    $groupedAgents['changes'][] = [
                         'name' => $agent->name,
-                        'message' => "{$agent->name}: {$lastWeekCount}->{$thisWeekCount} up"
-                    ];
-                } elseif ($thisWeekCount < $lastWeekCount) {
-                    $groupedAgents['down'][] = [
-                        'name' => $agent->name,
-                        'message' => "{$agent->name}: {$lastWeekCount}->{$thisWeekCount} down"
+                        'message' => "{$agent->name}: {$lastWeekCount}->{$thisWeekCount} {$trend}"
                     ];
                 } else {
                     $groupedAgents['same'][] = [
@@ -61,9 +84,8 @@ class CustomTask extends Command
                     ];
                 }
             }
-
-            // Send performance reports in chunks
-            $this->sendGroupReports($groupedAgents);
+            // Modified sendGroupReports method
+            $this->sendModifiedGroupReports($groupedAgents);
 
             echo "Custom task executed successfully!\n";
             return Command::SUCCESS;
@@ -75,23 +97,16 @@ class CustomTask extends Command
         }
     }
 
-    private function sendGroupReports($groupedAgents)
+    private function sendModifiedGroupReports($groupedAgents)
     {
-        // Process improving agents
-        if (!empty($groupedAgents['up'])) {
-            $upMessages = array_map(fn($agent) => $agent['message'], $groupedAgents['up']);
-            $this->sendChunkedMessages("Improving Agents: ", $upMessages, count($groupedAgents['up']));
+        // Process agents with changes
+        Log::info($groupedAgents);die;
+        if (!empty($groupedAgents['changes'])) {
+            $changeMessages = array_map(fn($agent) => $agent['message'], $groupedAgents['changes']);
+            $this->sendChunkedMessages("Agent Performance Changes: ", $changeMessages, count($groupedAgents['changes']));
         }
 
         sleep(5); // Delay between groups
-
-        // Process declining agents
-        if (!empty($groupedAgents['down'])) {
-            $downMessages = array_map(fn($agent) => $agent['message'], $groupedAgents['down']);
-            $this->sendChunkedMessages("Declining Agents: ", $downMessages, count($groupedAgents['down']));
-        }
-
-        sleep(30); // Delay between groups
 
         // Process stable agents
         if (!empty($groupedAgents['same'])) {
@@ -99,7 +114,7 @@ class CustomTask extends Command
             $this->sendChunkedMessages("Stable Agents: ", $sameMessages, count($groupedAgents['same']));
         }
 
-        sleep(30); // Delay between groups
+        sleep(5); // Delay between groups
 
         // Process inactive agents
         if (!empty($groupedAgents['dead'])) {
@@ -167,8 +182,7 @@ class CustomTask extends Command
                             [
                                 'type' => 'text',
                                 'text' => $report
-                            ]
-                            ,
+                            ],
                             [
                                 'type' => 'text',
                                 'text' => (string)$upCount
