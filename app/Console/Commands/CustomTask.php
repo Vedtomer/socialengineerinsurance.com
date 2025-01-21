@@ -100,7 +100,7 @@ class CustomTask extends Command
     private function sendModifiedGroupReports($groupedAgents)
     {
         // Process agents with changes
-        Log::info($groupedAgents);die;
+        // Log::info($groupedAgents);die;
         if (!empty($groupedAgents['changes'])) {
             $changeMessages = array_map(fn($agent) => $agent['message'], $groupedAgents['changes']);
             $this->sendChunkedMessages("Agent Performance Changes: ", $changeMessages, count($groupedAgents['changes']));
