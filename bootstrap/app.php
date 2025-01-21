@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add the ConvertNullToEmptyString middleware globally
         $middleware->append(\App\Http\Middleware\ConvertNullToEmptyString::class);
     })
+    ->withSchedule(function ($schedule) {
+        $schedule->command('app:custom-task')->everyMinute();
+    })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
