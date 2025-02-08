@@ -33,7 +33,10 @@
               </div>
             </div>
             <div class="cta-newsletter-form-wrap">
-              <button type="submit" data-wait="Please wait..." class="primary-button w-button">Get A Quote</button>
+                <a href="https://wa.me/919728786086?text=Hello!%20I%20would%20like%20to%20get%20a%20quote%20for%20insurance." data-wait="Please wait..." class="primary-button w-button">
+                    Get A Quote
+                </a>
+
             </div>
             <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65cdb3ff5d14df92f80ad5ae_Contact%20Circle%20Shape.svg" loading="lazy" data-w-id="8f2ded18-e9f9-1588-8d22-a340a1e9886d" alt="CTA Circle Shape Image" class="cta-circle-shape-image" />
           </div>
