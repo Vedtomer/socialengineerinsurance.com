@@ -1,10 +1,10 @@
-<footer class="footer-section" style="background-color:#e9f3f2;margin-top:32px">
+<footer class="footer-section" style="background-color:#e9f3f2;margin-top:32px;text-align:center">
     <div class="footer-upper-section">
       <div class="w-layout-blockcontainer main-container w-container">
         <div data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80c4" class="footer-flex">
           <div class="footer-about-column">
             <a href="{{ route('homepage') }}" class="footer-logo-wrap w-inline-block">
-              <img src="{{ asset('asset/website/images/logo-transparent.png') }}" loading="lazy" alt="Logo" class="footer-logo" />
+              <img src="{{ asset('asset/website/images/logo-transparent.png') }}" loading="lazy" alt="Logo" class="footer-logo"  style="display: inline-block !important"/>
             </a>
             <div class="footer-excerpt">Insurance can be difficult hard. Social Engineer Insurance makes it easy.</div>
             <div class="footer-contact-info-wrap">
