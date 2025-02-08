@@ -13,7 +13,7 @@
                 <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
                     <ul role="list" class="nav-menu-list-wrap w-list-unstyled">
                         <li class="mobile-menu-logo"><a href="{{route('homepage')}}" class="navbar-brand w-nav-brand"><img src="{{ asset('asset/website/images/logo.png') }}" loading="lazy" alt="" class="brand-logo" /></a></li>
-                        <li class="nav-list-item">
+                        {{-- <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="ae4b32c0-8975-07e2-c09e-90c8dffb18bd" class="nav-dropdown w-dropdown">
                                 <div class="nav-dropdown-toggle-wrap w-dropdown-toggle">
                                     <div data-w-id="ae4b32c0-8975-07e2-c09e-90c8dffb18bf" class="nav-dropdown-toggle">
@@ -27,6 +27,9 @@
                                     </div>
                                 </nav>
                             </div>
+                        </li> --}}
+                        <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd969" class="nav-list-item margin-top"><a href="/" class="nav-link">Home</a>
+                            <div class="nav-bottom-shape"></div>
                         </li>
                         <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd969" class="nav-list-item margin-top"><a href="/about" class="nav-link">About</a>
                             <div class="nav-bottom-shape"></div>

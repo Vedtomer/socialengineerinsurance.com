@@ -15,16 +15,17 @@
                             class="sub-title-wrap"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b79812ab0af18673227bc2_Badge%20Logo.png"
                                 loading="lazy" alt="Welcome Shape" class="hero-sub-title-image" />
-                            <div class="hero-sub-title">Welcome to Insurbes</div>
+                            <div class="hero-sub-title">Welcome to Social Engineer Insurance</div>
                         </div>
                         <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:1"
-                            class="hero-heading">In Minutes, You&#x27;ll Find Your Perfect <span
-                                class="heading-highlight-text">Insurance</span> Plan</h1>
+                            class="hero-heading">Get the Best E-Rickshaw
+                            <span
+                                class="heading-highlight-text"> Insurance</span> in Minutes</h1>
                     </div>
                     <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:1"
-                        class="hero-excerpt">Insurbes company is provide financial protection and risk
-                        management to individuals, businesses &amp; other entities in exchange for premiums.
-                        This can include coverage for as home, family, health and more.</p>
+                        class="hero-excerpt">At Social Engineer Insurance, we prioritize your needs by offering customized insurance solutions. Whether it's electric rickshaw insurance or life and health coverage, we ensure you get the best protection with tailored plans that fit your requirements. Secure your future with confidence—let us find the best coverage for you.
+
+                        .</p>
                     <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:1"
                         class="newsletter-form-wrap">
                         <div class="newsletter-form-block w-form">
@@ -83,6 +84,9 @@
             </div>
         </div>
     </section>
+
+
+
     <section class="brand-logo-section">
         <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:1" class="brand-logo-flex">
             <div style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
