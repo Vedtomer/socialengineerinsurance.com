@@ -3178,14 +3178,14 @@ figcaption {
   border-radius: 100px;
   justify-content: center;
   align-items: center;
-  width: 198px;
+  min-width: 198px;
   padding: 5px 10px;
   display: flex;
 }
 
 .hero-heading {
   color: var(--primary);
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .heading-highlight-text {
@@ -7902,8 +7902,8 @@ figcaption {
   }
 
   .hero-section {
-    padding-top: 100px;
-    padding-bottom: 135px;
+    padding-top: 75px;
+    padding-bottom: 75px;
   }
 
   .hero-wrapper {
@@ -14087,4 +14087,9 @@ figcaption {
   font-weight: 800;
   font-style: normal;
   font-display: swap;
+}
+
+
+.align-c{
+    align-items: center;
 }

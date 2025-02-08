@@ -5,28 +5,27 @@
 {{-- @section('title', 'Home') --}}
 
 @section('content')
-
     <section class="hero-section">
         <div class="w-layout-blockcontainer main-container w-container">
-            <div class="hero-section-wrapper">
+            <div class="hero-section-wrapper align-c">
                 <div class="hero-content-block">
                     <div class="hero-header-block">
-                        <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:1"
+                        {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:1"
                             class="sub-title-wrap"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b79812ab0af18673227bc2_Badge%20Logo.png"
                                 loading="lazy" alt="Welcome Shape" class="hero-sub-title-image" />
                             <div class="hero-sub-title">Welcome to Social Engineer Insurance</div>
-                        </div>
-                        <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:1"
-                            class="hero-heading">Get the Best E-Rickshaw
-                            <span
-                                class="heading-highlight-text"> Insurance</span> in Minutes</h1>
+                        </div> --}}
+                        <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:1" class="hero-heading">Get the
+                            Best E-Rickshaw
+                            <span class="heading-highlight-text"> Insurance</span> in Minutes
+                        </h1>
                     </div>
-                    <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:1"
+                    {{-- <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:1"
                         class="hero-excerpt">At Social Engineer Insurance, we prioritize your needs by offering customized insurance solutions. Whether it's electric rickshaw insurance or life and health coverage, we ensure you get the best protection with tailored plans that fit your requirements. Secure your future with confidence—let us find the best coverage for you.
 
-                        .</p>
-                    <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:1"
+                        .</p> --}}
+                    {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:1"
                         class="newsletter-form-wrap">
                         <div class="newsletter-form-block w-form">
                             <form id="newsletter-email-form" name="email-form" data-name="Email Form"
@@ -49,22 +48,22 @@
                                     form.</div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div id="w-node-d8b7b9a4-9846-4f96-d345-53159bb96423-2401686d" class="hero-image-block">
                     <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96425" style="opacity:1"
-                        class="hero-image-inner relative"><img
-                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image.jpg"
+                        class="hero-image-inner relative"><img src="{{ asset('asset/website/images/sei.jpg') }}"
                             loading="lazy"
                             style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                             sizes="(max-width: 479px) 100vw, (max-width: 767px) 96vw, (max-width: 991px) 690px, (max-width: 1279px) 440px, (max-width: 1439px) 545px, (max-width: 1919px) 536.375px, 550px"
                             alt="Hero Image"
-                            srcset="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image-p-500.jpg 500w, https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image.jpg 532w"
+                            srcset="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1fe9345f9f64f0a6e42c0_Hero%20Image-p-500.jpg 500w, {{ asset('asset/website/images/sei.jpg') }} 532w"
                             class="hero-image-version-two" />
-                        <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:1"
-                            class="hero-customer-image-wrap"><img
-                                src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1ffb7139efde81a0a2022_Happy%20Customer.png"
-                                loading="lazy" alt="Hero Customer Image" class="hero-customer-image" /></div>
+                        {{-- <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:1"
+                            class="hero-customer-image-wrap">
+                            <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1ffb7139efde81a0a2022_Happy%20Customer.png"
+                                loading="lazy" alt="Hero Customer Image" class="hero-customer-image" />
+                        </div> --}}
                         <div class="image-overlay-wrap">
                             <div data-w-id="7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0070" class="image-overlay-grid">
                                 <div id="w-node-_7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0071-1f7c006f"
@@ -87,7 +86,7 @@
 
 
 
-    <section class="brand-logo-section">
+    {{-- <section class="brand-logo-section">
         <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:1" class="brand-logo-flex">
             <div style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                 class="brand-logo-wrap">
@@ -146,15 +145,38 @@
         </div>
         <div class="brand-logo-side-overlay"></div>
         <div class="brand-logo-side-overlay right-side-overlay"></div>
+    </section> --}}
+
+    <section >
+        <div class="w-layout-blockcontainer main-container w-container">
+            <div class="about-us-wrapper">
+                <div class="page-heading-wrap">
+                    <div data-w-id="eba3cd07-734f-a87f-7656-6ee84e4cabda"
+                        style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"
+                        class="page-intro-wrap about-intro-max-width">
+                        <div class="page-intro-text" style="margin-top: 0px !important">At Social Engineer Insurance, we prioritize your needs by offering customized insurance solutions. Whether it's electric rickshaw insurance or life and health coverage, we ensure you get the best protection with tailored plans that fit your requirements. Secure your future with confidence—let us find the best coverage for you.</div>
+                    </div>
+                </div>
+
+                <img
+                    src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65b867606ba5973c24a6a24e_Hero%20Shape.png"
+                    loading="lazy"
+                    style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-226.472deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1; will-change: transform;"
+                    data-w-id="b215a556-e1e0-029c-c25c-8b53bd731021" alt="Circle Image"
+                    class="about-us-circle-shape-image circle-shape-image size-decrease">
+            </div>
+        </div>
     </section>
+
+
+
     <section class="unique-feature-section section-y-axis-gap">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="unique-feature-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap unique-feature-title-max-width">
-                        <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:1"
-                            class="section-title">What Makes Us <span
-                                class="heading-highlight-text">Different</span> From Others?</h2>
+                        <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:1" class="section-title">What
+                            Makes Us <span class="heading-highlight-text">Different</span> From Others?</h2>
                     </div>
                     <div class="section-sub-title-wrap unique-feature-sub-title-max-width">
                         <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1"
@@ -163,8 +185,7 @@
                     </div>
                 </div>
                 <div class="unique-feature-grid">
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:1"
-                        class="unique-feature-card">
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:1" class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d0a308217ff5cd6478fa_Makes%20Us%20Different%20Image%20One.png"
                                 loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -175,8 +196,7 @@
                                 then safely.</div>
                         </div>
                     </div>
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:1"
-                        class="unique-feature-card">
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:1" class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d26df1501f2c18dd05dc_Makes%20Us%20Different%20Image%20Two.png"
                                 loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -187,8 +207,7 @@
                                 then safely.</div>
                         </div>
                     </div>
-                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:1"
-                        class="unique-feature-card">
+                    <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:1" class="unique-feature-card">
                         <div class="unique-feature-image-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9d2a0a1f1aa34965db483_Makes%20Us%20Different%20Image%20Three.png"
                                 loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -203,14 +222,13 @@
             </div>
         </div>
     </section>
-    <section data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac33"
-        class="why-choose-us-section section-bottom-gap">
+    <section data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac33" class="why-choose-us-section section-bottom-gap">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="why-choose-us-wrapper">
                 <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:1"
                     class="why-choose-us-image-block">
-                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac37"
-                        class="why-choose-us-image-wrap version-two"><img class="why-choose-us-image"
+                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac37" class="why-choose-us-image-wrap version-two">
+                        <img class="why-choose-us-image"
                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c3106489e332bc3f979ed7_Services%20Main%20Image%20Home%20Two.png"
                             width="698" height="" alt="Why Choose Us Image"
                             style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
@@ -236,9 +254,8 @@
                 <div class="why-choose-us-content-block">
                     <div class="section-heading-wrap">
                         <div class="section-title-wrap why-choose-us-title-max-width">
-                            <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:1"
-                                class="section-title">What Makes Our <span
-                                    class="heading-highlight-text">Services</span> Reliable?</h2>
+                            <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:1" class="section-title">
+                                What Makes Our <span class="heading-highlight-text">Services</span> Reliable?</h2>
                         </div>
                         <div class="section-sub-title-wrap why-choose-us-sub-title-max-width">
                             <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:1"
@@ -246,13 +263,11 @@
                                 peace they have insurance coverage challenging times.</div>
                         </div>
                     </div>
-                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:1"
-                        class="why-choose-us-grid">
+                    <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:1" class="why-choose-us-grid">
                         <div class="why-choose-us-card">
                             <div class="why-choose-us-icon-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09dbb933fadb8f2fa18d1_Smart%20Watch.svg"
-                                    loading="lazy" alt="Why Choose Us Card Logo"
-                                    class="why-choose-us-icon" /></div>
+                                    loading="lazy" alt="Why Choose Us Card Logo" class="why-choose-us-icon" /></div>
                             <div class="why-choose-us-card-content">
                                 <h3 class="why-choose-us-card-title">Smart Match</h3>
                                 <p class="why-choose-us-card-summary">We match your unique profile tothe
@@ -262,8 +277,7 @@
                         <div class="why-choose-us-card">
                             <div class="why-choose-us-icon-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09dcede98f1b59a699780_Certified.svg"
-                                    loading="lazy" alt="Why Choose Us Card Logo"
-                                    class="why-choose-us-icon" /></div>
+                                    loading="lazy" alt="Why Choose Us Card Logo" class="why-choose-us-icon" /></div>
                             <div class="why-choose-us-card-content">
                                 <h3 class="why-choose-us-card-title">Certified Insurance</h3>
                                 <p class="why-choose-us-card-summary">Don’t worry, we have gone through the
@@ -273,8 +287,7 @@
                         <div class="why-choose-us-card">
                             <div class="why-choose-us-icon-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09ddc1fc24121af18ba87_25%20%2B%20Year%20Experience.svg"
-                                    loading="lazy" alt="Why Choose Us Card Logo"
-                                    class="why-choose-us-icon" /></div>
+                                    loading="lazy" alt="Why Choose Us Card Logo" class="why-choose-us-icon" /></div>
                             <div class="why-choose-us-card-content">
                                 <h3 class="why-choose-us-card-title">25+ Years Experience</h3>
                                 <p class="why-choose-us-card-summary">More than 25+ years we have insurance
@@ -284,8 +297,7 @@
                         <div class="why-choose-us-card">
                             <div class="why-choose-us-icon-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09dec27e8c9b1e47c3089_Chat%20.svg"
-                                    loading="lazy" alt="Why Choose Us Card Logo"
-                                    class="why-choose-us-icon" /></div>
+                                    loading="lazy" alt="Why Choose Us Card Logo" class="why-choose-us-icon" /></div>
                             <div class="why-choose-us-card-content">
                                 <h3 class="why-choose-us-card-title">24/7 Support</h3>
                                 <p class="why-choose-us-card-summary">We&#x27;re always there for you 24/7 for
@@ -384,9 +396,8 @@
             <div class="insurance-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap insurance-title-max-width">
-                        <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:1"
-                            class="section-title">We Provide Insurance <span
-                                class="heading-highlight-text">Solutions</span> to Meet Your Needs</h2>
+                        <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:1" class="section-title">We
+                            Provide Insurance <span class="heading-highlight-text">Solutions</span> to Meet Your Needs</h2>
                     </div>
                     <div class="section-sub-title-wrap insurance-sub-title-max-width">
                         <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:1"
@@ -395,18 +406,18 @@
                     </div>
                 </div>
                 <div class="insurance-content-wrap">
-                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:1"
-                        class="insurance-shape-wrap"><a href="#pricePlan"
-                            class="insurance-shape-link w-inline-block"><img
+                    <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:1" class="insurance-shape-wrap">
+                        <a href="#pricePlan" class="insurance-shape-link w-inline-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b88503f7188521c90f4f19_Scroll%20Now.png"
                                 loading="lazy"
                                 style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0)"
                                 alt="Insurance Circle Shape" class="insurance-scroll-now-image" />
                             <div class="insurance-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b8852137777e39a60385d5_Scroll%20Now%20Arrow.png"
-                                    loading="lazy" data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55305"
-                                    alt="Insurance Shape" class="insurance-arrow-image" /></div>
-                        </a></div>
+                                    loading="lazy" data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55305" alt="Insurance Shape"
+                                    class="insurance-arrow-image" /></div>
+                        </a>
+                    </div>
                     <div class="insurance-card-wrap">
                         <div class="insurance-collection-wrap w-dyn-list">
                             <div role="list" class="insurance-collection-list w-dyn-items">
@@ -416,8 +427,7 @@
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">25% Savings</div>
-                                                <div class="insurance-title-wrap"><a
-                                                        href="/insurance/home-insurance"
+                                                <div class="insurance-title-wrap"><a href="/insurance/home-insurance"
                                                         class="insurance-card-title-link w-inline-block">
                                                         <div class="insurance-card-title">Home Insurance</div>
                                                     </a><img alt="Insurance Title Bg Image" loading="lazy"
@@ -425,8 +435,7 @@
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
                                                 </div>
                                             </div>
-                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo"
-                                                    loading="lazy"
+                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo" loading="lazy"
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bd15894473eedf478d4_house-03.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
@@ -447,8 +456,7 @@
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">20% Savings</div>
-                                                <div class="insurance-title-wrap"><a
-                                                        href="/insurance/auto-insurance"
+                                                <div class="insurance-title-wrap"><a href="/insurance/auto-insurance"
                                                         class="insurance-card-title-link w-inline-block">
                                                         <div class="insurance-card-title">Auto Insurance</div>
                                                     </a><img alt="Insurance Title Bg Image" loading="lazy"
@@ -456,8 +464,7 @@
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
                                                 </div>
                                             </div>
-                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo"
-                                                    loading="lazy"
+                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo" loading="lazy"
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bdf713eed670622c533_Auto.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
@@ -478,8 +485,7 @@
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">20% Savings</div>
-                                                <div class="insurance-title-wrap"><a
-                                                        href="/insurance/health-insurance"
+                                                <div class="insurance-title-wrap"><a href="/insurance/health-insurance"
                                                         class="insurance-card-title-link w-inline-block">
                                                         <div class="insurance-card-title">Health Insurance
                                                         </div>
@@ -488,8 +494,7 @@
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
                                                 </div>
                                             </div>
-                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo"
-                                                    loading="lazy"
+                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo" loading="lazy"
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09beb31cd6303a7a9931e_Health.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
@@ -497,8 +502,7 @@
                                             of individuals, safeguarding against covered risks. Offers
                                             protection for personal health assets within a specified coverage.
                                         </p>
-                                        <div class="insurance-button-wrap"><a
-                                                href="/insurance/health-insurance"
+                                        <div class="insurance-button-wrap"><a href="/insurance/health-insurance"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09cd9734a4f3325ae5453_Health%20Bg.svg"
@@ -511,8 +515,7 @@
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
                                                 <div class="insurance-saving-title">25% Savings</div>
-                                                <div class="insurance-title-wrap"><a
-                                                        href="/insurance/travel-insurance"
+                                                <div class="insurance-title-wrap"><a href="/insurance/travel-insurance"
                                                         class="insurance-card-title-link w-inline-block">
                                                         <div class="insurance-card-title">Travel Insurance
                                                         </div>
@@ -521,16 +524,14 @@
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
                                                 </div>
                                             </div>
-                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo"
-                                                    loading="lazy"
+                                            <div class="insurance-logo-wrap"><img alt="Insurance Logo" loading="lazy"
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bf61fc24121af17b6d3_Travel.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
                                         <p class="insurance-summary">Secures your travel experience and
                                             personal belongings from covered risks. Covers personal possessions
                                             and provides liability protection during your journey.</p>
-                                        <div class="insurance-button-wrap"><a
-                                                href="/insurance/travel-insurance"
+                                        <div class="insurance-button-wrap"><a href="/insurance/travel-insurance"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09ce8de98f1b59a68f93f_Travel%20Bg.svg"
@@ -541,8 +542,8 @@
                         </div>
                     </div>
                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:1"
-                        class="insurance-button-wrapper"><a href="/all-insurance"
-                            class="primary-button w-button">View All Insurance</a></div>
+                        class="insurance-button-wrapper"><a href="/all-insurance" class="primary-button w-button">View
+                            All Insurance</a></div>
                 </div>
             </div>
         </div>
@@ -552,15 +553,14 @@
             <div class="app-content-block">
                 <div class="app-content">
                     <div class="app-heading-wrap">
-                        <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:1"
-                            class="app-title">Take a Look at the Insurbes Mobile App</h2>
-                        <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:1"
-                            class="app-sub-title">Insurbes companies work to sense more security and peace they
+                        <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:1" class="app-title">Take a
+                            Look at the Insurbes Mobile App</h2>
+                        <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:1" class="app-sub-title">
+                            Insurbes companies work to sense more security and peace they
                             have insurance coverage</div>
                     </div>
-                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:1"
-                        class="app-link-wrap"><a href="https://play.google.com/store/apps?hl=en&amp;gl=US"
-                            class="app-link w-inline-block"><img
+                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:1" class="app-link-wrap"><a
+                            href="https://play.google.com/store/apps?hl=en&amp;gl=US" class="app-link w-inline-block"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9dd51ca197f45ab2c2c81_Badge%20Android.png"
                                 loading="lazy" alt="Google Play Image" class="google-play-image" /></a><a
                             href="https://www.apple.com/store" class="app-link w-inline-block"><img
@@ -584,9 +584,9 @@
             <div class="insurance-price-wrapper">
                 <div class="section-heading-wrap center">
                     <div class="section-title-wrap insurance-price-title-max-width">
-                        <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:1"
-                            class="section-title">We’ve Got an Awesome <span
-                                class="heading-highlight-text">Price</span> Plan For Your Insurance</h2>
+                        <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:1" class="section-title">
+                            We’ve Got an Awesome <span class="heading-highlight-text">Price</span> Plan For Your Insurance
+                        </h2>
                     </div>
                     <div class="section-sub-title-wrap insurance-price-sub-title-max-width">
                         <div data-w-id="1d0150f3-c970-f95a-51d2-c5de322322bc" style="opacity:1"
@@ -595,11 +595,10 @@
                     </div>
                 </div>
                 <div class="insurance-price-content-wrap">
-                    <div data-current="Tab 1" data-easing="ease" data-duration-in="300"
-                        data-duration-out="100" class="insurance-tabs w-tabs">
-                        <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee4250f"
-                            class="insurance-tab-toggle w-tab-menu"><a data-w-tab="Tab 1"
-                                class="monthly-tab-link w-inline-block w-tab-link w--current">
+                    <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100"
+                        class="insurance-tabs w-tabs">
+                        <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee4250f" class="insurance-tab-toggle w-tab-menu"><a
+                                data-w-tab="Tab 1" class="monthly-tab-link w-inline-block w-tab-link w--current">
                                 <div class="month-tab">Monthly</div>
                                 <div class="tab-circle"></div>
                             </a><a data-w-tab="Tab 2" class="annually-tab-link w-inline-block w-tab-link">
@@ -610,8 +609,7 @@
                                 <div class="annual-tab">Annually</div>
                             </a></div>
                         <div class="insurance-tab-content-block w-tab-content">
-                            <div data-w-tab="Tab 1"
-                                class="insurance-tab-month-content w-tab-pane w--tab-active">
+                            <div data-w-tab="Tab 1" class="insurance-tab-month-content w-tab-pane w--tab-active">
                                 <div class="insurance-month-content-wrap">
                                     <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee42531"
                                         class="insurance-pricing-list-wrapper w-dyn-list">
@@ -620,9 +618,8 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="d30f04ae-c39a-d3b2-56f7-76df1c8ab816"
-                                                            class="insurance-checkbox checkbox-one"><img
-                                                                width="20" loading="lazy"
-                                                                alt="Check Icon "
+                                                            class="insurance-checkbox checkbox-one"><img width="20"
+                                                                loading="lazy" alt="Check Icon "
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
                                                                 class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
@@ -634,8 +631,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$160.56</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/home-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/home-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -649,11 +645,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="36ce8def-bd3c-8a49-bdb7-6505a6e5331e"
-                                                            class="insurance-checkbox checkbox-two"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-two"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Auto Insurance</div>
                                                             <div class="insurance-savings">10% Savings</div>
@@ -663,8 +657,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$370.56</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/auto-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/auto-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -678,11 +671,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="eafe44a7-36a1-c289-c49e-b64af2d01c6c"
-                                                            class="insurance-checkbox checkbox-three"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-three"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Health Insurance</div>
                                                             <div class="insurance-savings">15% Savings</div>
@@ -692,8 +683,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$465.20</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/health-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/health-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -707,11 +697,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee42521"
-                                                            class="insurance-checkbox checkbox-four"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-four"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Travel Insurance</div>
                                                             <div class="insurance-savings">20% Savings</div>
@@ -721,8 +709,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$520.40</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/travel-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/travel-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -740,11 +727,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="b2450baf-95ca-80e7-c250-9c4f2bd00aa5"
-                                                            class="insurance-checkbox checkbox-one"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-one"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Home Insurance</div>
                                                             <div class="insurance-savings">5% Savings</div>
@@ -754,8 +739,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$160.56</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/home-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/home-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -769,11 +753,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="dfcca466-293a-9662-a378-fad4160c6500"
-                                                            class="insurance-checkbox checkbox-two"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-two"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Auto Insurance</div>
                                                             <div class="insurance-savings">10% Savings</div>
@@ -783,8 +765,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$370.56</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/auto-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/auto-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -798,11 +779,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="45670251-491c-d063-dc3c-57a437301190"
-                                                            class="insurance-checkbox checkbox-three"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-three"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Health Insurance</div>
                                                             <div class="insurance-savings">15% Savings</div>
@@ -812,8 +791,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$465.20</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/health-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/health-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -827,11 +805,9 @@
                                                 <div class="insurance-pricing-content">
                                                     <div class="insurance-checkbox-and-name-wrap">
                                                         <div data-w-id="b48a83e2-1082-e8a9-a24c-bf0432e32c00"
-                                                            class="insurance-checkbox checkbox-four"><img
-                                                                loading="lazy"
+                                                            class="insurance-checkbox checkbox-four"><img loading="lazy"
                                                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65ba392c8601d5eadb4f07d7_Check%20Icon.png"
-                                                                alt="Check Icon "
-                                                                class="insurance-check-icon" /></div>
+                                                                alt="Check Icon " class="insurance-check-icon" /></div>
                                                         <div class="insurance-name-and-savings">
                                                             <div class="insurance-name">Travel Insurance</div>
                                                             <div class="insurance-savings">20% Savings</div>
@@ -841,8 +817,7 @@
                                                         <div class="insurance-total-text">Total</div>
                                                         <div class="insurance-total-price">$520.40</div>
                                                     </div>
-                                                    <div class="insurance-button"><a
-                                                            href="/insurance/travel-insurance"
+                                                    <div class="insurance-button"><a href="/insurance/travel-insurance"
                                                             class="secondary-button padding-minus w-button">Purchase
                                                             Now</a></div>
                                                 </div>
@@ -853,14 +828,11 @@
                             </div>
                         </div>
                     </div>
-                    <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee425c6"
-                        class="insurance-included-services-block">
+                    <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee425c6" class="insurance-included-services-block">
                         <div class="insurance-included-services-wrap">
-                            <div
-                                class="insurance-service-collection-list-wrap service-collection-one w-dyn-list">
+                            <div class="insurance-service-collection-list-wrap service-collection-one w-dyn-list">
                                 <div role="list" class="insurance-service-collection-list w-dyn-items">
-                                    <div role="listitem"
-                                        class="insurance-service-collection-items w-dyn-item">
+                                    <div role="listitem" class="insurance-service-collection-items w-dyn-item">
                                         <div class="insurance-service-content service-item-one">
                                             <div class="insurance-services-rich-text w-richtext">
                                                 <h3>What Service Included?</h3>
@@ -877,11 +849,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="insurance-service-collection-list-wrap service-collection-two w-dyn-list">
+                            <div class="insurance-service-collection-list-wrap service-collection-two w-dyn-list">
                                 <div role="list" class="insurance-service-collection-list w-dyn-items">
-                                    <div role="listitem"
-                                        class="insurance-service-collection-items w-dyn-item">
+                                    <div role="listitem" class="insurance-service-collection-items w-dyn-item">
                                         <div class="insurance-service-content service-item-two">
                                             <div class="insurance-services-rich-text w-richtext">
                                                 <h3>What Service Included?</h3>
@@ -898,11 +868,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="insurance-service-collection-list-wrap service-collection-three w-dyn-list">
+                            <div class="insurance-service-collection-list-wrap service-collection-three w-dyn-list">
                                 <div role="list" class="insurance-service-collection-list w-dyn-items">
-                                    <div role="listitem"
-                                        class="insurance-service-collection-items w-dyn-item">
+                                    <div role="listitem" class="insurance-service-collection-items w-dyn-item">
                                         <div class="insurance-service-content service-itmes-three">
                                             <div class="insurance-services-rich-text w-richtext">
                                                 <h3>What Service Included?</h3>
@@ -919,11 +887,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="insurance-service-collection-list-wrap service-collection-four w-dyn-list">
+                            <div class="insurance-service-collection-list-wrap service-collection-four w-dyn-list">
                                 <div role="list" class="insurance-service-collection-list w-dyn-items">
-                                    <div role="listitem"
-                                        class="insurance-service-collection-items w-dyn-item">
+                                    <div role="listitem" class="insurance-service-collection-items w-dyn-item">
                                         <div class="insurance-service-content service-items-four">
                                             <div class="insurance-services-rich-text w-richtext">
                                                 <h3>What Service Included?</h3>
@@ -962,29 +928,23 @@
                 </div>
                 <div class="testimonial-content-wrap">
                     <div data-delay="4000" data-animation="slide" class="testimonial-slider w-slider"
-                        data-autoplay="false" data-easing="ease" data-hide-arrows="false"
-                        data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3"
-                        data-duration="500" data-infinite="true">
+                        data-autoplay="false" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false"
+                        data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
                         <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8f35"
                             class="testmonial-slider-mask w-slider-mask">
                             <div class="testimonial-slider-item w-slide">
                                 <div class="client-feedback-card clint-one">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /></div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">That is awesome!</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1005,20 +965,15 @@
                                 <div class="client-feedback-card client-two">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">Absolutely impressive</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1039,20 +994,15 @@
                                 <div class="client-feedback-card client-three">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">It&#x27;s really wonderful.</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1073,20 +1023,15 @@
                                 <div class="client-feedback-card clint-one">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">That is awesome!</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1107,20 +1052,15 @@
                                 <div class="client-feedback-card client-two">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">Absolutely impressive</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1141,20 +1081,16 @@
                                 <div class="client-feedback-card client-three">
                                     <div class="client-rating-block"><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /><img
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
                                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating"
-                                            class="client-rating-star-icon" /></div>
+                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" />
+                                    </div>
                                     <div class="client-feedback-block">
                                         <div class="client-feedback-title">It&#x27;s really wonderful.</div>
                                         <p class="client-feedback-summary">The personalized attention and
@@ -1174,13 +1110,12 @@
                         </div>
                         <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8fae"
                             class="slider-left-arrow w-slider-arrow-left">
-                            <div class="left-arrow-icon w-embed"><svg width="22" height="20"
-                                    viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div class="left-arrow-icon w-embed"><svg width="22" height="20" viewBox="0 0 22 20"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20.3332 10H4.33325" stroke="#070707" stroke-width="2.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9.66675 2L1.66675 10L9.66675 18" stroke="#070707"
-                                        stroke-width="2.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
+                                    <path d="M9.66675 2L1.66675 10L9.66675 18" stroke="#070707" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
                                 </svg></div>
                         </div>
                         <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8fb0"
@@ -1189,9 +1124,8 @@
                                     viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1.66675 10H17.6667" stroke="#070707" stroke-width="2.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M12.3333 2L20.3333 10L12.3333 18" stroke="#070707"
-                                        stroke-width="2.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
+                                    <path d="M12.3333 2L20.3333 10L12.3333 18" stroke="#070707" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
                                 </svg></div>
                         </div>
                         <div class="slider-nav w-slider-nav w-round w-num"></div>
@@ -1358,10 +1292,9 @@
                             class="newsletter-form center" data-wf-page-id="65b60c5eef338f6b2401686d"
                             data-wf-element-id="8f2ded18-e9f9-1588-8d22-a340a1e98863"><input
                                 class="newsletter-input-field w-input" maxlength="256" name="Email-3"
-                                data-name="Email 3" placeholder="Enter Your Email..." type="email"
-                                id="Email-3" required="" /><input type="submit"
-                                data-wait="Please wait..." class="primary-button w-button"
-                                value="Get A Quote" /></form>
+                                data-name="Email 3" placeholder="Enter Your Email..." type="email" id="Email-3"
+                                required="" /><input type="submit" data-wait="Please wait..."
+                                class="primary-button w-button" value="Get A Quote" /></form>
                         <div class="w-form-done">
                             <div class="success-message-text">Thank you! Your submission has been received!
                             </div>
@@ -1380,5 +1313,4 @@
             loading="lazy" data-w-id="8f2ded18-e9f9-1588-8d22-a340a1e9886d" alt="CTA Circle Shape Image"
             class="cta-circle-shape-image" />
     </section>
-
 @endsection
