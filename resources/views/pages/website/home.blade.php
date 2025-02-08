@@ -180,8 +180,7 @@
                     </div>
                     <div class="section-sub-title-wrap unique-feature-sub-title-max-width">
                         <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1"
-                            class="section-sub-title">Insurbes companies work to sense more security &amp;
-                            peace they have insurance coverage challenging times.</div>
+                            class="section-sub-title">Social Engineer Insurance Insurance companies provide a sense of security and peace, ensuring coverage during life’s uncertainties.</div>
                     </div>
                 </div>
                 <div class="unique-feature-grid">
