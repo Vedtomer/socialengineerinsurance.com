@@ -147,19 +147,22 @@
         <div class="brand-logo-side-overlay right-side-overlay"></div>
     </section> --}}
 
-    <section >
+    <section>
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="about-us-wrapper">
                 <div class="page-heading-wrap">
                     <div data-w-id="eba3cd07-734f-a87f-7656-6ee84e4cabda"
                         style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"
                         class="page-intro-wrap about-intro-max-width">
-                        <div class="page-intro-text" style="margin-top: 0px !important">At Social Engineer Insurance, we prioritize your needs by offering customized insurance solutions. Whether it's electric rickshaw insurance or life and health coverage, we ensure you get the best protection with tailored plans that fit your requirements. Secure your future with confidence—let us find the best coverage for you.</div>
+                        <div class="page-intro-text" style="margin-top: 0px !important">At Social Engineer Insurance, we
+                            prioritize your needs by offering customized insurance solutions. Whether it's electric rickshaw
+                            insurance or life and health coverage, we ensure you get the best protection with tailored plans
+                            that fit your requirements. Secure your future with confidence—let us find the best coverage for
+                            you.</div>
                     </div>
                 </div>
 
-                <img
-                    src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65b867606ba5973c24a6a24e_Hero%20Shape.png"
+                <img src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65b867606ba5973c24a6a24e_Hero%20Shape.png"
                     loading="lazy"
                     style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-226.472deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1; will-change: transform;"
                     data-w-id="b215a556-e1e0-029c-c25c-8b53bd731021" alt="Circle Image"
@@ -179,8 +182,9 @@
                             Makes Us <span class="heading-highlight-text">Different</span> From Others?</h2>
                     </div>
                     <div class="section-sub-title-wrap unique-feature-sub-title-max-width">
-                        <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1"
-                            class="section-sub-title">Social Engineer Insurance Insurance companies provide a sense of security and peace, ensuring coverage during life’s uncertainties.</div>
+                        <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1" class="section-sub-title">
+                            Social Engineer Insurance Insurance companies provide a sense of security and peace, ensuring
+                            coverage during life’s uncertainties.</div>
                     </div>
                 </div>
                 <div class="unique-feature-grid">
@@ -227,13 +231,12 @@
                 <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:1"
                     class="why-choose-us-image-block">
                     <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac37" class="why-choose-us-image-wrap version-two">
-                        <img class="why-choose-us-image"
-                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c3106489e332bc3f979ed7_Services%20Main%20Image%20Home%20Two.png"
+                        <img class="why-choose-us-image" src="{{ asset('asset/website/images/sei1.jpeg') }}"
                             width="698" height="" alt="Why Choose Us Image"
                             style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                             sizes="(max-width: 479px) 100vw, (max-width: 767px) 95vw, (max-width: 991px) 690px, (max-width: 1279px) 362.34375px, (max-width: 1439px) 442.875px, (max-width: 1919px) 554px, 617px"
                             loading="lazy"
-                            srcset="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c3106489e332bc3f979ed7_Services%20Main%20Image%20Home%20Two-p-500.png 500w, https://assets-global.website-files.com/65b60c5def338f6b24016820/65c3106489e332bc3f979ed7_Services%20Main%20Image%20Home%20Two.png 600w" />
+                            srcset="{{ asset('asset/website/images/sei1.jpeg') }} 500w, {{ asset('asset/website/images/sei1.jpeg') }} 600w" />
                         <div class="image-overlay-wrap">
                             <div data-w-id="7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0070" class="image-overlay-grid">
                                 <div id="w-node-_7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0071-1f7c006f"
@@ -243,11 +246,14 @@
                                 <div class="image-overlay-mask mask-four"></div>
                             </div>
                         </div>
-                    </div><img
+                    </div>
+                    {{-- <img
                         src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1b7caa0a0c5f27cd098f9_Infurrance%20Profit%20Imag.png"
                         loading="lazy" style="opacity:1" data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac39"
-                        alt="Why Choose Us Profit Image" class="why-choose-us-profit-image change-position" />
-                    <div class="why-choose-us-shape-one change-position"></div>
+                        alt="Why Choose Us Profit Image" class="why-choose-us-profit-image change-position" /> --}}
+                    <div class="why-choose-us-shape-one change-position">
+
+                    </div>
                     <div class="why-choose-us-shape-two change-position"></div>
                 </div>
                 <div class="why-choose-us-content-block">
@@ -258,8 +264,8 @@
                         </div>
                         <div class="section-sub-title-wrap why-choose-us-sub-title-max-width">
                             <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:1"
-                                class="section-sub-title">Insurbes companies work to sense more security &amp;
-                                peace they have insurance coverage challenging times.</div>
+                                class="section-sub-title">Insurance companies offer peace of mind and financial security,
+                                protecting you during life’s unpredictable moments.</div>
                         </div>
                     </div>
                     <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:1" class="why-choose-us-grid">
@@ -288,8 +294,8 @@
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09ddc1fc24121af18ba87_25%20%2B%20Year%20Experience.svg"
                                     loading="lazy" alt="Why Choose Us Card Logo" class="why-choose-us-icon" /></div>
                             <div class="why-choose-us-card-content">
-                                <h3 class="why-choose-us-card-title">25+ Years Experience</h3>
-                                <p class="why-choose-us-card-summary">More than 25+ years we have insurance
+                                <h3 class="why-choose-us-card-title">12+ Years Experience</h3>
+                                <p class="why-choose-us-card-summary">More than 12+ years we have insurance
                                     dedicate it to you.</p>
                             </div>
                         </div>
@@ -312,16 +318,16 @@
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="funfact-wrapper">
                 <div class="section-heading-wrap align-left">
-                    <h2 class="section-title">Impact <span class="heading-highlight-text">Numbers</span></h2>
-                    <div class="section-sub-title align-left">We&#x27;ve seen a significant increase our
-                        valuable traffic and leads.</div>
+                    <h3 class="section-title">Our Proud <span class="heading-highlight-text">Achievements</span></h3>
+                    <div class="section-sub-title align-left">We’ve proudly served clients across the nation with reliable
+                        and trusted services for over a decade.</div>
                 </div>
                 <div class="funfact-content-block">
                     <div class="single-funfact-wrap">
                         <div data-w-id="fe7488cd-87e1-0978-cb29-99e5268bb50f" class="funfact-number-block">
                             <div style="-webkit-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                                 class="funfact-number-wrap upper-movement">
-                                <div class="funfact-number">8</div>
+                                <div class="funfact-number">5</div>
                                 <div class="funfact-number">6</div>
                                 <div class="funfact-number">2</div>
                                 <div class="funfact-number">7</div>
@@ -333,17 +339,17 @@
                                 <div class="funfact-number">9</div>
                                 <div class="funfact-number">4</div>
                                 <div class="funfact-number">6</div>
-                                <div class="funfact-number">2</div>
+                                <div class="funfact-number">0</div>
                             </div>
                             <div class="funfact-heading-text">k</div>
                         </div>
-                        <div class="number-text-label">Global Clients</div>
+                        <div class="number-text-label">E-Rickshaw Insurance</div>
                     </div>
                     <div class="single-funfact-wrap">
                         <div data-w-id="e6e872bc-6efa-f3dc-8502-d9cbc41c6bc5" class="funfact-number-block">
                             <div style="-webkit-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                                 class="funfact-number-wrap upper-movement">
-                                <div class="funfact-number">8</div>
+                                <div class="funfact-number">1</div>
                                 <div class="funfact-number">5</div>
                                 <div class="funfact-number">6</div>
                                 <div class="funfact-number">3</div>
@@ -355,7 +361,7 @@
                                 <div class="funfact-number">9</div>
                                 <div class="funfact-number">8</div>
                                 <div class="funfact-number">4</div>
-                                <div class="funfact-number">6</div>
+                                <div class="funfact-number">2</div>
                             </div>
                             <div class="funfact-heading-text">+</div>
                         </div>
@@ -365,7 +371,7 @@
                         <div data-w-id="7a8249df-87ef-35a1-d47f-b4ecebd97bc8" class="funfact-number-block">
                             <div style="-webkit-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                                 class="funfact-number-wrap upper-movement">
-                                <div class="funfact-number">8</div>
+                                <div class="funfact-number">10</div>
                                 <div class="funfact-number">5</div>
                                 <div class="funfact-number">4</div>
                                 <div class="funfact-number">3</div>
@@ -377,11 +383,11 @@
                                 <div class="funfact-number">9</div>
                                 <div class="funfact-number">8</div>
                                 <div class="funfact-number">7</div>
-                                <div class="funfact-number">6</div>
+                                <div class="funfact-number">00</div>
                             </div>
                             <div class="funfact-heading-text">+</div>
                         </div>
-                        <div class="number-text-label">Wining Awards</div>
+                        <div class="number-text-label">Clients</div>
                     </div>
                 </div>
             </div>
@@ -400,8 +406,9 @@
                     </div>
                     <div class="section-sub-title-wrap insurance-sub-title-max-width">
                         <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:1"
-                            class="section-sub-title">Insurance companies aim to help individuals and
-                            businesses mitigate the financial impact of unforeseen events or risks.</div>
+                            class="section-sub-title">Insurance companies are dedicated to protecting individuals and
+                            businesses from the financial challenges of unexpected events and risks
+                            .</div>
                     </div>
                 </div>
                 <div class="insurance-content-wrap">
@@ -425,10 +432,10 @@
                                         style="background-color:#caf2f8;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
-                                                <div class="insurance-saving-title">25% Savings</div>
+                                                <div class="insurance-saving-title">Specialist in </div>
                                                 <div class="insurance-title-wrap"><a href="/insurance/home-insurance"
                                                         class="insurance-card-title-link w-inline-block">
-                                                        <div class="insurance-card-title">Home Insurance</div>
+                                                        <div class="insurance-card-title">E-Rickshaw Insurance</div>
                                                     </a><img alt="Insurance Title Bg Image" loading="lazy"
                                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65bb37038f8e27fb82d9e644_Insurance%20House%20Text%20bg.png"
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
@@ -438,17 +445,18 @@
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bd15894473eedf478d4_house-03.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
-                                        <p class="insurance-summary">Protects the structure of the home and
-                                            personal for the belongings from covered perils. Covers personal new
-                                            property within a rented dwelling and provides liability protection.
+                                        <p class="insurance-summary"> India's Trusted Leader in E-Rickshaw Insurance –
+                                            Tailored plans for complete protection, ensuring peace of mind for every
+                                            journey.
                                         </p>
-                                        <div class="insurance-button-wrap"><a href="/insurance/home-insurance"
+                                        <div class="insurance-button-wrap"><a href="{{ route('e_rickshaw_insurance') }}"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09c356000266e5d847832_Home%20Bg.svg"
                                             class="insurance-bg-shape-image" />
                                     </div>
                                 </div>
+
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
                                         style="background-color:#EBD7FD;opacity:1" class="insurance-card">
@@ -457,33 +465,31 @@
                                                 <div class="insurance-saving-title">20% Savings</div>
                                                 <div class="insurance-title-wrap"><a href="/insurance/auto-insurance"
                                                         class="insurance-card-title-link w-inline-block">
-                                                        <div class="insurance-card-title">Auto Insurance</div>
+                                                        <div class="insurance-card-title">Two-Wheeler Insurance</div>
                                                     </a><img alt="Insurance Title Bg Image" loading="lazy"
                                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65bb3d3f91da7449af64e618_Auto%20Insurance%20Text%20Bg.png"
                                                         class="insurance-title-bg-shape-image absolute-bottom" />
                                                 </div>
                                             </div>
                                             <div class="insurance-logo-wrap"><img alt="Insurance Logo" loading="lazy"
-                                                    src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bdf713eed670622c533_Auto.svg"
+                                                    src="{{ asset('asset/website/images/sei.gif') }}"
                                                     class="insurance-logo" /></div>
                                         </div>
-                                        <p class="insurance-summary">Secures the integrity of your vehicle and
-                                            safeguards personal belongings from covered risks. Offers coverage
-                                            for personal possessions within your car and extends liability
-                                            protection.</p>
-                                        <div class="insurance-button-wrap"><a href="/insurance/auto-insurance"
+                                        <p class="insurance-summary">Safeguard your bike or scooter with comprehensive coverage, protecting against accidents, theft, and unforeseen damages. Enjoy peace of mind with plans that ensure your two-wheeler stays road-ready and secure.                                            .</p>
+                                        <div class="insurance-button-wrap"><a href="{{route('two_wheeler_insurance')}}"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09c477e4ae2e81d26c72c_Auto%20Bg.svg"
                                             class="insurance-bg-shape-image" />
                                     </div>
                                 </div>
+
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
                                         style="background-color:#FFDCCD;opacity:1" class="insurance-card">
                                         <div class="insurance-card-header-block">
                                             <div class="insurance-header-wrap">
-                                                <div class="insurance-saving-title">20% Savings</div>
+                                                <div class="insurance-saving-title">30% Savings</div>
                                                 <div class="insurance-title-wrap"><a href="/insurance/health-insurance"
                                                         class="insurance-card-title-link w-inline-block">
                                                         <div class="insurance-card-title">Health Insurance
@@ -497,17 +503,16 @@
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09beb31cd6303a7a9931e_Health.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
-                                        <p class="insurance-summary">Ensures the well-being and health coverage
-                                            of individuals, safeguarding against covered risks. Offers
-                                            protection for personal health assets within a specified coverage.
+                                        <p class="insurance-summary">Comprehensive Health Protection – Secure your future with tailored plans for your well-being. Enjoy peace of mind with coverage designed to meet your health needs.
                                         </p>
-                                        <div class="insurance-button-wrap"><a href="/insurance/health-insurance"
+                                        <div class="insurance-button-wrap"><a href="{{route('health_insurance')}}"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09cd9734a4f3325ae5453_Health%20Bg.svg"
                                             class="insurance-bg-shape-image" />
                                     </div>
                                 </div>
+
                                 <div role="listitem" class="insurance-collection-items w-dyn-item">
                                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
                                         style="background-color:#F5FAD4;opacity:1" class="insurance-card">
@@ -516,7 +521,7 @@
                                                 <div class="insurance-saving-title">25% Savings</div>
                                                 <div class="insurance-title-wrap"><a href="/insurance/travel-insurance"
                                                         class="insurance-card-title-link w-inline-block">
-                                                        <div class="insurance-card-title">Travel Insurance
+                                                        <div class="insurance-card-title">Private Car Insurance
                                                         </div>
                                                     </a><img alt="Insurance Title Bg Image" loading="lazy"
                                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65bb4f79f67961724fd14a33_Travel%20Insurance%20Title%20Bg.png"
@@ -527,27 +532,27 @@
                                                     src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09bf61fc24121af17b6d3_Travel.svg"
                                                     class="insurance-logo" /></div>
                                         </div>
-                                        <p class="insurance-summary">Secures your travel experience and
-                                            personal belongings from covered risks. Covers personal possessions
-                                            and provides liability protection during your journey.</p>
-                                        <div class="insurance-button-wrap"><a href="/insurance/travel-insurance"
+                                        <p class="insurance-summary">Protect your car and travel with confidence. Our plans cover accidental damages, theft, and liability, ensuring you and your vehicle stay secure on every journey. Choose comprehensive protection tailored to your needs.                                            .</p>
+                                        <div class="insurance-button-wrap"><a href="{{route('private_car_insurance')}}"
                                                 class="secondary-button w-button">Learn More Now</a></div><img
                                             alt="Insurance BG Image" loading="lazy"
                                             src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09ce8de98f1b59a68f93f_Travel%20Bg.svg"
                                             class="insurance-bg-shape-image" />
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                     <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:1"
-                        class="insurance-button-wrapper"><a href="/all-insurance" class="primary-button w-button">View
+                        class="insurance-button-wrapper"><a href="{{route('insurance')}}" class="primary-button w-button">View
                             All Insurance</a></div>
                 </div>
             </div>
         </div>
     </section>
-    <section data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa2" class="app-section">
+
+    {{-- <section data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa2" class="app-section">
         <div class="app-section-wrapper">
             <div class="app-content-block">
                 <div class="app-content">
@@ -577,7 +582,8 @@
                         loading="lazy" alt="App Mobile Image" class="app-secondary-image" /></div>
             </div>
         </div>
-    </section>
+    </section> --}}
+
     <section id="pricePlan" class="insurance-price-section section-y-axis-gap increase-padding">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="insurance-price-wrapper">
@@ -593,7 +599,7 @@
                             to fulfill their obligations to policyholders.</div>
                     </div>
                 </div>
-                <div class="insurance-price-content-wrap">
+                {{-- <div class="insurance-price-content-wrap">
                     <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100"
                         class="insurance-tabs w-tabs">
                         <div data-w-id="63e7e0cc-3d52-8875-5bb3-93177ee4250f" class="insurance-tab-toggle w-tab-menu"><a
@@ -907,372 +913,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
-    <section class="testimonial-section">
-        <div class="w-layout-blockcontainer main-container w-container">
-            <div class="testimonial-wrapper">
-                <div class="section-heading-wrap section-heading-max-width">
-                    <div class="section-title-wrap">
-                        <h2 data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8f2b" class="section-title">Let’s
-                            Check Our Happy <span class="heading-highlight-text">Clients</span> Reviews</h2>
-                    </div>
-                    <div class="section-sub-title-wrap testimonial-sub-title-max-width">
-                        <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8f31" class="section-sub-title">
-                            These insurance provide organization say our centralized platform planning and
-                            monitoring insurance lifecycle.</div>
-                    </div>
-                </div>
-                <div class="testimonial-content-wrap">
-                    <div data-delay="4000" data-animation="slide" class="testimonial-slider w-slider"
-                        data-autoplay="false" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false"
-                        data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
-                        <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8f35"
-                            class="testmonial-slider-mask w-slider-mask">
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card clint-one">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Star Icon" class="client-rating-star-icon" /></div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">That is awesome!</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65e6ea24a0ea71b19bca9d89_Client%201.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">Jacqueline Rosa</div>
-                                            <div class="client-designation">CEO at Miro</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card client-two">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">Absolutely impressive</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65e6ea98876429c82bd5fdda_Client%202.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">Jessica Alba</div>
-                                            <div class="client-designation">Founder at Zira</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card client-three">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">It&#x27;s really wonderful.</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65e6eacf60326ed2290a300d_Client%203.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">John Lee</div>
-                                            <div class="client-designation">CEO at Zoho</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card clint-one">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">That is awesome!</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb13ab3c4304404d69d9fd_Jacqueline%20Rosa.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">Rosalyn Beu</div>
-                                            <div class="client-designation">CEO at Miro</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card client-two">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /></div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">Absolutely impressive</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c61677f0f4790f3fc28_Sophia%20Flora.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">Brandom King</div>
-                                            <div class="client-designation">Founder at Zira</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-slider-item w-slide">
-                                <div class="client-feedback-card client-three">
-                                    <div class="client-rating-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" /><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1027f73cc18c946bc558_Star.png"
-                                            loading="lazy" alt="Client Rating" class="client-rating-star-icon" />
-                                    </div>
-                                    <div class="client-feedback-block">
-                                        <div class="client-feedback-title">It&#x27;s really wonderful.</div>
-                                        <p class="client-feedback-summary">The personalized attention and
-                                            creative that solutions you provided were game changer for our
-                                            business.</p>
-                                    </div>
-                                    <div class="client-info-block"><img
-                                            src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c70114f68d1c132f915_Jessica%20Albe.png"
-                                            loading="lazy" alt="Client Image" class="client-image" />
-                                        <div class="client-name-and-title-wrap">
-                                            <div class="client-name">Jessy Le</div>
-                                            <div class="client-designation">CEO at Zoho</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8fae"
-                            class="slider-left-arrow w-slider-arrow-left">
-                            <div class="left-arrow-icon w-embed"><svg width="22" height="20" viewBox="0 0 22 20"
-                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20.3332 10H4.33325" stroke="#070707" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9.66675 2L1.66675 10L9.66675 18" stroke="#070707" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg></div>
-                        </div>
-                        <div data-w-id="e4a04614-71b9-1845-f8cd-1ae395cb8fb0"
-                            class="slider-right-arrow w-slider-arrow-right">
-                            <div class="right-arrow-icon w-embed"><svg width="22" height="20"
-                                    viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1.66675 10H17.6667" stroke="#070707" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M12.3333 2L20.3333 10L12.3333 18" stroke="#070707" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg></div>
-                        </div>
-                        <div class="slider-nav w-slider-nav w-round w-num"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="faq-section section-y-axis-gap">
-        <div class="w-layout-blockcontainer main-container w-container">
-            <div class="faq-wrapper">
-                <div class="section-heading-wrap center">
-                    <div class="section-title-wrap faq-section-title-max-width">
-                        <h2 data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da09" class="section-title">The Most
-                            Frequently Asked <span class="heading-highlight-text">Questions</span></h2>
-                    </div>
-                    <div class="section-sub-title-wrap faq-sub-title-max-width">
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da0e" class="section-sub-title">
-                            Insurance is a financial arrangement in which an individual or entity pays a premium
-                            to an insurance company</div>
-                    </div>
-                </div>
-                <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da10" class="faq-content-wrap">
-                    <div class="faq-items-block">
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da12" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">What is Insurance?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Insurance is a financial arrangement in which an
-                                    individual or entity pays a premium to an insurance company.</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da1b" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">What Impacts My Car Insurance Price?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Car insurance price is influenced by a variety of
-                                    factors. A clean driving record, age, and the type of vehicle you own all
-                                    play crucial roles.</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da24" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">Types of Insurance Are Available for Family?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">For families seeking comprehensive protection, various
-                                    types ,of insurance are available. Health insurance ensures access to
-                                    medical care. Auto insurance cover vehicles and residences. Travel insurance
-                                    adds a layer of security during trips</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da2d" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">How Are Insurance Premiums Determined?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Insurance premiums are determined through a complex
-                                    process that takes into account various factors to assess the level of risk
-                                    associated with insuring an individual, property, or entity.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="w-node-_6387d7b8-7195-cae3-f3ac-d62c8429da36-8429da06" class="faq-items-block">
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da37" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">How Does Our Pricing Works ?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Certainly! In insurance, pricing is determined through a
-                                    thorough analysis of risk factors, historical data, and market conditions.
-                                    Underwriters assess the applicant&#x27;s risk profile, while actuaries use
-                                    statistical models to predict potential claims.</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da40" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">What Impacts My Home Insurance Price?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Home insurance price is determined by factors such as
-                                    the property&#x27;s location, construction, age, coverage levels,
-                                    deductible, your credit score, and the presence of safety features.
-                                    Maintaining a secure home.</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da49" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">How Does Insurance Claims Process Work?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">The insurance claims process involves reporting a loss
-                                    to your insurer, documenting the incident, and providing necessary
-                                    information. The insurer then assesses the claim, verifies coverage, and
-                                    determines the payout.</p>
-                            </div>
-                        </div>
-                        <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da52" class="faq-item">
-                            <div class="faq-question-block">
-                                <h3 class="faq-question">Do Insurance Companies Offer Discounts?</h3>
-                                <div class="faq-arrow-wrap"><img
-                                        src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
-                                        loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
-                                </div>
-                            </div>
-                            <div class="faq-answer-block">
-                                <p class="faq-answer">Yes, insurance companies commonly offer discounts to
-                                    policyholders. Discounts may be available for factors like safe driving,
-                                    bundling multiple policies, having a good credit score, installing safety
-                                    features, or maintaining a claims-free history.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section data-w-id="8f2ded18-e9f9-1588-8d22-a340a1e98855" class="cta-section cta-section-gap">
+
+@include('pages/website/section/testimonial')
+@include('pages/website/section/faq')
+
+
+
+    {{-- <section data-w-id="8f2ded18-e9f9-1588-8d22-a340a1e98855" class="cta-section cta-section-gap">
         <div class="w-layout-blockcontainer main-container w-container">
             <div class="cta-wrapper">
                 <div class="section-heading-wrap center">
@@ -1311,5 +962,5 @@
             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65cdb3ff5d14df92f80ad5ae_Contact%20Circle%20Shape.svg"
             loading="lazy" data-w-id="8f2ded18-e9f9-1588-8d22-a340a1e9886d" alt="CTA Circle Shape Image"
             class="cta-circle-shape-image" />
-    </section>
+    </section> --}}
 @endsection

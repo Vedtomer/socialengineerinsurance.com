@@ -17,6 +17,42 @@ Route::get('/', function () {
     return view('pages.website.home');
 })->name("homepage");
 
+
+
+Route::get('/', function () {
+    return view('pages.website.home');
+})->name("homepage");
+
+// SEO-friendly routes for insurance services
+Route::get('/e-rickshaw-insurance', function () {
+    return view('pages.website.e_rickshaw_insurance');
+})->name('e_rickshaw_insurance');
+
+Route::get('/insurance', function () {
+    return view('pages.website.insurance');
+})->name('insurance');
+
+Route::get('/health-insurance', function () {
+    return view('pages.website.health_insurance');
+})->name('health_insurance');
+
+
+Route::get('/two-wheeler-insurance', function () {
+    return view('pages.website.two_wheeler_insurance');
+})->name('two_wheeler_insurance');
+
+Route::get('/home-insurance', function () {
+    return view('pages.website.home_insurance');
+})->name('home_insurance');
+
+Route::get('/private-car-insurance', function () {
+    return view('pages.website.private_car_insurance');
+})->name('private_car_insurance');
+
+
+
+
+
 Route::get('/about', function () {
     return view('pages.website.about');
 })->name("about-us");
@@ -115,7 +151,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/policy-rates', [PolicyController::class, 'showPolicyRates'])->name('admin.dashboard');
 
-        
+
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
 
