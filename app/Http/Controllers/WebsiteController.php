@@ -22,7 +22,8 @@ class WebsiteController extends Controller
             'Social Engineer Insurance | E-Rikshaw Insurance',
             'Specialists in E-Rikshaw Insurance and All Types of Insurance Services, including Health and Motor Vehicle Insurance'
         );
-        return view('pages.website.home');
+        $dataWfPage = '65b60c5eef338f6b2401686d';
+        return view('pages.website.home',compact('dataWfPage'));
     }
 
     public function eRickshawInsurance()
@@ -85,7 +86,9 @@ class WebsiteController extends Controller
             'About Us | Social Engineer Insurance',
             'Learn about our mission to provide the best insurance services with customer satisfaction'
         );
-        return view('pages.website.about');
+
+        $dataWfPage = '65c44d67f63a923b7d56c38a';
+        return view('pages.website.about', compact('dataWfPage'));
     }
 
     public function contact()
@@ -94,7 +97,7 @@ class WebsiteController extends Controller
             'Contact Us | Social Engineer Insurance',
             'Get in touch with our insurance experts for the best guidance and support'
         );
-        return view('pages.website.contact');
+        $dataWfPage = '65cda451a80f1552a7289505';
+        return view('pages.website.contact',compact('dataWfPage'));
     }
 }
-

@@ -7,10 +7,10 @@
               <img src="{{ asset('asset/website/images/logo-transparent.png') }}" loading="lazy" alt="Logo" class="footer-logo"  style="display: inline-block !important"/>
             </a>
             <div class="footer-excerpt">Insurance can be difficult hard. Social Engineer Insurance makes it easy.</div>
-            <div class="footer-contact-info-wrap">
+            {{-- <div class="footer-contact-info-wrap">
               <a href="tel:919728786086" class="footer-contact-number">+91 97287 86086</a>
               <a href="mailto:socialengineerinsurance@gmail.com" class="footer-contact-email">socialengineerinsurance@gmail.com</a>
-            </div>
+            </div> --}}
             <div class="footer-socials-wrap">
               <a data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80d0" href="https://www.facebook.com/" target="_blank" class="social-link w-inline-block">
                 <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c067e3589270df428ba501_facebook-f.svg" loading="lazy" width="10" alt="Social Icon" class="social-icon" />
@@ -29,7 +29,7 @@
                 <h3 class="section-title">Get <span class="heading-highlight-text">Insurance</span> Now </h3>
               </div>
               <div class="section-sub-title-wrap cta-sub-title-max-width">
-                <div class="section-sub-title">Insurbes companies work to sense more security and peace they have insurance coverage.</div>
+                <div class="section-sub-title">Social Engineer Insurance makes securing your future simple and stress-free. Let us handle your insurance needs so you can focus on what truly matters.</div>
               </div>
             </div>
             <div class="cta-newsletter-form-wrap">

@@ -8,19 +8,19 @@
                 <div class="contact-us-content-block">
                     <div class="page-heading-wrap align-left">
                         <div class="page-title-wrap contact-us-title-max-width">
-                            <h1 data-w-id="fee1da3b-23dd-7373-10e7-2b557b414e70" style="opacity:1"
+                            <h1 data-w-id="fee1da3b-23dd-7373-10e7-2b557b414e70" style="opacity:0"
                                 class="page-title align-left">Your Trusted Insurance Partner is Just a
 
                                 <span
                                     class="heading-highlight-text">Message </span> Away!<br /></h1>
                         </div>
                         <div class="page-intro-wrap contact-us-intrio-max-width">
-                            <div data-w-id="0115bbd7-5049-5fcd-b5f8-68edcdbc9c6c" style="opacity:1"
+                            <div data-w-id="0115bbd7-5049-5fcd-b5f8-68edcdbc9c6c" style="opacity:0"
                                 class="page-intro-text align-left">Whether it’s a query or assistance, we’re always here to support you.</div>
                         </div>
                     </div>
                     <div class="contact-us-info-wrap">
-                        <div data-w-id="cfce3110-c8a3-c0b7-ad9c-d84baf2cf53c" style="opacity:1"
+                        <div data-w-id="cfce3110-c8a3-c0b7-ad9c-d84baf2cf53c" style="opacity:0"
                             class="contact-us-info-block">
                             <div class="contact-us-icon-wrap"><img
                                     src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cda7dd7cfa50e206791c49_location.svg"
@@ -28,7 +28,7 @@
                             <div class="contact-us-info-text address">1st Floor, Near Bhagat Ford Building, Shiv Chownk, GT Road, Ludhiana-141008, Punjab, India
                             </div>
                         </div>
-                        <div data-w-id="93bb69cd-d1a9-1609-713d-6cf5c33c49ad" style="opacity:1"
+                        <div data-w-id="93bb69cd-d1a9-1609-713d-6cf5c33c49ad" style="opacity:0"
                             class="contact-us-info-block">
                             <div class="contact-us-icon-wrap"><img
                                     src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8a2f4b2c1a91691b3b7d_sms.svg"
@@ -36,7 +36,7 @@
                                 href="mailto:gouravbhalla@socialengineerinsurance.com?subject=contact"
                                 class="contact-us-info-text">gouravbhalla@socialengineerinsurance.com</a>
                         </div>
-                        <div data-w-id="afbe7270-882b-75eb-4104-9760238e59c1" style="opacity:1"
+                        <div data-w-id="afbe7270-882b-75eb-4104-9760238e59c1" style="opacity:0"
                             class="contact-us-info-block">
                             <div class="contact-us-icon-wrap"><img
                                     src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8d8a927713da746dfd62_call-calling.svg"
@@ -48,7 +48,7 @@
 
 
                 <div id="w-node-_4b69fcbf-4c1e-ec93-9a64-f9480a662a84-a7289505"
-                    data-w-id="4b69fcbf-4c1e-ec93-9a64-f9480a662a84" style="opacity:1"
+                    data-w-id="4b69fcbf-4c1e-ec93-9a64-f9480a662a84" style="opacity:0"
                     class="contact-us-form-block-version-two w-form">
                     <form id="contact-one" name="email-form" data-name="Email Form" method="get" class="contact-us-form"
                         data-wf-page-id="65cda451a80f1552a7289505"
@@ -83,7 +83,7 @@
                         </div><label class="w-checkbox contact-us-form-checkbox">
                             <div class="w-checkbox-input w-checkbox-input--inputType-custom checkbox">
                             </div><input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox"
-                                style="opacity:1;position:absolute;z-index:-1" /><span
+                                style="opacity:0;position:absolute;z-index:-1" /><span
                                 class="checkbox-text w-form-label" for="checkbox">I agree to the Social Engineer Insurance
                                 privacy policy</span>
                         </label>
@@ -102,7 +102,7 @@
             </div>
 
 
-            <div data-w-id="50d7dc04-fc81-0bab-067b-e7fa6f68018d" style="opacity:1" class="contact-us-map-image-wrap">
+            <div data-w-id="50d7dc04-fc81-0bab-067b-e7fa6f68018d" style="opacity:0" class="contact-us-map-image-wrap">
                 <div class="contact-us-map " data-widget-style="roadmap"
                     data-widget-latlng="30.8920274,75.8708912" data-enable-scroll="false" role="region" title="1st Floor, Near Bhagat Ford Building, Shiv Chownk, GT Road, Ludhiana-141008, Punjab, India"
                     data-enable-touch="true" data-widget-zoom="12" data-widget-tooltip="">

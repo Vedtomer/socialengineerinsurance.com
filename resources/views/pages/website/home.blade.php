@@ -10,24 +10,24 @@
         <div class="hero-section-wrapper align-c">
             <div class="hero-content-block">
                 <div class="hero-header-block">
-                    {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:1" class="sub-title-wrap">
+                    {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9640c" style="opacity:0" class="sub-title-wrap">
                         <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b79812ab0af18673227bc2_Badge%20Logo.png"
                             loading="lazy" alt="Welcome Shape" class="hero-sub-title-image" />
                         <div class="hero-sub-title">Welcome to Social Engineer Insurance</div>
                     </div> --}}
-                    <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:1" class="hero-heading">Get the
+                    <h1 data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96410" style="opacity:0" class="hero-heading">Get the
                         Best E-Rickshaw
                         <span class="heading-highlight-text"> Insurance</span> in Minutes
                     </h1>
                 </div>
-                {{-- <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:1" class="hero-excerpt">At
+                {{-- <p data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96415" style="opacity:0" class="hero-excerpt">At
                     Social Engineer Insurance, we prioritize your needs by offering customized insurance solutions.
                     Whether it's electric rickshaw insurance or life and health coverage, we ensure you get the best
                     protection with tailored plans that fit your requirements. Secure your future with confidence—let us
                     find the best coverage for you.
 
                     .</p> --}}
-                {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:1"
+                {{-- <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96417" style="opacity:0"
                     class="newsletter-form-wrap">
                     <div class="newsletter-form-block w-form">
                         <form id="newsletter-email-form" name="email-form" data-name="Email Form" method="get"
@@ -51,7 +51,7 @@
                 </div> --}}
             </div>
             <div id="w-node-d8b7b9a4-9846-4f96-d345-53159bb96423-2401686d" class="hero-image-block">
-                <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96425" style="opacity:1"
+                <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96425" style="opacity:0"
                     class="hero-image-inner relative"><img src="{{ asset('asset/website/images/sei.jpg') }}"
                         loading="lazy"
                         style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
@@ -59,7 +59,7 @@
                         alt="Hero Image"
                         srcset="{{ asset('asset/website/images/sei.jpg') }}, {{ asset('asset/website/images/sei.jpg') }} 532w"
                         class="hero-image-version-two" />
-                    {{-- <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:1"
+                    {{-- <div data-w-id="664c949b-1f5e-4059-65f6-4412eb0a40a5" style="opacity:0"
                         class="hero-customer-image-wrap">
                         <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c1ffb7139efde81a0a2022_Happy%20Customer.png"
                             loading="lazy" alt="Hero Customer Image" class="hero-customer-image" />
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96429" style="opacity:1"
+                <div data-w-id="d8b7b9a4-9846-4f96-d345-53159bb96429" style="opacity:0"
                     class="hero-shape-image lower-shape-image">
                     <img src="{{ asset('asset/website/images/icon/3.png') }}"
                         loading="lazy" data-w-id="d8b7b9a4-9846-4f96-d345-53159bb9642a" alt="Hero Shape"
@@ -88,7 +88,7 @@
 
 
 {{-- <section class="brand-logo-section">
-    <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:1" class="brand-logo-flex">
+    <div data-w-id="dddc6fa6-c78f-9861-5eb6-f699e8f01939" style="opacity:0" class="brand-logo-flex">
         <div style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
             class="brand-logo-wrap">
             <div class="brand-logo-block"><img
@@ -179,17 +179,17 @@
         <div class="unique-feature-wrapper">
             <div class="section-heading-wrap center">
                 <div class="section-title-wrap unique-feature-title-max-width">
-                    <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:1" class="section-title">What
+                    <h2 data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bbe" style="opacity:0" class="section-title">What
                         Makes Us <span class="heading-highlight-text">Different</span> From Others?</h2>
                 </div>
                 <div class="section-sub-title-wrap unique-feature-sub-title-max-width">
-                    <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:1" class="section-sub-title">
+                    <div data-w-id="5edc5d3f-39a7-08fd-f2f5-6db71fdc5bc4" style="opacity:0" class="section-sub-title">
                         Social Engineer Insurance Insurance companies provide a sense of security and peace, ensuring
                         coverage during life’s uncertainties.</div>
                 </div>
             </div>
             <div class="unique-feature-grid">
-                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:1" class="unique-feature-card">
+                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c585" style="opacity:0" class="unique-feature-card">
                     <div class="unique-feature-image-block"><img
                             src="{{ asset('asset/website/images/blue/1.png') }}"
                             loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -200,7 +200,7 @@
                             then safely.</div>
                     </div>
                 </div>
-                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:1" class="unique-feature-card">
+                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c58d" style="opacity:0" class="unique-feature-card">
                     <div class="unique-feature-image-block"><img
                             src="{{ asset('asset/website/images/claim/5.png') }}"
                             loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -211,7 +211,7 @@
                             then safely.</div>
                     </div>
                 </div>
-                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:1" class="unique-feature-card">
+                <div data-w-id="34897b49-3320-2bdc-6fb3-31ab8028c595" style="opacity:0" class="unique-feature-card">
                     <div class="unique-feature-image-block"><img
                             src="{{ asset('asset/website/images/digital.png') }}"
                             loading="lazy" alt="What Different Image" class="unique-feature-image" />
@@ -229,7 +229,7 @@
 <section data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac33" class="why-choose-us-section section-bottom-gap">
     <div class="w-layout-blockcontainer main-container w-container">
         <div class="why-choose-us-wrapper">
-            <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:1" class="why-choose-us-image-block">
+            <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac36" style="opacity:0" class="why-choose-us-image-block">
                 <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac37" class="why-choose-us-image-wrap version-two">
                     <img class="why-choose-us-image" src="{{ asset('asset/website/images/blue/1.png') }}" width="698"
                         height="" alt="Why Choose Us Image"
@@ -249,7 +249,7 @@
                 </div>
                 {{-- <img
                     src="{{ asset('asset/website/images/animation/10.gif') }}"
-                    loading="lazy" style="opacity:1" data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac39"
+                    loading="lazy" style="opacity:0" data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac39"
                     alt="Why Choose Us Profit Image" class="why-choose-us-profit-image change-position" /> --}}
                 <div class="why-choose-us-shape-one change-position">
 
@@ -259,16 +259,16 @@
             <div class="why-choose-us-content-block">
                 <div class="section-heading-wrap">
                     <div class="section-title-wrap why-choose-us-title-max-width">
-                        <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:1" class="section-title">
+                        <h2 data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a315d" style="opacity:0" class="section-title">
                             What Makes Our <span class="heading-highlight-text">Services</span> Reliable?</h2>
                     </div>
                     <div class="section-sub-title-wrap why-choose-us-sub-title-max-width">
-                        <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:1"
+                        <div data-w-id="d53cb367-8994-1cab-bbf1-6e18bc8a3163" style="opacity:0"
                             class="section-sub-title">Insurance companies offer peace of mind and financial security,
                             protecting you during life’s unpredictable moments.</div>
                     </div>
                 </div>
-                <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:1" class="why-choose-us-grid">
+                <div data-w-id="ace7a893-17cb-0173-dc5e-fccf6517ac45" style="opacity:0" class="why-choose-us-grid">
                     <div class="why-choose-us-card">
                         <div class="why-choose-us-icon-wrap"><img
                                 src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c09dbb933fadb8f2fa18d1_Smart%20Watch.svg"
@@ -314,7 +314,7 @@
         </div>
     </div>
 </section>
-<section data-w-id="fefa0a19-0653-41a5-ddc2-9a090a72fc8f" style="opacity:1" class="fun-fact-section">
+<section data-w-id="fefa0a19-0653-41a5-ddc2-9a090a72fc8f" style="opacity:0" class="fun-fact-section">
     <div class="w-layout-blockcontainer main-container w-container">
         <div class="funfact-wrapper">
             <div class="section-heading-wrap align-left">
@@ -371,7 +371,7 @@
                     <div data-w-id="7a8249df-87ef-35a1-d47f-b4ecebd97bc8" class="funfact-number-block">
                         <div style="-webkit-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 400%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                             class="funfact-number-wrap upper-movement">
-                            <div class="funfact-number">10</div>
+                            <div class="funfact-number">1</div>
                             <div class="funfact-number">5</div>
                             <div class="funfact-number">4</div>
                             <div class="funfact-number">3</div>
@@ -383,7 +383,7 @@
                             <div class="funfact-number">9</div>
                             <div class="funfact-number">8</div>
                             <div class="funfact-number">7</div>
-                            <div class="funfact-number">00</div>
+                            <div class="funfact-number">0</div>
                         </div>
                         <div class="funfact-heading-text">+</div>
                     </div>
@@ -401,18 +401,18 @@
         <div class="insurance-wrapper">
             <div class="section-heading-wrap center">
                 <div class="section-title-wrap insurance-title-max-width">
-                    <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:1" class="section-title">We
+                    <h2 data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c657e" style="opacity:0" class="section-title">We
                         Provide Insurance <span class="heading-highlight-text">Solutions</span> to Meet Your Needs</h2>
                 </div>
                 <div class="section-sub-title-wrap insurance-sub-title-max-width">
-                    <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:1" class="section-sub-title">
+                    <div data-w-id="1a7d18fd-d572-e5c8-2794-5b89573c6584" style="opacity:0" class="section-sub-title">
                         Insurance companies are dedicated to protecting individuals and
                         businesses from the financial challenges of unexpected events and risks
                         .</div>
                 </div>
             </div>
             <div class="insurance-content-wrap">
-                <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:1" class="insurance-shape-wrap">
+                <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:0" class="insurance-shape-wrap">
                     <a href="#pricePlan" class="insurance-shape-link w-inline-block"><img
                             src="{{ asset('asset/website/images/animation/1.gif') }}"
                             loading="lazy"
@@ -430,7 +430,7 @@
                         <div role="list" class="insurance-collection-list w-dyn-items">
                             <div role="listitem" class="insurance-collection-items w-dyn-item">
                                 <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                    style="background-color:#caf2f8;opacity:1" class="insurance-card">
+                                    style="background-color:#caf2f8;opacity:0" class="insurance-card">
                                     <div class="insurance-card-header-block">
                                         <div class="insurance-header-wrap">
                                             <div class="insurance-saving-title">Specialist in </div>
@@ -460,7 +460,7 @@
 
                             <div role="listitem" class="insurance-collection-items w-dyn-item">
                                 <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                    style="background-color:#EBD7FD;opacity:1" class="insurance-card">
+                                    style="background-color:#EBD7FD;opacity:0" class="insurance-card">
                                     <div class="insurance-card-header-block">
                                         <div class="insurance-header-wrap">
                                             <div class="insurance-saving-title">20% Savings</div>
@@ -490,7 +490,7 @@
 
                             <div role="listitem" class="insurance-collection-items w-dyn-item">
                                 <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                    style="background-color:#FFDCCD;opacity:1" class="insurance-card">
+                                    style="background-color:#FFDCCD;opacity:0" class="insurance-card">
                                     <div class="insurance-card-header-block">
                                         <div class="insurance-header-wrap">
                                             <div class="insurance-saving-title">30% Savings</div>
@@ -521,7 +521,7 @@
 
                             <div role="listitem" class="insurance-collection-items w-dyn-item">
                                 <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5530a"
-                                    style="background-color:#F5FAD4;opacity:1" class="insurance-card">
+                                    style="background-color:#F5FAD4;opacity:0" class="insurance-card">
                                     <div class="insurance-card-header-block">
                                         <div class="insurance-header-wrap">
                                             <div class="insurance-saving-title">25% Savings</div>
@@ -553,7 +553,7 @@
                         </div>
                     </div>
                 </div>
-                <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:1"
+                <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc5531c" style="opacity:0"
                     class="insurance-button-wrapper"><a href="{{route('insurance')}}"
                         class="primary-button w-button">View
                         All Insurance</a></div>
@@ -567,13 +567,13 @@
         <div class="app-content-block">
             <div class="app-content">
                 <div class="app-heading-wrap">
-                    <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:1" class="app-title">Take a
+                    <h2 data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa7" style="opacity:0" class="app-title">Take a
                         Look at the Insurbes Mobile App</h2>
-                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:1" class="app-sub-title">
+                    <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffa9" style="opacity:0" class="app-sub-title">
                         Insurbes companies work to sense more security and peace they
                         have insurance coverage</div>
                 </div>
-                <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:1" class="app-link-wrap"><a
+                <div data-w-id="6693c89a-2b93-3cb7-9fd7-2719f78cffab" style="opacity:0" class="app-link-wrap"><a
                         href="https://play.google.com/store/apps?hl=en&amp;gl=US" class="app-link w-inline-block"><img
                             src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b9dd51ca197f45ab2c2c81_Badge%20Android.png"
                             loading="lazy" alt="Google Play Image" class="google-play-image" /></a><a
@@ -599,12 +599,12 @@
         <div class="insurance-price-wrapper">
             <div class="section-heading-wrap center">
                 <div class="section-title-wrap insurance-price-title-max-width">
-                    <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:1" class="section-title">
+                    <h2 data-w-id="1d0150f3-c970-f95a-51d2-c5de322322b7" style="opacity:0" class="section-title">
                         We’ve Got an Awesome <span class="heading-highlight-text">Price</span> Plan For Your Insurance
                     </h2>
                 </div>
                 <div class="section-sub-title-wrap insurance-price-sub-title-max-width">
-                    <div data-w-id="1d0150f3-c970-f95a-51d2-c5de322322bc" style="opacity:1" class="section-sub-title">
+                    <div data-w-id="1d0150f3-c970-f95a-51d2-c5de322322bc" style="opacity:0" class="section-sub-title">
                         Insurance companies need to maintain financial stability
                         to fulfill their obligations to policyholders.</div>
                 </div>
