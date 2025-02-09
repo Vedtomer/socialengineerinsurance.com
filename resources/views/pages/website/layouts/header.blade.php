@@ -142,7 +142,7 @@
                             <div class="nav-bottom-shape"></div>
                         </li>
                         <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
-                            <a href="/blog" class="nav-link">Blog</a>
+                            <a href="https://blog.socialengineerinsurance.com/" class="nav-link" target="_blank">Blog</a>
                             <div class="nav-bottom-shape"></div>
                         </li>
                         <li class="mobile-menu-button">
