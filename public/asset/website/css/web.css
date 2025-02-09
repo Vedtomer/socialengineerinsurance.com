@@ -5236,7 +5236,7 @@ figcaption {
   grid-auto-columns: 1fr;
   justify-content: space-between;
   align-items: stretch;
-  margin-top: 60px;
+  margin-top: 0px;
   display: flex;
 }
 
@@ -8761,7 +8761,7 @@ figcaption {
     grid-column-gap: 74px;
     grid-row-gap: 74px;
     justify-content: flex-start;
-    margin-top: 75px;
+    margin-top: 0px;
   }
 
   .team-details-image-block {
@@ -11036,7 +11036,7 @@ figcaption {
 
   .team-details-content-wrap {
     flex-direction: column;
-    margin-top: 50px;
+    margin-top: 0px;
   }
 
   .team-details-image-block {
@@ -12373,7 +12373,7 @@ figcaption {
   }
 
   .team-details-content-wrap {
-    margin-top: 40px;
+    margin-top: 0px;
   }
 
   .team-member-info-title {

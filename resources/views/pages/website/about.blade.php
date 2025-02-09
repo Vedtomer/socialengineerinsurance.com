@@ -1,220 +1,123 @@
+
 @extends('pages.website.layouts.app')
-@section(section: 'content')
-    <section class="team-details-section ">
-        <div class="w-layout-blockcontainer main-container w-container">
-            <div class="team-details-wrapper">
-                {{-- <div class="page-heading-wrap">
-                    <div class="page-title-wrap">
-                        <h1 data-w-id="63be2aea-c2ca-41b7-de5a-588ad0f04238" style="opacity:0" class="page-title">Team Member
-                            <span class="heading-highlight-text">Details</span>
-                        </h1>
-                    </div>
-                    <div class="page-intro-wrap max-width">
-                        <div data-w-id="7bdc645e-3fce-f7c4-980b-2c6f03b3e39d" style="opacity:0" class="page-intro-text">The
-                            insurance team provides a planning and monitoring
-                            lifecycle to the organization.</div>
-                    </div>
-                </div> --}}
-                <div class="team-details-content-wrap">
-                    <div id="w-node-_8b166095-ca7c-830e-4eba-fe2fc62b8504-7d56c38a"
-                        data-w-id="8b166095-ca7c-830e-4eba-fe2fc62b8504" style="background-color:#ebd7fd;opacity:0"
-                        class="team-details-image-block"><img alt="Team Member Image" loading="lazy"
-                            src="https://cdn.prod.website-files.com/65b60c5eef338f6b2401687d/65deb6e08e77badcd59e4b0c_Team%20Member%20Main%20Image%201.png"
-                            sizes="(max-width: 479px) 89vw, (max-width: 767px) 93vw, (max-width: 991px) 668px, (max-width: 1439px) 478px, 511px"
-                            srcset="https://cdn.prod.website-files.com/65b60c5eef338f6b2401687d/65deb6e08e77badcd59e4b0c_Team%20Member%20Main%20Image%201-p-500.png 500w, https://cdn.prod.website-files.com/65b60c5eef338f6b2401687d/65deb6e08e77badcd59e4b0c_Team%20Member%20Main%20Image%201.png 512w"
-                            class="team-member-image team-member-details-image" />
-                        <div class="image-overlay-wrap">
-                            <div data-w-id="7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0070" class="image-overlay-grid">
-                                <div id="w-node-_7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0071-1f7c006f"
-                                    class="image-overlay-mask mask-one"></div>
-                                <div class="image-overlay-mask mask-two"></div>
-                                <div class="image-overlay-mask mask-three"></div>
-                                <div class="image-overlay-mask mask-four"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="w-node-aff92f30-3536-f71c-92a5-5ad90bd39e9e-7d56c38a" class="team-details-content-block">
-                        <div class="team-member-info-block">
-                            <h2 data-w-id="33b589e7-ab25-0f2f-69c4-77a7bc53b5fe" style="opacity:0"
-                                class="team-member-info-title">Stive Jackson</h2>
-                            <div data-w-id="8c897fd1-21ec-8eb1-74f5-d4f0d5c61762" style="opacity:0"
-                                class="team-member-summary">Stive Jackson is detailed professional developer.
-                                He has a proven track record of developing predictive models that drive informed
-                                decision-making.</div>
-                        </div>
-                        <div class="team-member-contact-info-wrap">
-                            <div data-w-id="337225f7-8321-e130-bb85-33c50f2b6f07" style="opacity:0"
-                                class="team-member-single-contact-info-block">
-                                <div class="team-member-contact-icon-block"><img
-                                        src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8a2f4b2c1a91691b3b7d_sms.svg"
-                                        loading="lazy" alt="Email Icon" class="team-member-contact-info-icon" /></div>
-                                <div class="team-member-contact-info-block">
-                                    <div class="team-member-contact-info-title">Email Address</div><a
-                                        href="mailto:support.stive@gmail.com"
-                                        class="team-member-contact-info-link">support.stive@gmail.com</a>
-                                </div>
-                            </div>
-                            <div data-w-id="34e5e0e3-39d6-992b-d4d5-39784f28b174" style="opacity:0"
-                                class="team-member-single-contact-info-block">
-                                <div class="team-member-contact-icon-block"><img
-                                        src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8d6991d3b0194f6354da_globe-02.svg"
-                                        loading="lazy" alt="Website Logo Icon" class="team-member-contact-info-icon" />
-                                </div>
-                                <div class="team-member-contact-info-block">
-                                    <div class="team-member-contact-info-title">Portfolio Site</div><a
-                                        href="http://www.stivejackson.com"
-                                        class="team-member-contact-info-link">http://www.stivejackson.com</a>
-                                </div>
-                            </div>
-                            <div data-w-id="79bc811e-97ea-a76a-ddda-b1a9a7dff201" style="opacity:0"
-                                class="team-member-single-contact-info-block">
-                                <div class="team-member-contact-icon-block"><img
-                                        src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8d8a927713da746dfd62_call-calling.svg"
-                                        loading="lazy" alt="Phone Icon" class="team-member-contact-info-icon" /></div>
-                                <div class="team-member-contact-info-block">
-                                    <div class="team-member-contact-info-title">Phone Number</div><a
-                                        href="tel:(123)123-6789" class="team-member-contact-info-link">(123)
-                                        123-6789</a>
-                                </div>
-                            </div>
+
+
+@section('content')
+
+
+
+
+
+<section class="about-us-section" style="padding-top: 60px; padding-bottom: 60px;"> {{-- Added padding for better spacing --}}
+    <div class="w-layout-blockcontainer main-container w-container" style="max-width: 960px;"> {{-- Adjust max-width as needed --}}
+        <div class="about-us-wrapper">
+
+            <div class="page-heading-wrap">
+                <div data-w-id="930a43b2-7057-7394-0a26-60723e919809" style="opacity:0"
+                    class="page-title-wrap">
+                    <h1 class="page-title">We’re Dedicated to Making <span
+                            class="heading-highlight-text">Insurance</span> More Easier</h1>
+                </div>
+                <div data-w-id="eba3cd07-734f-a87f-7656-6ee84e4cabda" style="opacity:0"
+                    class="page-intro-wrap about-intro-max-width">
+                    <div class="page-intro-text">Insurbes companies work to sense more security and peace
+                        they have insurance coverage the more effective support and challenging times.</div>
+                </div>
+            </div>
+
+
+
+            <div class="about-us-header" style="text-align: center; margin-bottom: 40px;"> {{-- Centered and added margin --}}
+                <h1 data-w-id="fee1da3b-23dd-7373-10e7-2b557b414e70" style="opacity:0"
+                class="page-title " >About Social Engineer Insurance</h1> {{-- Example styling - adjust font --}}
+                <p class="about-us-subtitle" style="font-size: 1.1em; color: #777;"> {{-- Example styling - adjust font & color --}}
+                    Securing Your Future with Tailored Insurance Solutions. At Social Engineer Insurance, we're dedicated to providing innovative and personalized coverage that puts your safety and peace of mind first.
+                </p>
+            </div>
+
+            <div class="our-mission-section" style="margin-bottom: 50px;"> {{-- Added margin --}}
+                <h2 class="section-title" style="font-size: 2em; font-weight: 600; margin-bottom: 20px; color: #333;">Our Mission</h2> {{-- Example styling - adjust font & color --}}
+                <p class="section-description" style="font-size: 1.1em; line-height: 1.6; color: #555;"> {{-- Example styling - adjust font & line-height --}}
+                    Empowering You with Protection. Social Engineer Insurance is on a mission to make comprehensive and customized insurance accessible to everyone. We are deeply committed to securing your future, offering specialized plans from electric rickshaw coverage to vital life and health protection.
+                </p>
+            </div>
+
+            <div class="why-choose-us-section" style="margin-bottom: 50px;"> {{-- Added margin --}}
+                <h2 class="section-title" style="font-size: 2em; font-weight: 600; margin-bottom: 20px; color: #333;">Why Choose Social Engineer Insurance?</h2> {{-- Example styling - adjust font & color --}}
+                <ul class="why-choose-us-list" style="list-style: none; padding-left: 0;"> {{-- Removed default list style --}}
+                    <li style="margin-bottom: 15px; font-size: 1.1em; color: #555;"> {{-- Added margin & font styling --}}
+                        <strong style="font-weight: 600; color: #333;">Your Advocate, Not Ours:</strong> As an independent provider, we work solely for you, ensuring you get the most favorable terms and ideal insurance solutions.
+                    </li>
+                    <li style="margin-bottom: 15px; font-size: 1.1em; color: #555;"> {{-- Added margin & font styling --}}
+                        <strong style="font-weight: 600; color: #333;">Specialized Expertise:</strong> We are specialists in electric rickshaw, life, and health insurance, offering deep knowledge and tailored plans.
+                    </li>
+                    <li style="font-size: 1.1em; color: #555;"> {{-- Added font styling --}}
+                        <strong style="font-weight: 600; color: #333;">You're at the Heart of Everything:</strong> Our customer-centric approach means your unique needs drive our plan design, ensuring personalized coverage.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="team-details-content-wrap" style="align-items: center; margin-bottom: 60px;"> {{-- Added margin --}}
+                <div id="w-node-_8b166095-ca7c-830e-4eba-fe2fc62b8504-7d56c38a" class="team-details-image-block">
+                    <img alt="Team Member Image" loading="lazy"
+                         src="{{ asset('asset/website/images/gourav.png') }}"
+                         sizes="(max-width: 479px) 89vw, (max-width: 767px) 93vw, (max-width: 991px) 668px, (max-width: 1439px) 478px, 511px"
+                         srcset="{{ asset('asset/website/images/gourav.png') }} 512w"
+                         class="team-member-image team-member-details-image" />
+                    <div class="image-overlay-wrap">
+                        <div class="image-overlay-grid">
+                            <div class="image-overlay-mask mask-one"></div>
+                            <div class="image-overlay-mask mask-two"></div>
+                            <div class="image-overlay-mask mask-three"></div>
+                            <div class="image-overlay-mask mask-four"></div>
                         </div>
                     </div>
                 </div>
-                <div class="team-member-details-grid" style="margin-top: 50px !important">
-                    <div class="team-member-details-left-column">
-                        <div class="best-skill-block">
-                            <h2 data-w-id="e83da8f9-feb9-a5fb-42f9-443fcfc5b93d" style="opacity:0" class="best-skill-title">
-                                Best <span class="heading-highlight-text">Skills</span></h2>
-                            <div data-w-id="e2717ac7-1270-8c68-749a-704915e61f11" style="opacity:0"
-                                class="best-skill-summary">I’m developing digital solutions for companies
-                                seeking better visibility on the internet</div>
-                        </div>
-                        <div data-w-id="44fcf9bb-18a3-dd63-3db6-6e21ea259bcf" style="opacity:0"
-                            class="skill-progress-bar-block">
-                            <div class="skill-progress-bar-wrapper">
-                                <div class="skill-title-block">
-                                    <div class="skill-title">Design</div>
-                                    <div class="skill-percentage">65%</div>
-                                </div>
-                                <div class="skill-level-block">
-                                    <div class="skill-inner-bg"></div>
-                                    <div style="width:0px" class="skill-front-bg skill-65-percent"></div>
-                                </div>
-                            </div>
-                            <div class="skill-progress-bar-wrapper">
-                                <div class="skill-title-block">
-                                    <div class="skill-title">Development</div>
-                                    <div class="skill-percentage">50%</div>
-                                </div>
-                                <div class="skill-level-block">
-                                    <div class="skill-inner-bg"></div>
-                                    <div style="width:0px" class="skill-front-bg skill-50-percent"></div>
-                                </div>
-                            </div>
-                            <div class="skill-progress-bar-wrapper">
-                                <div class="skill-title-block">
-                                    <div class="skill-title">Marketing</div>
-                                    <div class="skill-percentage">80%</div>
-                                </div>
-                                <div class="skill-level-block">
-                                    <div class="skill-inner-bg"></div>
-                                    <div style="width:0px" class="skill-front-bg skill-80-percent"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="team-member-details-right-column">
-                        <div class="past-experirnce-wrap">
-                            <h2 data-w-id="1036c1ad-b831-f2da-c62d-9c653fc8ca94" style="opacity:0"
-                                class="past-experience-title">Past <span class="heading-highlight-text">Experience</span>
-                            </h2>
-                            <div data-w-id="ba702a55-5d01-d48b-9544-d201e369d2c7" style="opacity:0"
-                                class="past-experience-summary">I have extensive experience in project
-                                management, having successfully led multiple teams in the completion of complex
-                                initiatives.</div>
-                        </div>
-                        <div class="past-job-details-wrap">
-                            <div data-w-id="0d5a6a07-c005-b381-0f34-fc7154448644" style="opacity:0"
-                                class="past-job-details-block">
-                                <div class="past-job-details-title-and-icon-wrap">
-                                    <div class="past-job-icon-wrap"><img
-                                            src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cca0b63e84ba13f23909f1_promotion.svg"
-                                            loading="lazy" alt="Job Icon" class="past-job-icon" /></div>
-                                    <div class="past-job-title">Marketing Officer</div>
-                                </div>
-                                <p class="past-job-description">5 years successfully market execute compare to
-                                    marketing strategies.</p>
-                            </div>
-                            <div data-w-id="0c39a6a4-9e36-8817-e760-344831e6f031" style="opacity:0"
-                                class="past-job-details-block">
-                                <div class="past-job-details-title-and-icon-wrap">
-                                    <div class="past-job-icon-wrap"><img
-                                            src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cca0b63e84ba13f23909f1_promotion.svg"
-                                            loading="lazy" alt="Job Icon" class="past-job-icon" /></div>
-                                    <div class="past-job-title">Junior Marketer</div>
-                                </div>
-                                <p class="past-job-description">2+ years successfully market execute compare to
-                                    marketing strategies.</p>
-                            </div>
-                        </div>
-
-                        {{-- <div class="team-contact-form-wrap">
-                            <div class="section-heading-wrap">
-                                <div class="section-title-wrap">
-                                    <h2 data-w-id="01d296d0-d944-6df5-da3d-92ae77bedc77" style="opacity:0"
-                                        class="section-title">Leave a <span class="heading-highlight-text">Massage</span>
-                                    </h2>
-                                </div>
-                                <div class="section-sub-title-wrap team-contact-form-sub-title">
-                                    <div data-w-id="438493b7-aef9-ef1b-259c-6ec7cc992c57" style="opacity:0"
-                                        class="section-sub-title">I’m developing digital solutions for
-                                        companies seeking better visibility on the internet</div>
-                                </div>
-                            </div>
-                            <div data-w-id="c6510361-1331-3561-9f5b-b74799514dfe" style="opacity:0"
-                                class="team-contact-form-block w-form">
-                                <form id="email-form-2" name="email-form-2" data-name="Email Form 2" method="get"
-                                    class="team-contact-form" data-wf-page-id="65c44d67f63a923b7d56c38a"
-                                    data-wf-element-id="c6510361-1331-3561-9f5b-b74799514dff">
-                                    <div class="team-contact-form-grid">
-                                        <div class="team-contact-form-field-block"><label for="First-Name"
-                                                class="team-contact-form-text-field">First Name<sup
-                                                    class="team-contact-form-superscript">*</sup></label><input
-                                                class="team-contact-form-input-field w-input" maxlength="256"
-                                                name="First-Name" data-name="First Name" placeholder="First Name"
-                                                type="text" id="First-Name" required="" /></div>
-                                        <div class="team-contact-form-field-block"><label for="Last-Name"
-                                                class="team-contact-form-text-field">Last Name<sup
-                                                    class="team-contact-form-superscript">*</sup></label><input
-                                                class="team-contact-form-input-field w-input" maxlength="256"
-                                                name="Last-Name" data-name="Last Name" placeholder="Last Name"
-                                                type="text" id="Last-Name" required="" /></div>
-                                    </div>
-                                    <div class="team-contact-form-field-block"><label for="field"
-                                            class="team-contact-form-text-field">Your Massage<sup
-                                                class="team-contact-form-superscript">*</sup></label>
-                                        <textarea required="" placeholder="Please type your massage here..." maxlength="5000" id="field"
-                                            name="field" data-name="Field" class="team-member-contact-form-textarea w-input"></textarea>
-                                    </div>
-                                    <div class="team-contact-form-button-wrap"><input type="submit"
-                                            data-wait="Please wait..." class="primary-button max-width w-button"
-                                            value="Send Massage" />
-                                    </div>
-                                </form>
-                                <div class="success-message w-form-done">
-                                    <div class="success-message-text">Thank you! Your submission has been
-                                        received!</div>
-                                </div>
-                                <div class="error-message w-form-fail">
-                                    <div class="error-message-text">Oops! Something went wrong while submitting
-                                        the form.</div>
-                                </div>
-                            </div>
-                        </div> --}}
+                <div id="w-node-aff92f30-3536-f71c-92a5-5ad90bd39e9e-7d56c38a" class="team-details-content-block" style="padding-left: 30px;"> {{-- Added padding --}}
+                    <div class="team-member-info-block">
+                        <h2 class="team-member-info-title" style="font-size: 2em; font-weight: 600; margin-bottom: 15px; color: #333;">Gourav Bhalla</h2> {{-- Example styling - adjust font & color --}}
+                        <p class="team-member-summary" style="font-size: 1.1em; line-height: 1.6; color: #555;"> {{-- Example styling - adjust font & line-height --}}
+                            Gourav Bhalla is the founder and driving force behind Social Engineer Insurance. With over 12 years of experience in the insurance industry, Gourav has a deep understanding of the complexities of insurance needs.
+                            <br><br>
+                            Before starting his own business three years ago, Gourav worked in various roles across the insurance sector, where he honed his skills in customer service, claims management, and policy development. His goal is to make insurance accessible and straightforward for everyone.
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
+            <div class="core-values-section" style="margin-bottom: 50px;"> {{-- Added margin --}}
+                <h2 class="section-title" style="font-size: 2em; font-weight: 600; margin-bottom: 20px; color: #333;">Our Core Values</h2> {{-- Example styling - adjust font & color --}}
+                <ul class="core-values-list" style="list-style: none; padding-left: 0;"> {{-- Removed default list style --}}
+                    <li style="margin-bottom: 15px; font-size: 1.1em; color: #555;"> {{-- Added margin & font styling --}}
+                        <strong style="font-weight: 600; color: #333;">Integrity:</strong> We build lasting trust through complete transparency and unwavering ethical practices.
+                    </li>
+                    <li style="margin-bottom: 15px; font-size: 1.1em; color: #555;"> {{-- Added margin & font styling --}}
+                        <strong style="font-weight: 600; color: #333;">Customer First:</strong> Your needs are paramount – we prioritize them in every decision and solution we offer.
+                    </li>
+                    <li style="font-size: 1.1em; color: #555;"> {{-- Added font styling --}}
+                        <strong style="font-weight: 600; color: #333;">Innovative Solutions:</strong> We are committed to delivering forward-thinking and highly customized insurance for a changing world.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="testimonials-section" style="margin-bottom: 60px; padding: 40px; background-color: #f9f9f9; border-radius: 8px; text-align: center;"> {{-- Added styling for box --}}
+                <h2 class="section-title" style="font-size: 2em; font-weight: 600; margin-bottom: 20px; color: #333;">What Our Clients Say</h2> {{-- Example styling - adjust font & color --}}
+                <p class="testimonial" style="font-size: 1.1em; line-height: 1.6; color: #555; font-style: italic; margin-bottom: 20px;"> {{-- Example styling - adjust font & line-height --}}
+                    "Social Engineer Insurance has been a game-changer for me. Their tailored electric rickshaw insurance plan gave me the peace of mind I needed. Highly recommend!" – <strong style="font-weight: 600; font-style: normal; color: #333;">Ved Tomer</strong>
+                </p>
+                <p class="testimonial" style="font-size: 1.1em; line-height: 1.6; color: #555; font-style: italic;"> {{-- Example styling - adjust font & line-height --}}
+                    "The team at Social Engineer Insurance truly cares. They guided me through every step of my life insurance policy. Great service!" – <strong style="font-weight: 600; font-style: normal; color: #333;">Neetu Mahal</strong>
+                </p>
+            </div>
+
+            <div class="contact-section" style="text-align: center;"> {{-- Centered text --}}
+                <h2 class="section-title" style="font-size: 2em; font-weight: 600; margin-bottom: 20px; color: #333;">Ready to Get Started?</h2> {{-- Example styling - adjust font & color --}}
+                <p class="section-description" style="font-size: 1.1em; line-height: 1.6; color: #555; margin-bottom: 30px;"> {{-- Example styling - adjust font & line-height & margin --}}
+                    Take the first step towards securing your future. Contact us today to explore personalized insurance solutions and discover how Social Engineer Insurance can protect what matters most to you.
+                </p>
+                <a href="{{ route('contact-us') }}" class="contact-button" style="display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: 500;">Get in Touch</a> {{-- Example button styling --}}
+            </div>
+        </div>
+    </div>
+</section>
 @endsection
