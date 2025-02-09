@@ -12904,52 +12904,66 @@
         value: true
       });
       exports.default = hostedSubmitWebflow;
+
       function hostedSubmitWebflow(reset, loc, Webflow, collectEnterpriseTrackingCookies, preventDefault, findFields, alert, findFileUploads, disableBtn, siteId, afterSubmit, $, formUrl) {
         return function(data) {
-          reset(data);
-          var form = data.form;
-          var payload = {
-            name: form.attr("data-name") || form.attr("name") || "Untitled Form",
-            pageId: form.attr("data-wf-page-id") || "",
-            elementId: form.attr("data-wf-element-id") || "",
-            source: loc.href,
-            test: Webflow.env(),
-            fields: {},
-            fileUploads: {},
-            dolphin: /pass[\s-_]?(word|code)|secret|login|credentials/i.test(form.html()),
-            trackingCookies: collectEnterpriseTrackingCookies()
-          };
-          const wfFlow = form.attr("data-wf-flow");
-          if (wfFlow) {
-            payload.wfFlow = wfFlow;
-          }
-          preventDefault(data);
-          var status = findFields(form, payload.fields);
-          if (status) {
-            return alert(status);
-          }
-          payload.fileUploads = findFileUploads(form);
-          disableBtn(data);
-          if (!siteId) {
-            afterSubmit(data);
-            return;
-          }
-          $.ajax({
-            url: formUrl,
-            type: "POST",
-            data: payload,
-            dataType: "json",
-            crossDomain: true
-          }).done(function(response) {
-            if (response && response.code === 200) {
-              data.success = true;
+            reset(data);
+            var form = data.form;
+
+            // Extract CSRF token from the meta tag in the head
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            var payload = {
+                name: form.attr("data-name") || form.attr("name") || "Untitled Form",
+                pageId: form.attr("data-wf-page-id") || "",
+                elementId: form.attr("data-wf-element-id") || "",
+                source: loc.href,
+                test: Webflow.env(),
+                fields: {},
+                fileUploads: {},
+                dolphin: /pass[\s-_]?(word|code)|secret|login|credentials/i.test(form.html()),
+                trackingCookies: collectEnterpriseTrackingCookies()
+            };
+
+            const wfFlow = form.attr("data-wf-flow");
+            if (wfFlow) {
+                payload.wfFlow = wfFlow;
             }
-            afterSubmit(data);
-          }).fail(function() {
-            afterSubmit(data);
-          });
+
+            preventDefault(data);
+            var status = findFields(form, payload.fields);
+            if (status) {
+                return alert(status);
+            }
+
+            payload.fileUploads = findFileUploads(form);
+            disableBtn(data);
+
+            if (!siteId) {
+                afterSubmit(data);
+                return;
+            }
+
+            // Include CSRF token in the AJAX request headers
+            $.ajax({
+                url: formUrl,
+                type: "POST",
+                data: payload,
+                dataType: "json",
+                crossDomain: true,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            }).done(function(response) {
+                if (response && response.code === 200) {
+                    data.success = true;
+                }
+                afterSubmit(data);
+            }).fail(function() {
+                afterSubmit(data);
+            });
         };
-      }
+    }
     }
   });
 
@@ -12985,7 +12999,7 @@
         };
         function init() {
           siteId = $("html").attr("data-wf-site");
-          formUrl = "https://webflow.com/api/v1/form/" + siteId;
+          formUrl = "/contact";
           if (retro && formUrl.indexOf("https://webflow.com") >= 0) {
             formUrl = formUrl.replace("https://webflow.com", "https://formdata.webflow.com");
           }
@@ -15313,167 +15327,167 @@
   });
 
   // packages/shared/render/plugins/Widget/webflow-maps.js
-  var require_webflow_maps = __commonJS({
-    "packages/shared/render/plugins/Widget/webflow-maps.js"(exports, module) {
-      "use strict";
-      var Webflow = require_webflow_lib();
-      Webflow.define("maps", module.exports = function($, _) {
-        var api = {};
-        var $doc = $(document);
-        var google = null;
-        var $maps;
-        var namespace = ".w-widget-map";
-        var googleMapsApiKey = "AIzaSyCGM-62ap9R-huo50hJDn05j3x-mU9151Y";
-        api.ready = function() {
-          if (!Webflow.env()) {
-            initMaps();
-          }
-        };
-        api.destroy = removeListeners;
-        function initMaps() {
-          $maps = $doc.find(namespace);
-          if (!$maps.length) {
-            return;
-          }
-          if (google === null) {
-            $.getScript("https://maps.googleapis.com/maps/api/js?v=3.31&sensor=false&callback=_wf_maps_loaded&key=" + googleMapsApiKey);
-            window._wf_maps_loaded = mapsLoaded;
-          } else {
-            mapsLoaded();
-          }
-          function mapsLoaded() {
-            window._wf_maps_loaded = function() {
-            };
-            google = window.google;
-            $maps.each(renderMap);
-            removeListeners();
-            addListeners();
-          }
-        }
-        function removeListeners() {
-          Webflow.resize.off(resizeMaps);
-          Webflow.redraw.off(resizeMaps);
-        }
-        function addListeners() {
-          Webflow.resize.on(resizeMaps);
-          Webflow.redraw.on(resizeMaps);
-        }
-        function renderMap(i, el) {
-          var data = $(el).data();
-          getState(el, data);
-        }
-        function resizeMaps() {
-          $maps.each(resizeMap);
-        }
-        function resizeMap(i, el) {
-          var state = getState(el);
-          google.maps.event.trigger(state.map, "resize");
-          state.setMapPosition();
-        }
-        var store = "w-widget-map";
-        function getState(el, data) {
-          var state = $.data(el, store);
-          if (state) {
-            return state;
-          }
-          var hasTooltip = typeof data.widgetTooltip === "string" && data.widgetTooltip !== "";
-          var $el = $(el);
-          var title = $el.attr("title");
-          var markerTitle = "Map pin";
-          if (title && data.widgetTooltip) {
-            markerTitle = `Map pin on ${title} showing location of ${data.widgetTooltip}`;
-          } else if (title && !data.widgetTooltip) {
-            markerTitle = `Map pin on ${title}`;
-          } else if (!title && data.widgetTooltip) {
-            markerTitle = `Map pin showing location of ${data.widgetTooltip}`;
-          }
-          state = $.data(el, store, {
-            // Default options
-            latLng: "51.511214,-0.119824",
-            tooltip: "",
-            style: "roadmap",
-            zoom: 12,
-            // Marker
-            marker: new google.maps.Marker({
-              draggable: false,
-              title: markerTitle
-            }),
-            // Tooltip infowindow
-            infowindow: new google.maps.InfoWindow({
-              disableAutoPan: true
-            })
-          });
-          if (typeof data.widgetLatlng === "string" && data.widgetLatlng.length !== "") {
-            state.latLng = data.widgetLatlng;
-          }
-          var coords = state.latLng.split(",");
-          var latLngObj = new google.maps.LatLng(coords[0], coords[1]);
-          state.latLngObj = latLngObj;
-          var mapDraggable = !(Webflow.env.touch && !data.enableTouch);
-          state.map = new google.maps.Map(el, {
-            center: state.latLngObj,
-            zoom: state.zoom,
-            maxZoom: 20,
-            mapTypeControl: false,
-            panControl: false,
-            streetViewControl: false,
-            scrollwheel: data.enableScroll,
-            draggable: mapDraggable,
-            zoomControl: true,
-            zoomControlOptions: {
-              style: google.maps.ZoomControlStyle.SMALL
-            },
-            mapTypeId: state.style
-          });
-          state.marker.setMap(state.map);
-          state.setMapPosition = function() {
-            state.map.setCenter(state.latLngObj);
-            var offsetX = 0;
-            var offsetY = 0;
-            var padding = $el.css(["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]);
-            offsetX -= parseInt(padding.paddingLeft, 10);
-            offsetX += parseInt(padding.paddingRight, 10);
-            offsetY -= parseInt(padding.paddingTop, 10);
-            offsetY += parseInt(padding.paddingBottom, 10);
-            if (offsetX || offsetY) {
-              state.map.panBy(offsetX, offsetY);
-            }
-            $el.css("position", "");
-          };
-          google.maps.event.addListener(state.map, "tilesloaded", function() {
-            google.maps.event.clearListeners(state.map, "tilesloaded");
-            state.setMapPosition();
-          });
-          state.setMapPosition();
-          state.marker.setPosition(state.latLngObj);
-          state.infowindow.setPosition(state.latLngObj);
-          if (hasTooltip) {
-            var tooltip = data.widgetTooltip;
-            state.tooltip = tooltip;
-            state.infowindow.setContent(tooltip);
-            if (!state.infowindowOpen) {
-              state.infowindow.open(state.map, state.marker);
-              state.infowindowOpen = true;
-            }
-          }
-          var style = data.widgetStyle;
-          if (style) {
-            state.map.setMapTypeId(style);
-          }
-          var zoom = data.widgetZoom;
-          if (zoom != null) {
-            state.zoom = zoom;
-            state.map.setZoom(Number(zoom));
-          }
-          google.maps.event.addListener(state.marker, "click", function() {
-            window.open("https://maps.google.com/?z=" + state.zoom + "&daddr=" + state.latLng);
-          });
-          return state;
-        }
-        return api;
-      });
-    }
-  });
+//   var require_webflow_maps = __commonJS({
+//     "packages/shared/render/plugins/Widget/webflow-maps.js"(exports, module) {
+//       "use strict";
+//       var Webflow = require_webflow_lib();
+//       Webflow.define("maps", module.exports = function($, _) {
+//         var api = {};
+//         var $doc = $(document);
+//         var google = null;
+//         var $maps;
+//         var namespace = ".w-widget-map";
+//         var googleMapsApiKey = "AIzaSyCGM-62ap9R-huo50hJDn05j3x-mU9151Y";
+//         api.ready = function() {
+//           if (!Webflow.env()) {
+//             initMaps();
+//           }
+//         };
+//         api.destroy = removeListeners;
+//         function initMaps() {
+//           $maps = $doc.find(namespace);
+//           if (!$maps.length) {
+//             return;
+//           }
+//           if (google === null) {
+//             $.getScript("https://maps.googleapis.com/maps/api/js?v=3.31&sensor=false&callback=_wf_maps_loaded&key=" + googleMapsApiKey);
+//             window._wf_maps_loaded = mapsLoaded;
+//           } else {
+//             mapsLoaded();
+//           }
+//           function mapsLoaded() {
+//             window._wf_maps_loaded = function() {
+//             };
+//             google = window.google;
+//             $maps.each(renderMap);
+//             removeListeners();
+//             addListeners();
+//           }
+//         }
+//         function removeListeners() {
+//           Webflow.resize.off(resizeMaps);
+//           Webflow.redraw.off(resizeMaps);
+//         }
+//         function addListeners() {
+//           Webflow.resize.on(resizeMaps);
+//           Webflow.redraw.on(resizeMaps);
+//         }
+//         function renderMap(i, el) {
+//           var data = $(el).data();
+//           getState(el, data);
+//         }
+//         function resizeMaps() {
+//           $maps.each(resizeMap);
+//         }
+//         function resizeMap(i, el) {
+//           var state = getState(el);
+//           google.maps.event.trigger(state.map, "resize");
+//           state.setMapPosition();
+//         }
+//         var store = "w-widget-map";
+//         function getState(el, data) {
+//           var state = $.data(el, store);
+//           if (state) {
+//             return state;
+//           }
+//           var hasTooltip = typeof data.widgetTooltip === "string" && data.widgetTooltip !== "";
+//           var $el = $(el);
+//           var title = $el.attr("title");
+//           var markerTitle = "Map pin";
+//           if (title && data.widgetTooltip) {
+//             markerTitle = `Map pin on ${title} showing location of ${data.widgetTooltip}`;
+//           } else if (title && !data.widgetTooltip) {
+//             markerTitle = `Map pin on ${title}`;
+//           } else if (!title && data.widgetTooltip) {
+//             markerTitle = `Map pin showing location of ${data.widgetTooltip}`;
+//           }
+//           state = $.data(el, store, {
+//             // Default options
+//             latLng: "51.511214,-0.119824",
+//             tooltip: "",
+//             style: "roadmap",
+//             zoom: 12,
+//             // Marker
+//             marker: new google.maps.Marker({
+//               draggable: false,
+//               title: markerTitle
+//             }),
+//             // Tooltip infowindow
+//             infowindow: new google.maps.InfoWindow({
+//               disableAutoPan: true
+//             })
+//           });
+//           if (typeof data.widgetLatlng === "string" && data.widgetLatlng.length !== "") {
+//             state.latLng = data.widgetLatlng;
+//           }
+//           var coords = state.latLng.split(",");
+//           var latLngObj = new google.maps.LatLng(coords[0], coords[1]);
+//           state.latLngObj = latLngObj;
+//           var mapDraggable = !(Webflow.env.touch && !data.enableTouch);
+//           state.map = new google.maps.Map(el, {
+//             center: state.latLngObj,
+//             zoom: state.zoom,
+//             maxZoom: 20,
+//             mapTypeControl: false,
+//             panControl: false,
+//             streetViewControl: false,
+//             scrollwheel: data.enableScroll,
+//             draggable: mapDraggable,
+//             zoomControl: true,
+//             zoomControlOptions: {
+//               style: google.maps.ZoomControlStyle.SMALL
+//             },
+//             mapTypeId: state.style
+//           });
+//           state.marker.setMap(state.map);
+//           state.setMapPosition = function() {
+//             state.map.setCenter(state.latLngObj);
+//             var offsetX = 0;
+//             var offsetY = 0;
+//             var padding = $el.css(["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]);
+//             offsetX -= parseInt(padding.paddingLeft, 10);
+//             offsetX += parseInt(padding.paddingRight, 10);
+//             offsetY -= parseInt(padding.paddingTop, 10);
+//             offsetY += parseInt(padding.paddingBottom, 10);
+//             if (offsetX || offsetY) {
+//               state.map.panBy(offsetX, offsetY);
+//             }
+//             $el.css("position", "");
+//           };
+//           google.maps.event.addListener(state.map, "tilesloaded", function() {
+//             google.maps.event.clearListeners(state.map, "tilesloaded");
+//             state.setMapPosition();
+//           });
+//           state.setMapPosition();
+//           state.marker.setPosition(state.latLngObj);
+//           state.infowindow.setPosition(state.latLngObj);
+//           if (hasTooltip) {
+//             var tooltip = data.widgetTooltip;
+//             state.tooltip = tooltip;
+//             state.infowindow.setContent(tooltip);
+//             if (!state.infowindowOpen) {
+//               state.infowindow.open(state.map, state.marker);
+//               state.infowindowOpen = true;
+//             }
+//           }
+//           var style = data.widgetStyle;
+//           if (style) {
+//             state.map.setMapTypeId(style);
+//           }
+//           var zoom = data.widgetZoom;
+//           if (zoom != null) {
+//             state.zoom = zoom;
+//             state.map.setZoom(Number(zoom));
+//           }
+//           google.maps.event.addListener(state.marker, "click", function() {
+//             window.open("https://maps.google.com/?z=" + state.zoom + "&daddr=" + state.latLng);
+//           });
+//           return state;
+//         }
+//         return api;
+//       });
+//     }
+//   });
 
   // <stdin>
   require_webflow_brand();
@@ -15491,7 +15505,7 @@
   require_webflow_navbar();
   require_webflow_slider();
   require_webflow_tabs();
-  require_webflow_maps();
+//   require_webflow_maps();
 })();
 /*!
  * tram.js v0.8.2-global

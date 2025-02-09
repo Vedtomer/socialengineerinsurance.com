@@ -1,4 +1,4 @@
-<footer class="footer-section" style="background-color:#e9f3f2;margin-top:32px;text-align:center">
+<footer class="footer-section" style="background-color:#e9f3f2;text-align:center">
     <div class="footer-upper-section">
       <div class="w-layout-blockcontainer main-container w-container">
         <div data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80c4" class="footer-flex">

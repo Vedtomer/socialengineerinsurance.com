@@ -37,24 +37,24 @@
             'client_name' => 'Neetu Mahal',
             'client_designation' => 'Founder of Saga Softwares',
         ],
-        [
-            'class' => 'client-two',
-            'rating' => 5,
-            'feedback_title' => 'Absolutely impressive',
-            'feedback_summary' => 'The personalized attention and creative solutions you provided were a game-changer for our business.',
-            'client_image' => 'https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c61677f0f4790f3fc28_Sophia%20Flora.png',
-            'client_name' => 'Vikram Mehta',
-            'client_designation' => '',
-        ],
-        [
-            'class' => 'client-three',
-            'rating' => 5,
-            'feedback_title' => 'It\'s really wonderful.',
-            'feedback_summary' => 'The personalized attention and creative solutions you provided were a game-changer for our business.',
-            'client_image' => 'https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c70114f68d1c132f915_Jessica%20Albe.png',
-            'client_name' => 'Ananya Reddy',
-            'client_designation' => '',
-        ],
+        // [
+        //     'class' => 'client-two',
+        //     'rating' => 5,
+        //     'feedback_title' => 'Absolutely impressive',
+        //     'feedback_summary' => 'The personalized attention and creative solutions you provided were a game-changer for our business.',
+        //     'client_image' => 'https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c61677f0f4790f3fc28_Sophia%20Flora.png',
+        //     'client_name' => 'Vikram Mehta',
+        //     'client_designation' => '',
+        // ],
+        // [
+        //     'class' => 'client-three',
+        //     'rating' => 5,
+        //     'feedback_title' => 'It\'s really wonderful.',
+        //     'feedback_summary' => 'The personalized attention and creative solutions you provided were a game-changer for our business.',
+        //     'client_image' => 'https://assets-global.website-files.com/65b60c5def338f6b24016820/65bb1c70114f68d1c132f915_Jessica%20Albe.png',
+        //     'client_name' => 'Ananya Reddy',
+        //     'client_designation' => '',
+        // ],
     ];
 @endphp
 

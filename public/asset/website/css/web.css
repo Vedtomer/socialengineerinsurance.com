@@ -5996,7 +5996,7 @@ figcaption {
 
 .contact-us-info-text {
   color: var(--secondary);
-  max-width: 236px;
+  max-width: 400px;
   font-family: Inter, sans-serif;
   font-size: 18px;
   font-weight: 400;
