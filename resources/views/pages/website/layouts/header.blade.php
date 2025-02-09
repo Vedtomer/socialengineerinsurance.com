@@ -40,7 +40,7 @@
                                 href="/about" class="nav-link">About</a>
                             <div class="nav-bottom-shape"></div>
                         </li>
-                        <li class="nav-list-item">
+                        {{-- <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd96e"
                                 class="nav-dropdown w-dropdown">
                                 <div class="nav-dropdown-toggle-wrap w-dropdown-toggle">
@@ -76,8 +76,8 @@
                                     </div>
                                 </nav>
                             </div>
-                        </li>
-                        <li class="nav-list-item">
+                        </li> --}}
+                        {{-- <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="efd43221-6175-cb41-1e5a-ec85546a7fc7"
                                 class="nav-dropdown w-dropdown">
                                 <div data-w-id="efd43221-6175-cb41-1e5a-ec85546a7fc8"
@@ -136,15 +136,15 @@
                                     </div>
                                 </nav>
                             </div>
-                        </li>
+                        </li> --}}
                         <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
                             <a href="{{route('contact-us')}}" class="nav-link">Contact Us</a>
                             <div class="nav-bottom-shape"></div>
                         </li>
-                        <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
+                        {{-- <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
                             <a href="/blog" class="nav-link">Blog</a>
                             <div class="nav-bottom-shape"></div>
-                        </li>
+                        </li> --}}
                         <li class="mobile-menu-button">
                             <div class="nav-button-wrapper mobile-button-wrap">
                                 {{-- <a href="#"class="login-link-text">Login</a>
