@@ -11,25 +11,8 @@
 <section class="about-us-section" style="padding-top: 60px; padding-bottom: 60px;"> {{-- Added padding for better spacing --}}
     <div class="w-layout-blockcontainer main-container w-container" style="max-width: 960px;"> {{-- Adjust max-width as needed --}}
         <div class="about-us-wrapper">
-
-            <div class="page-heading-wrap">
-                <div data-w-id="930a43b2-7057-7394-0a26-60723e919809" style="opacity:0"
-                    class="page-title-wrap">
-                    <h1 class="page-title">We’re Dedicated to Making <span
-                            class="heading-highlight-text">Insurance</span> More Easier</h1>
-                </div>
-                <div data-w-id="eba3cd07-734f-a87f-7656-6ee84e4cabda" style="opacity:0"
-                    class="page-intro-wrap about-intro-max-width">
-                    <div class="page-intro-text">Insurbes companies work to sense more security and peace
-                        they have insurance coverage the more effective support and challenging times.</div>
-                </div>
-            </div>
-
-
-
             <div class="about-us-header" style="text-align: center; margin-bottom: 40px;"> {{-- Centered and added margin --}}
-                <h1 data-w-id="fee1da3b-23dd-7373-10e7-2b557b414e70" style="opacity:0"
-                class="page-title " >About Social Engineer Insurance</h1> {{-- Example styling - adjust font --}}
+                <h1 class="about-us-title" >About Social Engineer Insurance</h1> {{-- Example styling - adjust font --}}
                 <p class="about-us-subtitle" style="font-size: 1.1em; color: #777;"> {{-- Example styling - adjust font & color --}}
                     Securing Your Future with Tailored Insurance Solutions. At Social Engineer Insurance, we're dedicated to providing innovative and personalized coverage that puts your safety and peace of mind first.
                 </p>
