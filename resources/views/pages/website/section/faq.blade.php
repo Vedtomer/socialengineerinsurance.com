@@ -8,108 +8,107 @@
                 </div>
                 <div class="section-sub-title-wrap faq-sub-title-max-width">
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da0e" class="section-sub-title">
-                        Insurance is a financial arrangement in which an individual or entity pays a premium
-                        to an insurance company for protection against financial losses.</div>
+                        As an independent insurance provider, we focus on your needs, offering tailored solutions. We specialize in electric rickshaw insurance and life and health coverage, securing the best terms for your protection.</div>
                 </div>
             </div>
             <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da10" class="faq-content-wrap">
                 <div class="faq-items-block">
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da12" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">What is Insurance?</h3>
+                            <h3 class="faq-question">What is Electric Rickshaw Insurance?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Insurance is a financial product that provides protection against financial losses due to unforeseen events. In India, it is regulated by the Insurance Regulatory and Development Authority (IRDAI).</p>
+                            <p class="faq-answer">Electric rickshaw insurance provides financial protection against damages, theft, and third-party liabilities for your e-rickshaw. It ensures you are covered for unforeseen events while operating your vehicle.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da1b" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">What Impacts My Car Insurance Price?</h3>
+                            <h3 class="faq-question">Why Do I Need Life and Health Insurance?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">In India, car insurance prices depend on factors like the car's make and model, age, location, and your driving history. Comprehensive coverage and add-ons like zero depreciation also affect the premium.</p>
+                            <p class="faq-answer">Life and health insurance provide financial security for you and your family. They cover medical expenses, critical illnesses, and offer a safety net in case of unforeseen events, ensuring peace of mind.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da24" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">What Types of Insurance Are Available for Families?</h3>
+                            <h3 class="faq-question">What Factors Affect Electric Rickshaw Insurance Premiums?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Families in India can opt for health insurance, life insurance, motor insurance, and home insurance. These policies provide financial security for medical expenses, accidents, property damage, and more.</p>
+                            <p class="faq-answer">Premiums for electric rickshaw insurance depend on factors like the vehicle's age, usage, location, and coverage type. Comprehensive plans and add-ons like personal accident cover also influence the cost.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da2d" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">How Are Insurance Premiums Determined?</h3>
+                            <h3 class="faq-question">How Do I Choose the Right Health Insurance Plan?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Insurance premiums in India are calculated based on factors like age, health, lifestyle, coverage amount, and the type of policy. Actuarial calculations and risk assessments are used to determine the premium.</p>
+                            <p class="faq-answer">Consider factors like coverage amount, network hospitals, premium costs, and additional benefits like maternity cover or critical illness protection. We can help you find a plan tailored to your needs.</p>
                         </div>
                     </div>
                 </div>
                 <div id="w-node-_6387d7b8-7195-cae3-f3ac-d62c8429da36-8429da06" class="faq-items-block">
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da37" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">How Does Your Pricing Work?</h3>
+                            <h3 class="faq-question">What Does Electric Rickshaw Insurance Cover?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Our pricing is based on a thorough analysis of risk factors, market conditions, and your specific needs. We offer competitive rates tailored to provide the best value for your insurance coverage in India.</p>
+                            <p class="faq-answer">Electric rickshaw insurance typically covers third-party liabilities, damages due to accidents, theft, and natural disasters. Optional add-ons like personal accident cover and zero depreciation can enhance your policy.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da40" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">What Impacts My Home Insurance Price?</h3>
+                            <h3 class="faq-question">Can I Customize My Life Insurance Plan?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Home insurance prices in India depend on factors like the property's location, construction type, age, and the level of coverage. Safety features and your claims history also play a role in determining the premium.</p>
+                            <p class="faq-answer">Yes, we offer customizable life insurance plans to suit your financial goals and family needs. You can choose the coverage amount, policy term, and add riders like critical illness or accidental death cover.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da49" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">How Does the Insurance Claims Process Work?</h3>
+                            <h3 class="faq-question">How Do I File a Claim for Electric Rickshaw Insurance?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">To file a claim in India, you need to notify your insurer, provide necessary documentation (e.g., police reports, medical bills), and complete the claim form. The insurer will assess the claim and process the payout if approved.</p>
+                            <p class="faq-answer">To file a claim, notify your insurer immediately after an incident, submit required documents like the FIR (if applicable), and fill out the claim form. Our team will guide you through the process for a hassle-free experience.</p>
                         </div>
                     </div>
                     <div data-w-id="6387d7b8-7195-cae3-f3ac-d62c8429da52" class="faq-item">
                         <div class="faq-question-block">
-                            <h3 class="faq-question">Do Insurance Companies Offer Discounts?</h3>
+                            <h3 class="faq-question">Do You Offer Discounts on Insurance Plans?</h3>
                             <div class="faq-arrow-wrap"><img
                                     src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c226e77330419822f6f4c0_Right%20Arrow.svg"
                                     loading="lazy" alt="FAQ Arrow Image" class="faq-arrow-image" />
                             </div>
                         </div>
                         <div class="faq-answer-block">
-                            <p class="faq-answer">Yes, many insurance companies in India offer discounts for safe driving, bundling multiple policies, installing safety devices, and maintaining a claims-free record. Ask us about available discounts!</p>
+                            <p class="faq-answer">Yes, we offer discounts for safe driving records, bundling multiple policies, and installing safety features in your e-rickshaw. Contact us to learn more about available discounts and savings.</p>
                         </div>
                     </div>
                 </div>
