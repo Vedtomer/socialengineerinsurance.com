@@ -141,10 +141,10 @@
                             <a href="{{route('contact-us')}}" class="nav-link">Contact Us</a>
                             <div class="nav-bottom-shape"></div>
                         </li>
-                        {{-- <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
+                        <li data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd97d" class="nav-list-item margin-top">
                             <a href="/blog" class="nav-link">Blog</a>
                             <div class="nav-bottom-shape"></div>
-                        </li> --}}
+                        </li>
                         <li class="mobile-menu-button">
                             <div class="nav-button-wrapper mobile-button-wrap">
                                 {{-- <a href="#"class="login-link-text">Login</a>
