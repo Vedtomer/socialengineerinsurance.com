@@ -34,7 +34,7 @@
                                     src="https://cdn.prod.website-files.com/65b60c5def338f6b24016820/65cc8a2f4b2c1a91691b3b7d_sms.svg"
                                     loading="lazy" alt="Social Icon" class="contact-us-icon" /></div><a
                                 href="mailto:gouravbhalla@socialengineerinsurance.com?subject=contact"
-                                class="contact-us-info-text">gouravbhalla@socialengineerinsurance.com</a>
+                                class="contact-us-info-text">contact@socialengineerinsurance.com</a>
                         </div>
                         <div data-w-id="afbe7270-882b-75eb-4104-9760238e59c1" style="opacity:0"
                             class="contact-us-info-block">
