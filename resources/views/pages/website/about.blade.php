@@ -12,7 +12,8 @@
     <div class="w-layout-blockcontainer main-container w-container" style="max-width: 960px;"> {{-- Adjust max-width as needed --}}
         <div class="about-us-wrapper">
             <div class="about-us-header" style="text-align: center; margin-bottom: 40px;"> {{-- Centered and added margin --}}
-                <h1 class="about-us-title" >About Social Engineer Insurance</h1> {{-- Example styling - adjust font --}}
+                <h1 data-w-id="fee1da3b-23dd-7373-10e7-2b557b414e70"
+                class="page-title " >About Social Engineer Insurance</h1> {{-- Example styling - adjust font --}}
                 <p class="about-us-subtitle" style="font-size: 1.1em; color: #777;"> {{-- Example styling - adjust font & color --}}
                     Securing Your Future with Tailored Insurance Solutions. At Social Engineer Insurance, we're dedicated to providing innovative and personalized coverage that puts your safety and peace of mind first.
                 </p>
@@ -98,7 +99,7 @@
                 <p class="section-description" style="font-size: 1.1em; line-height: 1.6; color: #555; margin-bottom: 30px;"> {{-- Example styling - adjust font & line-height & margin --}}
                     Take the first step towards securing your future. Contact us today to explore personalized insurance solutions and discover how Social Engineer Insurance can protect what matters most to you.
                 </p>
-                <a href="{{ route('contact-us') }}" class="contact-button" style="display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: 500;">Get in Touch</a> {{-- Example button styling --}}
+                <a href="{{ route('contact-us') }}" class="secondary-button w-button">Get in Touch</a> {{-- Example button styling --}}
             </div>
         </div>
     </div>
