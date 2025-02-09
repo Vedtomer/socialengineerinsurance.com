@@ -14,7 +14,7 @@ lang="en" data-wf-locale="en" data-wf-collection="65c44d67f63a923b7d56c37e" >
     @include('pages.website.layouts.scripts')
 
      <!-- Add the robots meta tag to prevent indexing -->
-    <meta name="robots" content="noindex, nofollow">
+    {{-- <meta name="robots" content="noindex, nofollow"> --}}
 </body>
 
 </html>
