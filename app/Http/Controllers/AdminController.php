@@ -458,9 +458,14 @@ class AdminController extends Controller
         $otp = $request->input('otp');
 
         // Find user
-        $user = User::where('mobile_number', $phoneNumber)->first();
+        $user = User::where('mobile_number', $phoneNumber)
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })
+            ->first();
+
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => 'Admin user not found with this mobile number'], 404);
         }
 
         // Check if OTP exists
@@ -516,28 +521,28 @@ class AdminController extends Controller
 
 
     public function WhatsappMessageLog(Request $request)
-{
-    // If no date is provided, use today's date
-    $date = $request->input('date_range', now()->format('Y-m-d'));
+    {
+        // If no date is provided, use today's date
+        $date = $request->input('date_range', now()->format('Y-m-d'));
 
-    $messageLogs = WhatsappMessageLog::with('user')
-        ->when($date, function ($query) use ($date) {
-            // Filter logs for the specific date
-            return $query->whereDate('created_at', $date);
-        })
-        // Select the most recent log for each user
-        ->whereIn('id', function ($subquery) {
-            $subquery->select(\DB::raw('MAX(id)'))
-                ->from('whatsapp_message_logs')
-                ->groupBy('user_id');
-        })
-        ->orderBy('message_type', 'asc')
-        ->paginate(150);
+        $messageLogs = WhatsappMessageLog::with('user')
+            ->when($date, function ($query) use ($date) {
+                // Filter logs for the specific date
+                return $query->whereDate('created_at', $date);
+            })
+            // Select the most recent log for each user
+            ->whereIn('id', function ($subquery) {
+                $subquery->select(\DB::raw('MAX(id)'))
+                    ->from('whatsapp_message_logs')
+                    ->groupBy('user_id');
+            })
+            ->orderBy('message_type', 'asc')
+            ->paginate(150);
 
-    // Pass the selected date back to the view
-    return view('admin.whatsapp-logs.index', [
-        'messageLogs' => $messageLogs,
-        'selectedDate' => $date
-    ]);
-}
+        // Pass the selected date back to the view
+        return view('admin.whatsapp-logs.index', [
+            'messageLogs' => $messageLogs,
+            'selectedDate' => $date
+        ]);
+    }
 }
