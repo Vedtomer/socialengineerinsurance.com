@@ -352,10 +352,17 @@ class AdminController extends Controller
         $phoneNumber = $request->input('phone_number');
 
         // Check if user exists
-        $user = User::where('mobile_number', $phoneNumber)->first();
+        $user = User::where('mobile_number', $phoneNumber)
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })
+            ->first();
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => 'Admin user not found'], 404);
         }
+
+
+        // Continue with admin-only operations below this point
 
         // Generate 6-digit OTP
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
