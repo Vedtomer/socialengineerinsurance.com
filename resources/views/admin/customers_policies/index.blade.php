@@ -6,15 +6,16 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+<div class="row justify-content-center">
+    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
         <div class="action-btn layout-top-spacing">
             <button id="add-list" class="btn btn-secondary">
-                <a href="{{ route('customer-policies.create') }}">Add Customers Policy</a>
+                <a href="{{ route('customers.create') }}" class="text-white">Add Customers Policy</a>
             </button>
         </div>
     </div>
 </div>
+
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 layout-spacing">
             <div class="statbox widget box box-shadow">

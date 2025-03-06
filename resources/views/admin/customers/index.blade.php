@@ -1,13 +1,13 @@
-@extends('admin.layouts.app')
-@section('breadcrumb')
+@extends('admin.layouts.customer')
+{{-- @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Customer </a></li>
     <li class="breadcrumb-item active" aria-current="page">Manage Customer</li>
-@endsection
+@endsection --}}
 
 @section('content')
-    <div class="row">
+<div class="row justify-content-center">
         <!-- Existing Add Customers button -->
-        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4 ms-auto">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 mb-4">
             <div class="action-btn layout-top-spacing">
                 <button id="add-list" class="btn btn-secondary">
                     <a href="{{ route('customers.create') }}">Add Customers</a>
