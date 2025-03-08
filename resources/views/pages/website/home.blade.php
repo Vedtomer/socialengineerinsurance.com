@@ -236,7 +236,7 @@
                         style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
                         sizes="(max-width: 479px) 100vw, (max-width: 767px) 95vw, (max-width: 991px) 690px, (max-width: 1279px) 362.34375px, (max-width: 1439px) 442.875px, (max-width: 1919px) 554px, 617px"
                         loading="lazy"
-                        srcset="{{ asset('asset/website/images/blue/1.png') }} 500w, {{ asset('asset/website/images/blue/4.png') }} 600w" />
+                        srcset="{{ asset('asset/website/images/blue/1.png') }} 500w, {{ asset('asset/website/images/blue/4.gif') }} 600w" />
                     <div class="image-overlay-wrap">
                         <div data-w-id="7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0070" class="image-overlay-grid">
                             <div id="w-node-_7d53ccbd-3af6-6f1d-8a3d-d78e1f7c0071-1f7c006f"
@@ -414,7 +414,7 @@
             <div class="insurance-content-wrap">
                 <div data-w-id="ebbe2022-5a73-e986-ee7e-a253abc55302" style="opacity:0" class="insurance-shape-wrap">
                     <a href="#pricePlan" class="insurance-shape-link w-inline-block"><img
-                            src="{{ asset('asset/website/images/animation/1.gif') }}"
+                            src="{{ asset('asset/website/images/icon/33.png') }}"
                             loading="lazy"
                             style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0deg) skew(0, 0)"
                             alt="Insurance Circle Shape" class="insurance-scroll-now-image" />

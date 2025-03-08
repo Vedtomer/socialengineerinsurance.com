@@ -40,7 +40,7 @@
                                 href="/about" class="nav-link">About</a>
                             <div class="nav-bottom-shape"></div>
                         </li>
-                        {{-- <li class="nav-list-item">
+                        <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="694ef9c2-e27d-7080-1c57-14bcb98cd96e"
                                 class="nav-dropdown w-dropdown">
                                 <div class="nav-dropdown-toggle-wrap w-dropdown-toggle">
@@ -51,15 +51,13 @@
                                     </div>
                                 </div>
                                 <nav class="nav-dropdown-list w-dropdown-list">
-                                    <div class="nav-dropdown-link-wrap"><a href="/all-insurance"
-                                            class="nav-dropdown-link">All Insurance</a>
+                                    <div class="nav-dropdown-link-wrap">
                                         <div class="insurance-list-wrapp w-dyn-list">
                                             <div role="list" class="insurance-list w-dyn-items">
                                                 <div role="listitem" class="insurance-list-item w-dyn-item"><a
-                                                        href="/insurance/home-insurance"
-                                                        class="nav-dropdown-link w-dropdown-link">Home
-                                                        Insurance</a></div>
-                                                <div role="listitem" class="insurance-list-item w-dyn-item"><a
+                                                        href="{{route('e_rickshaw_insurance')}}"
+                                                        class="nav-dropdown-link w-dropdown-link">E-Rickshaw Insurance</a></div>
+                                                {{-- <div role="listitem" class="insurance-list-item w-dyn-item"><a
                                                         href="/insurance/auto-insurance"
                                                         class="nav-dropdown-link w-dropdown-link">Auto
                                                         Insurance</a></div>
@@ -70,13 +68,13 @@
                                                 <div role="listitem" class="insurance-list-item w-dyn-item"><a
                                                         href="/insurance/travel-insurance"
                                                         class="nav-dropdown-link w-dropdown-link">Travel
-                                                        Insurance</a></div>
+                                                        Insurance</a></div> --}}
                                             </div>
                                         </div>
                                     </div>
                                 </nav>
                             </div>
-                        </li> --}}
+                        </li>
                         {{-- <li class="nav-list-item">
                             <div data-hover="false" data-delay="0" data-w-id="efd43221-6175-cb41-1e5a-ec85546a7fc7"
                                 class="nav-dropdown w-dropdown">

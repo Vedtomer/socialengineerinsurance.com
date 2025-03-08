@@ -32,7 +32,9 @@ class WebsiteController extends Controller
             'E-Rickshaw Insurance Services | Social Engineer Insurance',
             'Comprehensive E-Rickshaw insurance coverage with the best premium rates and quick claim settlement'
         );
-        return view('pages.website.e_rickshaw_insurance');
+        
+        $dataWfPage = '65b8e600e52bdbb92d08f162';
+        return view('pages.website.e_rickshaw_insurance',compact('dataWfPage'));
     }
 
     public function insurance()
