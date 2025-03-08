@@ -480,8 +480,9 @@
                                         coverage, protecting against accidents, theft, and unforeseen damages. Enjoy
                                         peace of mind with plans that ensure your two-wheeler stays road-ready and
                                         secure. .</p>
-                                    <div class="insurance-button-wrap"><a href="{{route('two_wheeler_insurance')}}"
-                                            class="secondary-button w-button">Learn More Now</a></div><img
+                                    {{-- <div class="insurance-button-wrap"><a href="{{route('two_wheeler_insurance')}}"
+                                            class="secondary-button w-button">Learn More Now</a></div> --}}
+                                            <img
                                         alt="Insurance BG Image" loading="lazy"
                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09c477e4ae2e81d26c72c_Auto%20Bg.svg"
                                         class="insurance-bg-shape-image" />
@@ -511,8 +512,9 @@
                                         with tailored plans for your well-being. Enjoy peace of mind with coverage
                                         designed to meet your health needs.
                                     </p>
-                                    <div class="insurance-button-wrap"><a href="{{route('health_insurance')}}"
-                                            class="secondary-button w-button">Learn More Now</a></div><img
+                                    {{-- <div class="insurance-button-wrap"><a href="{{route('health_insurance')}}"
+                                            class="secondary-button w-button">Learn More Now</a></div> --}}
+                                            <img
                                         alt="Insurance BG Image" loading="lazy"
                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09cd9734a4f3325ae5453_Health%20Bg.svg"
                                         class="insurance-bg-shape-image" />
@@ -542,8 +544,9 @@
                                         cover accidental damages, theft, and liability, ensuring you and your vehicle
                                         stay secure on every journey. Choose comprehensive protection tailored to your
                                         needs. .</p>
-                                    <div class="insurance-button-wrap"><a href="{{route('private_car_insurance')}}"
-                                            class="secondary-button w-button">Learn More Now</a></div><img
+                                    {{-- <div class="insurance-button-wrap"><a href="{{route('private_car_insurance')}}"
+                                            class="secondary-button w-button">Learn More Now</a></div> --}}
+                                            <img
                                         alt="Insurance BG Image" loading="lazy"
                                         src="https://assets-global.website-files.com/65b60c5eef338f6b2401687d/65c09ce8de98f1b59a68f93f_Travel%20Bg.svg"
                                         class="insurance-bg-shape-image" />
