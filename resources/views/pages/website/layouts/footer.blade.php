@@ -1,52 +1,4 @@
-<!-- WhatsApp Floating Icon -->
-<style>
-  .whatsapp-float {
-    position: fixed;
-    width: 60px;
-    height: 60px;
-    bottom: 40px;
-    right: 40px;
-    background-color: #25d366;
-    color: #FFF;
-    border-radius: 50px;
-    text-align: center;
-    font-size: 30px;
-    box-shadow: 2px 2px 3px #999;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-  }
 
-  .whatsapp-float:hover {
-    background-color: #128C7E;
-    transform: scale(1.1);
-  }
-
-  .whatsapp-float i {
-    margin-top: 16px;
-  }
-
-  /* For mobile devices */
-  @media screen and (max-width: 767px) {
-    .whatsapp-float {
-      width: 50px;
-      height: 50px;
-      bottom: 20px;
-      right: 20px;
-      font-size: 22px;
-    }
-  }
-</style>
-
-<!-- Add Font Awesome for the WhatsApp icon -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- WhatsApp Floating Button -->
-<a href="https://wa.me/919728786086?text=Inquiry%20from%20https://socialengineerinsurance.com/%20website" class="whatsapp-float" target="_blank">
-  <i class="fab fa-whatsapp"></i>
-</a>
 
 <footer class="footer-section" style="background-color:#e9f3f2;text-align:center">
 
@@ -115,4 +67,13 @@
         </div>
       </div>
     </div>
+    <a href="https://wa.me/919728786086?text=Inquiry%20from%20https://socialengineerinsurance.com/%20website" class="whatsapp-float" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
   </footer>
+
+  <!-- WhatsApp Floating Icon -->
+
+  
+  <!-- WhatsApp Floating Button -->
+  
