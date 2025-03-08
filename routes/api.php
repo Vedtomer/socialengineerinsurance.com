@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 
-Route::middleware(['log.activity'])->group(function () {
+// Route::middleware(['log.activity'])->group(function () {
     Route::prefix('agent')->group(function () {
         Route::post('login', [LoginController::class, 'agentLogin']);
 
@@ -16,7 +16,7 @@ Route::middleware(['log.activity'])->group(function () {
         Route::post('signup', [LoginController::class, 'customerSignUp']);
 
         // Logout route accessible to any authenticated user
-        Route::middleware(['auth:api'])->post('logout', [LoginController::class, 'agentLogout']);
+        Route::middleware(['auth:api','log.activity'])->post('logout', [LoginController::class, 'agentLogout']);
         Route::match(['get', 'post'], '/approve-points-redemption/{id}', [ApiController::class, 'approvePointsRedemption']);
         // Routes restricted to users with the 'agent' role
         Route::middleware(['auth:api', 'role:agent|customer'])->group(function () {
@@ -79,4 +79,4 @@ Route::middleware(['log.activity'])->group(function () {
 
         return response('Invalid request', 400);
     });
-});
+// });
