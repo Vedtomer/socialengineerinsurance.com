@@ -1,4 +1,57 @@
+<!-- WhatsApp Floating Icon -->
+<style>
+  .whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .whatsapp-float:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+  }
+
+  .whatsapp-float i {
+    margin-top: 16px;
+  }
+
+  /* For mobile devices */
+  @media screen and (max-width: 767px) {
+    .whatsapp-float {
+      width: 50px;
+      height: 50px;
+      bottom: 20px;
+      right: 20px;
+      font-size: 22px;
+    }
+  }
+</style>
+
+<!-- Add Font Awesome for the WhatsApp icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/919728786086?text=Inquiry%20from%20https://socialengineerinsurance.com/%20website" class="whatsapp-float" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
 <footer class="footer-section" style="background-color:#e9f3f2;text-align:center">
+
+
+
     <div class="footer-upper-section">
       <div class="w-layout-blockcontainer main-container w-container">
         <div data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80c4" class="footer-flex">
@@ -7,15 +60,12 @@
               <img src="{{ asset('asset/website/images/logo-transparent.png') }}" loading="lazy" alt="Logo" class="footer-logo"  style="display: inline-block !important"/>
             </a>
             <div class="footer-excerpt">Insurance can be difficult hard. Social Engineer Insurance makes it easy.</div>
-            {{-- <div class="footer-contact-info-wrap">
-              <a href="tel:919728786086" class="footer-contact-number">+91 97287 86086</a>
-              <a href="mailto:socialengineerinsurance@gmail.com" class="footer-contact-email">socialengineerinsurance@gmail.com</a>
-            </div> --}}
+           
             <div class="footer-socials-wrap">
               <a data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80d0" href="https://www.facebook.com/" target="_blank" class="social-link w-inline-block">
                 <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65c067e3589270df428ba501_facebook-f.svg" loading="lazy" width="10" alt="Social Icon" class="social-icon" />
               </a>
-              <a data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80d2" href="https://www.linkedin.com" target="_blank" class="social-link w-inline-block">
+              <a data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80d2" href="https://www.linkedin.com/in/gouravbhalla23/?originalSubdomain=in" target="_blank" class="social-link w-inline-block">
                 <img src="https://assets-global.website-files.com/65b60c5def338f6b24016820/65b78795c0fc18711f7de254_Symbol.svg" loading="lazy" alt="Social Icon" class="social-icon" />
               </a>
               <a data-w-id="c2d7c88f-4c18-6b15-3ea1-fcf4b6ca80d4" href="https://www.instagram.com" target="_blank" class="social-link w-inline-block">
