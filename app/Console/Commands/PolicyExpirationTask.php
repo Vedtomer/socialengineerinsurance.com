@@ -45,7 +45,7 @@ class PolicyExpirationTask extends Command
                     $this->sendPolicyExpirationNotification(
                         $customer->name,
                         $policy->policy_holder_name ?? 'N/A',
-                        $policy->policy_number,
+                        $policy->policy_no,
                         Carbon::parse($policy->policy_end_date)->format('Y-m-d'),
                         $customer->mobile_number ?? $customer->mobile // Try both fields in case one is used over the other
                     );
