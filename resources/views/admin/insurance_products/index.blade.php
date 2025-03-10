@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.customer')
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="#">Insurance</a></li>

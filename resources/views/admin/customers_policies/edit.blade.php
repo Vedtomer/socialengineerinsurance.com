@@ -40,6 +40,12 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label for="policy_holder_name" class="form-label">Policy Holder Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="policy_holder_name" name="policy_holder_name"
+                                value="{{ old('policy_holder_name', $customerPolicy->policy_holder_name) }}" required>
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="policy_no" class="form-label">Policy No. <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="policy_no" name="policy_no"
                                 value="{{ old('policy_no', $customerPolicy->policy_no) }}" required>
