@@ -114,13 +114,7 @@ class CustomTask extends Command
             $this->sendChunkedMessages("Stable Agents: ", $sameMessages, count($groupedAgents['same']));
         }
 
-        sleep(5); // Delay between groups
-
-        // Process inactive agents
-        // if (!empty($groupedAgents['dead'])) {
-        //     $deadMessages = array_map(fn($agent) => $agent['message'], $groupedAgents['dead']);
-        //     $this->sendChunkedMessages("Inactive Agents: ", $deadMessages, count($groupedAgents['dead']));
-        // }
+        sleep(5); 
     }
 
     private function sendChunkedMessages($prefix, $messages, $totalCount)

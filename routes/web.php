@@ -14,6 +14,16 @@ use App\Http\Controllers\InsuranceProductController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ContactController;
 
+use App\Console\Commands\CustomTask;
+use Illuminate\Support\Facades\Artisan;
+
+
+
+Route::get('/cron', function () {
+    Artisan::call('app:custom-task');
+    return "Cron job executed.";
+})->name('cron');
+
 Route::get('/', [WebsiteController::class, 'home'])->name('homepage');
 Route::get('/e-rickshaw-insurance', [WebsiteController::class, 'eRickshawInsurance'])->name('e_rickshaw_insurance');
 Route::get('/insurance', [WebsiteController::class, 'insurance'])->name('insurance');
