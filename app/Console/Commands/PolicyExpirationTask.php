@@ -44,7 +44,7 @@ class PolicyExpirationTask extends Command
                 foreach ($expiringPolicies as $policy) {
                     $this->sendPolicyExpirationNotification(
                         $customer->name,
-                        $policy->policy_holder_name ?? $customer->name, // Use policy holder name or fallback to customer name
+                        $policy->policy_holder_name ?? 'N/A',
                         $policy->policy_number,
                         Carbon::parse($policy->policy_end_date)->format('Y-m-d'),
                         $customer->mobile_number ?? $customer->mobile // Try both fields in case one is used over the other
