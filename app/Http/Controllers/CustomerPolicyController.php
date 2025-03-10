@@ -7,28 +7,29 @@ use Illuminate\Http\Request;
 
 class CustomerPolicyController extends Controller
 {
-   public function index(Request $request)
-{
-    $customerPolicies = CustomerPolicy::with('customer'); // Assuming you have 'customer' relationship
-
-    $statusFilter = $request->query('status');
-    $expiryFilter = $request->query('expiry');
-
-    if ($statusFilter) {
-        $customerPolicies->where('status', $statusFilter); // Assuming 'status' is your policy status column
+    public function index(Request $request)
+    {
+        $customerPolicies = CustomerPolicy::with('customer');
+    
+        $statusFilter = $request->query('status');
+        $expiryFilter = $request->query('expiry');
+    
+        if ($statusFilter) {
+            $customerPolicies->where('status', $statusFilter);
+        }
+    
+        if ($expiryFilter === 'this_month') {
+            $customerPolicies->whereYear('policy_end_date', now()->year) // Add year check here
+                             ->whereMonth('policy_end_date', now()->month);
+        } elseif ($expiryFilter === 'next_7_days') {
+            $customerPolicies->where('policy_end_date', '<=', now()->addDays(7))
+                             ->where('policy_end_date', '>=', now());
+        }
+    
+        $customerPolicies = $customerPolicies->get();
+    
+        return view('admin.customers_policies.index', compact('customerPolicies'));
     }
-
-    if ($expiryFilter === 'this_month') {
-        $customerPolicies->whereMonth('policy_end_date', now()->month); // Filter for current month
-    } elseif ($expiryFilter === 'next_7_days') {
-        $customerPolicies->where('policy_end_date', '<=', now()->addDays(7))
-                         ->where('policy_end_date', '>=', now()); // Filter for next 7 days
-    }
-
-    $customerPolicies = $customerPolicies->get(); // Get the filtered policies
-
-    return view('admin.customers_policies.index', compact('customerPolicies'));
-}
 
     public function create()
     {
