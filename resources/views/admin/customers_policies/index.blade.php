@@ -203,18 +203,33 @@
                                     </td>
 
                                     <td>
-                                        {{ $policy->policy_no }}
                                         @if (!empty($policy->policy_link))
                                             <a href="{{ $policy->policy_link }}" target="_blank" class="ms-2">
                                                 <i class="fa-solid fa-download"></i>
                                             </a>
                                         @endif
+                                        {{ $policy->policy_no }}
+
                                     </td>
                                     <td>{{ $policy->policy_start_date }}</td>
                                     <td>{{ $policy->policy_end_date }}</td>
-                                    
 
-                                    <td>{{ $policy->status }}</td>
+
+                                    <td>
+                                        @if ($policy->status == 'active')
+                                            <span class="badge bg-soft-success text-success rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
+                                        @elseif ($policy->status == 'expired')
+                                            <span class="badge bg-soft-danger text-danger rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
+                                        @elseif ($policy->status == 'cancelled')
+                                            <span class="badge bg-soft-warning text-warning rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
+                                        @elseif ($policy->status == 'pending')
+                                            <span class="badge bg-soft-secondary text-secondary rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
+                                        @elseif ($policy->status == 'approved')
+                                            <span class="badge bg-soft-primary text-primary rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
+                                        @else
+                                            {{ $policy->status }} {{-- Default text if status doesn't match --}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <button type="button"
                                             class="btn btn-sm btn-soft-info rounded-pill view-policy-details"
