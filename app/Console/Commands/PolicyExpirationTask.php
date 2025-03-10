@@ -47,7 +47,7 @@ class PolicyExpirationTask extends Command
                         $policy->policy_holder_name ?? $customer->name, // Use policy holder name or fallback to customer name
                         $policy->policy_number,
                         Carbon::parse($policy->policy_end_date)->format('Y-m-d'),
-                        $customer->phone_number ?? $customer->mobile // Try both fields in case one is used over the other
+                        $customer->mobile_number ?? $customer->mobile // Try both fields in case one is used over the other
                     );
                     
                     // Add small delay between messages
