@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-    <title>CORK Admin - Multipurpose Bootstrap Dashboard Template </title>
+    <title>Admin-Socialengineer Insurance</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('asset/admin/images/favicon.ico') }}" />
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -92,7 +92,7 @@
 
    <link rel="stylesheet" type="text/css" href="{{ asset('asset/admin/src/plugins/css/dark/table/datatable/custom_dt_miscellaneous.css') }}">
 
-
+   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {
@@ -174,5 +174,5 @@
             min-height: 350px
         }
     </style>
-
+@yield('styles')
 </head>

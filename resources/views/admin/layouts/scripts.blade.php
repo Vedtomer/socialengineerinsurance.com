@@ -81,11 +81,10 @@
            placeholder: 'Select Customer',
            allowClear: true
        });
-    //    $('.InsuranceProduct').select2({
-    //        placeholder: 'Select Insurance  Product',
-    //        allowClear: false
-    //    });
-
+       //    $('.InsuranceProduct').select2({
+       //        placeholder: 'Select Insurance  Product',
+       //        allowClear: false
+       //    });
    </script>
 
    <script>
@@ -198,36 +197,36 @@
 
 
        function filterData() {
-    // Get the selected agent value
-    var agent = document.getElementById('agent').value;
+           // Get the selected agent value
+           var agent = document.getElementById('agent').value;
 
-    // Get the selected date value
-    var date = document.getElementById('date').value;
+           // Get the selected date value
+           var date = document.getElementById('date').value;
 
-    // Get the date range value
-    var dateRange = document.getElementById('rangeCalendarFlatpickr').value;
+           // Get the date range value
+           var dateRange = document.getElementById('rangeCalendarFlatpickr').value;
 
-    // Create the query parameters
-    var queryParams = new URLSearchParams(window.location.search);
-    queryParams.set('agent_id', agent);
+           // Create the query parameters
+           var queryParams = new URLSearchParams(window.location.search);
+           queryParams.set('agent_id', agent);
 
-    if (dateRange) {
-        queryParams.set('date_range', dateRange);
-        queryParams.delete('date');  // Remove the single date parameter if date range is selected
-    } else {
-        queryParams.set('date', date);
-        queryParams.delete('date_range');  // Remove the date range parameter if single date is selected
-    }
+           if (dateRange) {
+               queryParams.set('date_range', dateRange);
+               queryParams.delete('date'); // Remove the single date parameter if date range is selected
+           } else {
+               queryParams.set('date', date);
+               queryParams.delete('date_range'); // Remove the date range parameter if single date is selected
+           }
 
-    // Get the current base URL without query parameters
-    var baseUrl = window.location.origin + window.location.pathname;
+           // Get the current base URL without query parameters
+           var baseUrl = window.location.origin + window.location.pathname;
 
-    // Create the new URL with query parameters
-    var newUrl = baseUrl + '?' + queryParams.toString();
+           // Create the new URL with query parameters
+           var newUrl = baseUrl + '?' + queryParams.toString();
 
-    // Reload the page with the new URL
-    window.location.href = newUrl;
-}
+           // Reload the page with the new URL
+           window.location.href = newUrl;
+       }
 
 
        $('.Policy_Number').change(function() {
@@ -244,39 +243,34 @@
 
 
 
-  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
-  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
-  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-  <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
-
-
-   <!-- BEGIN PAGE LEVEL SCRIPTS -->
-
+   <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
+   <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/jszip.min.js') }}"></script>
+   <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
+   <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+   <script src="{{ asset('asset/admin/src/plugins/src/table/datatable/custom_miscellaneous.js') }}"></script>
    <script src="{{ asset('asset/admin/src/plugins/src/flatpickr/flatpickr.js ') }}"></script>
 
-   {{-- <script src="{{ asset('asset/admin/src/plugins/src/flatpickr/custom-flatpickr.js ') }}"></script> --}}
-   <!-- END PAGE LEVEL SCRIPTS -->
+
 
 
    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var urlParams = new URLSearchParams(window.location.search);
-        var dateRange = urlParams.get('date_range');
+       document.addEventListener('DOMContentLoaded', function() {
+           var urlParams = new URLSearchParams(window.location.search);
+           var dateRange = urlParams.get('date_range');
 
-        if (dateRange) {
-            document.getElementById('rangeCalendarFlatpickr').value = dateRange;
-        }
+           if (dateRange) {
+               document.getElementById('rangeCalendarFlatpickr').value = dateRange;
+           }
 
-        flatpickr("#rangeCalendarFlatpickr", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            defaultDate: dateRange ? dateRange.split(' to ') : null,
-            onChange: function(selectedDates, dateStr, instance) {
-                if (selectedDates.length === 2) {
-                    filterData();
-                }
-            }
-        });
-    });
-    </script>
+           flatpickr("#rangeCalendarFlatpickr", {
+               mode: "range",
+               dateFormat: "Y-m-d",
+               defaultDate: dateRange ? dateRange.split(' to ') : null,
+               onChange: function(selectedDates, dateStr, instance) {
+                   if (selectedDates.length === 2) {
+                       filterData();
+                   }
+               }
+           });
+       });
+   </script>

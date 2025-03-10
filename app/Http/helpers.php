@@ -247,3 +247,51 @@ function getCustomerAnalytics()
             ->count(),
     ];
 }
+
+
+
+function getCustomerPolicyAnalytics()
+{
+    $customers = User::role('customer')
+        ->orderBy("id", "desc")
+        ->withCount('customerPolicies')
+        ->get();
+
+    $customerIds = $customers->pluck('id');
+
+    $currentDate = now();
+    $startOfMonth = Carbon::now()->startOfMonth();
+    $endOfMonth = Carbon::now()->endOfMonth();
+    $next7Days = Carbon::now()->addDays(7);
+
+    return [
+        'totalCustomers' => $customers->count(),
+        'totalPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)->count(),
+
+        'activePoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->where('status', 'active') // Assuming 'active' is a status value
+            ->count(),
+
+        'expiredPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->where('status', 'expired') // Assuming 'expired' is a status value
+            ->count(),
+
+        'cancelledPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->where('status', 'cancelled') // Assuming 'cancelled' is a status value
+            ->count(),
+
+        'pendingPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->where('status', 'pending') // Assuming 'pending' is a status value
+            ->count(),
+
+        'policiesExpiringThisMonthCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->whereBetween('policy_end_date', [$startOfMonth, $endOfMonth])
+            ->count(),
+
+        'policiesExpiringIn7DaysCount' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->where('policy_end_date', '<=', $next7Days)
+            ->where('policy_end_date', '>=', $currentDate)
+            ->count(),
+    ];
+}
+

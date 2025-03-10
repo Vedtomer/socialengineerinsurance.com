@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.customer')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Customer</a></li>
@@ -33,12 +33,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="aadhar_number" class="form-label">Aadhar Number <span class="text-danger">*</span></label>
+                            <label for="aadhar_number" class="form-label">Aadhar Number </label>
                             <input type="text" class="form-control" id="aadhar_number" name="aadhar_number" value="{{ old('aadhar_number') }}" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="pan_number" class="form-label">PAN Number <span class="text-danger">*</span></label>
+                            <label for="pan_number" class="form-label">PAN Number </span></label>
                             <input type="text" class="form-control" id="pan_number" name="pan_number" value="{{ old('pan_number') }}" >
                         </div>
 
@@ -56,7 +56,11 @@
                           <!--  -->
                           <div class="col-md-12">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}">
+                            <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" 
+                                   onkeypress="return event.charCode !== 32" 
+                                   onpaste="setTimeout(function() { this.value = this.value.replace(/\s/g, '').toLowerCase(); }, 0)"
+                                   onblur="this.value = this.value.toLowerCase()"
+                                   oninput="this.value = this.value.toLowerCase()">
                         </div>
                         <!--  -->
 

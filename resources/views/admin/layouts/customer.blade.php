@@ -3,6 +3,7 @@
     data-wf-site="65b60c5def338f6b24016820" lang="en">
 @include('admin.layouts.head')
 
+
 <body class="layout-boxed" page="starter-pack">
     {{-- <div class="page-wrapper"> --}}
 
@@ -51,7 +52,7 @@
     </div>
     {{-- </div> --}}
     @include('admin.layouts.scripts')
-    
+    @yield('scripts')
 </body>
 
 </html>
