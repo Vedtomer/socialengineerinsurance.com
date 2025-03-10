@@ -222,7 +222,6 @@ function prepareApiParameter(Request $request)
     return [$agent_id, $start_date, $end_date];
 }
 
-
 function getCustomerAnalytics()
 {
     $customers = User::role('customer')
@@ -232,71 +231,57 @@ function getCustomerAnalytics()
 
     $customerIds = $customers->pluck('id');
 
-    $currentDate = now();
+    $currentDate = now(); 
 
     return [
         'totalCustomers' => $customers->count(),
         'totalAppActiveUsers' => UserActivity::whereIn('user_id', $customerIds)->distinct('user_id')->count(),
         'totalPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)->count(),
         'totalActivePolicies' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->whereDate('policy_start_date', '<=', $currentDate)
-            ->whereDate('policy_end_date', '>=', $currentDate)
+            ->where('status', 'active')
             ->count(),
         'totalExpiredPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->whereDate('policy_end_date', '<', $currentDate)
+            ->where('status', 'expired')
             ->count(),
     ];
 }
 
 
 
-
 function getCustomerPolicyAnalytics()
 {
-    // Get all customers with customer role
     $customers = User::role('customer')
         ->orderBy("id", "desc")
         ->withCount('customerPolicies')
         ->get();
 
     $customerIds = $customers->pluck('id');
+
     $currentDate = now();
     $startOfMonth = Carbon::now()->startOfMonth();
     $endOfMonth = Carbon::now()->endOfMonth();
     $next7Days = Carbon::now()->addDays(7);
 
-    // Decide which approach to use:
-    // Option 1: Use the status field (assumes status is kept up-to-date)
-    // Option 2: Use date-based logic (assumes dates are accurate)
-
-    // This example uses Option 2 (date-based logic) for active/expired
-    // and status field for other states
-
     return [
         'totalCustomers' => $customers->count(),
         'totalPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)->count(),
 
-        // Date-based active policies - policies within their active date range
         'activePoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->whereDate('policy_start_date', '<=', $currentDate)
-            ->whereDate('policy_end_date', '>=', $currentDate)
+            ->where('status', 'active') // Assuming 'active' is a status value
             ->count(),
 
-        // Date-based expired policies - policies past end date
         'expiredPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->whereDate('policy_end_date', '<', $currentDate)
+            ->where('status', 'expired') // Assuming 'expired' is a status value
             ->count(),
 
-        // Status-based cancelled and pending policies
         'cancelledPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->where('status', 'cancelled')
+            ->where('status', 'cancelled') // Assuming 'cancelled' is a status value
             ->count(),
 
         'pendingPoliciesCount' => CustomerPolicy::whereIn('user_id', $customerIds)
-            ->where('status', 'pending')
+            ->where('status', 'pending') // Assuming 'pending' is a status value
             ->count(),
 
-        // Policies expiring soon
         'policiesExpiringThisMonthCount' => CustomerPolicy::whereIn('user_id', $customerIds)
             ->whereBetween('policy_end_date', [$startOfMonth, $endOfMonth])
             ->count(),
@@ -305,10 +290,6 @@ function getCustomerPolicyAnalytics()
             ->where('policy_end_date', '<=', $next7Days)
             ->where('policy_end_date', '>=', $currentDate)
             ->count(),
-
-        // You may also want this metric from your original function
-        'totalAppActiveUsers' => UserActivity::whereIn('user_id', $customerIds)
-            ->distinct('user_id')
-            ->count(),
     ];
 }
+
