@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerPolicy;
 use App\Models\User;
+use App\Models\UserActivity;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Hash;
@@ -10,16 +13,21 @@ use Spatie\Permission\Models\Role;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $customers = User::role('customer')->orderBy("id", "desc")->get();
+        // Get customers with the role 'customer' and include policy count
+        $customers = User::role('customer')
+            ->orderBy("id", "desc")
+            ->withCount('customerPolicies') 
+            ->orderBy('name','desc')
+            ->get();
         return view('admin.customers.index', compact('customers'));
     }
+
+    
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,7 +59,7 @@ class CustomerController extends Controller
             'password' => 'required|string',
             'aadhar_document' => 'nullable|max:2048',
             'pan_document' => 'nullable|max:2048',
-             'username' => 'required|string|unique:users,username|max:255'
+            'username' => 'required|string|unique:users,username|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -136,7 +144,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
             'pan_document' => 'nullable|file|max:2048',
-             'username' => 'required|max:255'
+            'username' => 'required|max:255'
             // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
         ]);
 

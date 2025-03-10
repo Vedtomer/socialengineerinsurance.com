@@ -128,4 +128,9 @@ class User extends Authenticatable
 
         return null; // see the note above in Gate::before about why null must be returned here.
     }
+
+    public function customerPolicies()
+    {
+        return $this->hasMany(CustomerPolicy::class, 'user_id');
+    }
 }

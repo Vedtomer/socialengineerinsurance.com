@@ -2,9 +2,11 @@
 
 use App\Models\Commission;
 use App\Models\Company;
+use App\Models\CustomerPolicy;
 use App\Models\InsuranceProduct;
 use App\Models\User;
 use App\Models\Policy;
+use App\Models\UserActivity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PgSql\Lob;
@@ -131,25 +133,25 @@ if (!function_exists('getMonthsFromAprilToCurrent')) {
         $current_year = now()->format('Y');
         $years[] = $current_year;
         $current_month_number = now()->format('m');
-        $months = array_merge($months,array_map(function($month_number)use($current_year){
-            $target_date = now()->parse($current_year.'-'.sprintf('%02d',$month_number).'-01');
+        $months = array_merge($months, array_map(function ($month_number) use ($current_year) {
+            $target_date = now()->parse($current_year . '-' . sprintf('%02d', $month_number) . '-01');
             return [
                 'name' => $target_date->format('F, Y'),
                 'value' => strtolower($target_date->format('Y-m-d'))
             ];
-        },range(1,$current_month_number)));
-        if($current_month_number <= 4){
+        }, range(1, $current_month_number)));
+        if ($current_month_number <= 4) {
             $last_year = now()->subYear()->format('Y');
             $years[] = $last_year;
-            $months = array_merge($months,array_map(function($month_number)use($last_year){
-                $target_date = now()->parse($last_year.'-'.sprintf('%02d',$month_number).'-01');
+            $months = array_merge($months, array_map(function ($month_number) use ($last_year) {
+                $target_date = now()->parse($last_year . '-' . sprintf('%02d', $month_number) . '-01');
                 return [
                     'name' => $target_date->format('F, Y'),
                     'value' => strtolower($target_date->format('Y-m-d'))
                 ];
-            },range(12,4)));
+            }, range(12, 4)));
         }
-        return compact('years','months','current_selection');
+        return compact('years', 'months', 'current_selection');
     }
 }
 
@@ -179,10 +181,10 @@ if (!function_exists('prepareDashboardData')) {
                 $start_date = Carbon::parse($date_range)->toDateString();
                 $end_date = $start_date;
             }
-        }elseif(!empty($date)){
+        } elseif (!empty($date)) {
             if (strlen($date) == 4) {
-                $start_date = Carbon::parse($date.'-01-01')->toDateString();
-                $end_date = Carbon::parse($date.'-12-31')->endOfYear()->toDateString();
+                $start_date = Carbon::parse($date . '-01-01')->toDateString();
+                $end_date = Carbon::parse($date . '-12-31')->endOfYear()->toDateString();
             } else {
                 $start_date = Carbon::parse($date)->toDateString();
                 $end_date = Carbon::parse($date)->endOfMonth()->toDateString();
@@ -194,7 +196,7 @@ if (!function_exists('prepareDashboardData')) {
 }
 
 
- function prepareApiParameter(Request $request)
+function prepareApiParameter(Request $request)
 {
     $agent_id = auth()->guard('api')->id();
     $start_date_input = $request->input('start_date', "");
@@ -218,4 +220,30 @@ if (!function_exists('prepareDashboardData')) {
     Log::info('Parsed end_date: ' . $end_date);
 
     return [$agent_id, $start_date, $end_date];
+}
+
+
+function getCustomerAnalytics()
+{
+    $customers = User::role('customer')
+        ->orderBy("id", "desc")
+        ->withCount('customerPolicies')
+        ->get();
+
+    $customerIds = $customers->pluck('id');
+
+    $currentDate = now(); 
+
+    return [
+        'totalCustomers' => $customers->count(),
+        'totalAppActiveUsers' => UserActivity::whereIn('user_id', $customerIds)->distinct('user_id')->count(),
+        'totalPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)->count(),
+        'totalActivePolicies' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->whereDate('policy_start_date', '<=', $currentDate)
+            ->whereDate('policy_end_date', '>=', $currentDate)
+            ->count(),
+        'totalExpiredPolicies' => CustomerPolicy::whereIn('user_id', $customerIds)
+            ->whereDate('policy_end_date', '<', $currentDate)
+            ->count(),
+    ];
 }
