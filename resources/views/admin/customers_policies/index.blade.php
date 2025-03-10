@@ -153,8 +153,6 @@
 
 
 @section('content')
-   
-
     <div class="container-fluid p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold mb-0">Manage Customer Policies</h3>
@@ -175,11 +173,10 @@
                         <thead class="bg-light">
                             <tr>
                                 <th class="ps-4"></th>
+                                <th>Customer</th>
                                 <th>Policy No.</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                <th>Policy Holder</th>
-                                <th>Customer</th>
                                 <th>Status</th> {{-- Status kept outside modal --}}
                                 <th>Details</th>
                                 <th class="text-center">Actions</th>
@@ -189,18 +186,33 @@
                             @foreach ($customerPolicies as $key => $policy)
                                 <tr>
                                     <td class="ps-4 fw-medium">{{ $key + 1 }}</td>
+
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-3">
+                                                <span class="avatar-title bg-primary text-white rounded-circle">
+                                                    {{ substr($policy->user_name ?? 'U', 0, 1) }}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-medium">{{ $policy->user_name }}</h6>
+                                                <small
+                                                    class="text-muted">{{ $policy->policy_holder_name ?? 'No username' }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
                                     <td>
                                         {{ $policy->policy_no }}
                                         @if (!empty($policy->policy_link))
                                             <a href="{{ $policy->policy_link }}" target="_blank" class="ms-2">
-                                                <i class="feather feather-download"></i>
+                                                <i class="fa-solid fa-download"></i>
                                             </a>
                                         @endif
                                     </td>
                                     <td>{{ $policy->policy_start_date }}</td>
                                     <td>{{ $policy->policy_end_date }}</td>
-                                    <td>{{ \Illuminate\Support\Str::limit($policy->policy_holder_name ?? 'N/A', 12) }}</td>
-                                    <td>{{ \Illuminate\Support\Str::limit($policy->user_name ?? 'N/A', 12) }}</td>
+                                    
 
                                     <td>{{ $policy->status }}</td>
                                     <td>
