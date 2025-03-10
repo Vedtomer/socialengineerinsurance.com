@@ -231,7 +231,7 @@ function getCustomerAnalytics()
 
     $customerIds = $customers->pluck('id');
 
-    $currentDate = now(); 
+    $currentDate = now();
 
     return [
         'totalCustomers' => $customers->count(),
@@ -290,6 +290,6 @@ function getCustomerPolicyAnalytics()
             ->where('policy_end_date', '<=', $next7Days)
             ->where('policy_end_date', '>=', $currentDate)
             ->count(),
+        'totalAppActiveUsers' => UserActivity::whereIn('user_id', $customerIds)->distinct('user_id')->count(),
     ];
 }
-
