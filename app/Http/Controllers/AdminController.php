@@ -10,9 +10,11 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Policy;
+use App\Models\UserActivity;
 use App\Models\WhatsappMessageLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 use Twilio\Rest\Client;
@@ -550,6 +552,87 @@ class AdminController extends Controller
         return view('admin.whatsapp-logs.index', [
             'messageLogs' => $messageLogs,
             'selectedDate' => $date
+        ]);
+    }
+
+
+    public function AppActivity(Request $request)
+    {
+        $dateRange = $request->input('date_range', 'last_30_days');
+
+        $endDate = Carbon::now();
+        $startDate = Carbon::now()->subDays(30);
+
+        if ($dateRange == 'today') {
+            $startDate = Carbon::today();
+            $endDate = Carbon::today();
+        } elseif ($dateRange == 'yesterday') {
+            $startDate = Carbon::yesterday();
+            $endDate = Carbon::yesterday();
+        } elseif ($dateRange == 'last_7_days') {
+            $startDate = Carbon::now()->subDays(7);
+        } elseif ($dateRange == 'this_month') {
+            $startDate = Carbon::now()->startOfMonth();
+        } elseif ($dateRange == 'last_month') {
+            $startDate = Carbon::now()->subMonth()->startOfMonth();
+            $endDate = Carbon::now()->subMonth()->endOfMonth();
+        }
+
+        $routeNameMap = [
+            'home' => 'Home Page',
+            'getPointsSummary' => 'Get Points Summary',
+            'getPolicy' => 'Get Policy',
+            'pending-premium-ledger' => 'Pending Premium Ledger',
+            'points-ledger' => 'Points Ledger',
+            'get-claim' => 'Get Claim',
+            'slider' => 'Slider Data',
+            'transaction' => 'Transaction Details',
+            'login' => 'Agent Login',
+            'signup' => 'Customer Signup',
+            'logout' => 'Agent Logout',
+            'delete_account' => 'Delete Account',
+            'approve-points-redemption' => 'Approve Points Redemption',
+            // Add more routes and their appropriate names here
+        ];
+
+        $activitySummary = UserActivity::select(
+            'user_activities.user_type',
+            DB::raw('COUNT(*) as activity_count'),
+            'users.name as user_name',
+            DB::raw('MAX(user_activities.created_at) as last_active') // Fetch last active timestamp
+        )
+        ->leftJoin('users', 'user_activities.user_id', '=', 'users.id')
+        ->whereBetween('user_activities.created_at', [$startDate, $endDate])
+        ->groupBy('user_activities.user_type', 'users.name')
+        ->orderBy('user_activities.user_type', 'ASC')
+        ->orderBy('users.name', 'ASC')
+        ->get();
+    
+           
+
+        // Calculate counts for top boxes - Active users within the selected date range
+        $activeUsersCount = UserActivity::whereBetween('created_at', [$startDate, $endDate])->distinct('user_id')->count();
+        $activeAgentsCount = UserActivity::whereBetween('created_at', [$startDate, $endDate])->where('user_type', 'agent')->distinct('user_id')->count();
+        $activeCustomersCount = UserActivity::whereBetween('created_at', [$startDate, $endDate])->where('user_type', 'customer')->distinct('user_id')->count();
+        $totalUsersCount = User::whereHas('roles', function ($query) {
+            $query->whereIn('name', ['customer', 'agent']);
+        })->count();
+
+        $customerCount = User::role('customer')->count();
+        $agentCount = User::role('agent')->count();
+        
+
+        return view('admin.app-activity.index', [
+            'activitySummary' => $activitySummary,
+            'selectedDateRange' => $dateRange,
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
+            'activeUsersCount' => $activeUsersCount,       // Pass total active users count
+            'activeAgentsCount' => $activeAgentsCount,     // Pass total active agents count
+            'activeCustomersCount' => $activeCustomersCount, // Pass total active customers count
+            'totalUsersCount'=>$totalUsersCount,
+            'customerCount'=>$customerCount,
+            'agentCount'=>$agentCount
         ]);
     }
 }

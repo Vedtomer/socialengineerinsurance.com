@@ -8,23 +8,7 @@
 @section('content')
   
                 <div class="card">
-                    {{-- <div class="card-header">
-                        <form action="{{ route('WhatsappMessageLog') }}" method="GET" class="row g-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label">Select Date</label>
-                                <input type="date" 
-                                       name="date" 
-                                       class="form-control" 
-                                       value="{{ $selectedDate ?? now()->format('Y-m-d') }}"
-                                       max="{{ now()->format('Y-m-d') }}">
-                            </div>
-                            <div class="col-md-2 align-self-end">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i> Filter
-                                </button>
-                            </div>
-                        </form>
-                    </div> --}}
+                   
 
             <!-- Filter Section -->
             <div class="card-body collapse" id="filterSection">

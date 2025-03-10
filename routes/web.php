@@ -124,6 +124,7 @@ Route::prefix('admin')->group(function () {
 
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
+        Route::get('/app-activity', [AdminController::class, 'AppActivity'])->name('admin.app-activity');
 
     });
 });
