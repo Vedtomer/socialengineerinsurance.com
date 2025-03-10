@@ -7,11 +7,28 @@ use Illuminate\Http\Request;
 
 class CustomerPolicyController extends Controller
 {
-    public function index()
-    {
-        $customerPolicies = CustomerPolicy::all();
-        return view('admin.customers_policies.index', compact('customerPolicies'));
+   public function index(Request $request)
+{
+    $customerPolicies = CustomerPolicy::with('customer'); // Assuming you have 'customer' relationship
+
+    $statusFilter = $request->query('status');
+    $expiryFilter = $request->query('expiry');
+
+    if ($statusFilter) {
+        $customerPolicies->where('status', $statusFilter); // Assuming 'status' is your policy status column
     }
+
+    if ($expiryFilter === 'this_month') {
+        $customerPolicies->whereMonth('policy_end_date', now()->month); // Filter for current month
+    } elseif ($expiryFilter === 'next_7_days') {
+        $customerPolicies->where('policy_end_date', '<=', now()->addDays(7))
+                         ->where('policy_end_date', '>=', now()); // Filter for next 7 days
+    }
+
+    $customerPolicies = $customerPolicies->get(); // Get the filtered policies
+
+    return view('admin.customers_policies.index', compact('customerPolicies'));
+}
 
     public function create()
     {

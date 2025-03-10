@@ -60,6 +60,11 @@ class CustomerPolicy extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function customer() // Define the relationship as 'customer'
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Assuming 'user_id' is the foreign key in customer_policies table
+    }
+
     // Relationship to fetch the associated product
     public function product()
     {
