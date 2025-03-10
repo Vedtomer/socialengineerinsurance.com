@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToGroup('api', \App\Http\Middleware\LogUserActivity::class);
     })
     ->withSchedule(function ($schedule) {
-        $schedule->command('app:custom-task')->everyMinute();
+        $schedule->command('app:custom-task')->everyFiveMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

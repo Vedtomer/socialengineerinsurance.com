@@ -20,9 +20,10 @@ use Illuminate\Support\Facades\Artisan;
 
 
 Route::get('/cron', function () {
-    Artisan::call('app:custom-task');
-    return "Cron job executed.";
+    Artisan::call('schedule:run');
+    return response()->json(['message' => 'Cron job executed successfully.']);
 })->name('cron');
+
 
 Route::get('/', [WebsiteController::class, 'home'])->name('homepage');
 Route::get('/e-rickshaw-insurance', [WebsiteController::class, 'eRickshawInsurance'])->name('e_rickshaw_insurance');
