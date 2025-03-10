@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.customer')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Customer</a></li>
@@ -31,6 +31,13 @@
                                     <option value="{{ $customer->id }}" {{ old('user_id') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        
+
+                        <div class="col-md-6">
+                            <label for="policy_holder_name" class="form-label">Policy Holder Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="policy_holder_name" name="policy_holder_name" value="{{ old('policy_holder_name') }}" required>
                         </div>
 
                         <div class="col-md-6">

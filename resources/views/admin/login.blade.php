@@ -320,7 +320,7 @@
 
                     axios.post('{{route("admin.verifyOtp")}}', { phone_number: this.mobile, otp: this.otp })
                         .then(response => {
-                            window.location.href = '{{route("admin.analytics")}}';
+                            window.location.href = '{{route("admin.dashboard")}}';
                         })
                         .catch(error => {
                             this.otpError = error.response?.data?.message || 'Invalid OTP';

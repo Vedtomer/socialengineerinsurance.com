@@ -53,6 +53,7 @@ class CustomerPolicyController extends Controller
         'policy_type' => 'required',
         'product_id' => 'required',
         'policy_document' => 'nullable|mimes:pdf|max:2048',
+        'policy_holder_name'=>'required',
     ]);
 
     // Handle file upload for policy document
@@ -75,6 +76,7 @@ class CustomerPolicyController extends Controller
     $customerPolicy->insurance_company = $validatedData['insurance_company'];
     $customerPolicy->policy_type = $validatedData['policy_type'];
     $customerPolicy->product_id = $validatedData['product_id'];
+    $customerPolicy->policy_holder_name = $validatedData['policy_holder_name'];
 
 
 
@@ -123,6 +125,7 @@ class CustomerPolicyController extends Controller
             'insurance_company' => 'required',
             'policy_type' => 'required',
             'product_id' => 'required',
+            'policy_holder_name' => 'required',
         ]);
 
         $customerPolicy->update($validatedData);

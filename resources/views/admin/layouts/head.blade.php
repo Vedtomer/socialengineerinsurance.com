@@ -133,7 +133,6 @@
             margin-top: 0px !important;
         }
 
-
         .select2-container--default .select2-selection--single {
             height: auto;
             font-size: 15px;
@@ -141,38 +140,20 @@
             letter-spacing: 1px;
             border: 1px solid #1b2e4b;
             color: #009688;
-            background-color: #1b2e4b;
             border-radius: 6px;
 
-            transition: none;
+            
         }
 
 
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #009688 !important;
-            line-height: 28px;
-        }
+      
 
-        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-            background-color: #1b2e4b !important;
-            color: white;
-        }
+      
+       
 
-        .select2-selection__clear span {
-            color: white
-        }
 
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: auto;
-            position: absolute;
-            top: 50%;
-            right: 1px;
-            width: 20px;
-        }
 
-        table#html5-extension {
-            min-height: 350px
-        }
+       
     </style>
 @yield('styles')
 </head>

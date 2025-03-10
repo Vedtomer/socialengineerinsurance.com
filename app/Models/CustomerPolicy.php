@@ -24,7 +24,8 @@ class CustomerPolicy extends Model
         'premium',
         'insurance_company',
         'policy_type',
-        'product_id'
+        'product_id',
+        'policy_holder_name'
     ];
 
     // Hide user and product relationships in JSON response
