@@ -89,7 +89,7 @@ class PolicyExpirationTask extends Command
             'to' => "+91" . env('Whatsapp_admin_phone'),
             'type' => 'template',
             'template' => [
-                'name' => 'policy_expiry_notification', // Create this template in WhatsApp Business API
+                'name' => 'policy_expiry_notification', 
                 'language' => [
                     'code' => 'en'
                 ],
@@ -112,6 +112,10 @@ class PolicyExpirationTask extends Command
                             [
                                 'type' => 'text',
                                 'text' => $expiryDate
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => $phoneNumber
                             ]
                         ]
                     ]
