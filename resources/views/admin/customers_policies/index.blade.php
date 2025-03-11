@@ -197,7 +197,7 @@
                                             <div>
                                                 <h6 class="mb-0 fw-medium">{{ $policy->user_name }}</h6>
                                                 <small
-                                                    class="text-muted">{{ $policy->policy_holder_name ?? 'No username' }}</small>
+                                                    class="text-muted">{{ $policy->policy_holder_name ?? 'No Policy Holder Name' }}</small>
                                             </div>
                                         </div>
                                     </td>
