@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function ($schedule) {
         $schedule->command('app:custom-task')->dailyAt('10:00');
-        $schedule->command('app:policy-expiration-task')->everyFiveMinutes(); // Runs daily at 9 AM
+        $schedule->command('app:policy-expiration-task')->dailyAt('10:30'); 
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
