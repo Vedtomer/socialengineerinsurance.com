@@ -1,58 +1,55 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Models\WhatsappMessageLog;
 use Carbon\Carbon;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Permission\Models\Role;
 
-class SendWhatsAppMessages implements ShouldQueue
+class SendWhatsAppNotifications extends Command
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    // Add missing constants 
-    private const WHATSAPP_API_VERSION = 'v20.0'; // Update with current WhatsApp API version
-    private const PHONE_NUMBER_ID = '491697427350235'; // Replace with your actual WhatsApp Phone Number ID
-
-    // Increase the number of times the job can be retried
-    public $tries = 3;
-    
-    // Increase timeout to handle slow connections
-    public $timeout = 180; // 3 minutes
-
-    // Configurable delay between messages
-    private const MESSAGE_DELAY_SECONDS = 5; // 5 seconds between messages
-    private const MAX_MESSAGES_PER_MINUTE = 20; // WhatsApp API rate limit
-
-    protected $date;
-
-    public function __construct($date)
-    {
-        $this->date = $date;
-    }
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'whatsapp:send-notifications {date? : The date for which to send notifications (format: Y-m-d)}';
 
     /**
-     * Execute the job.
+     * The console command description.
+     *
+     * @var string
      */
-    public function handle(): void
+    protected $description = 'Send WhatsApp notifications to all users about their policies';
+
+    // Add constants from the job
+    private const WHATSAPP_API_VERSION = 'v20.0';
+    private const PHONE_NUMBER_ID = '491697427350235';
+    private const MESSAGE_DELAY_SECONDS = 5;
+    private const MAX_MESSAGES_PER_MINUTE = 20;
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
         try {
-            $date = $this->date;
+            // Get date from argument or use today's date
+            $date = $this->argument('date')
+            ? Carbon::parse($this->argument('date'))
+            : Carbon::yesterday();
+            
+            $this->info("Sending WhatsApp notifications for date: " . $date->format('Y-m-d'));
 
             // Reset or initialize the message send tracking
-            $this->initializeMessageRateLimiting();
+            $this->initializeMessageRateLimiting($date);
 
             // Get users with their policy data
-            $users =  User::role('agent')->where('status', 1)
+            $users = User::role('agent')->where('status', 1)
                 ->where('whatsapp_notification', 1)
                 ->withCount([
                     'Policy as policy_count' => function ($query) use ($date) {
@@ -66,18 +63,27 @@ class SendWhatsAppMessages implements ShouldQueue
                 ], 'agent_commission')
                 ->get();
 
+            $this->info("Found " . $users->count() . " users to notify");
+
+            $bar = $this->output->createProgressBar($users->count());
+            $bar->start();
+
+            $successCount = 0;
+            $failedCount = 0;
+
             foreach ($users as $user) {
                 // Check if message has already been sent today
                 if ($this->hasMessageSentToday($user)) {
-                    Log::info('WhatsApp message already sent today for user: ' . $user->id);
+                    $this->line("\nWhatsApp message already sent today for user: " . $user->id);
+                    $bar->advance();
                     continue;
                 }
 
                 // Check and respect rate limiting
-                $this->checkAndWaitForRateLimit();
+                $this->checkAndWaitForRateLimit($date);
 
                 try {
-                    $messageLog = $this->prepareMessageLog($user, $date);
+                    $messageLog = $this->prepareMessageLog($user);
 
                     if ($user->policy_count === 0) {
                         $lastPolicyDays = $this->getLastPolicyDays($user);
@@ -105,36 +111,47 @@ class SendWhatsAppMessages implements ShouldQueue
                     ]);
 
                     // Increment message count
-                    $this->incrementMessageCount();
+                    $this->incrementMessageCount($date);
 
-                    Log::info('WhatsApp message sent successfully for user: ' . $user->id);
+                    $successCount++;
 
                 } catch (\Exception $e) {
                     // Update log with error details
-                    $messageLog->update([
-                        'is_successful' => false,
-                        'error_message' => $e->getMessage()
-                    ]);
+                    if (isset($messageLog)) {
+                        $messageLog->update([
+                            'is_successful' => false,
+                            'error_message' => $e->getMessage()
+                        ]);
+                    }
 
-                    Log::error('WhatsApp message failed for user: ' . $user->id . ' Error: ' . $e->getMessage());
+                    $this->error("\nWhatsApp message failed for user: " . $user->id . " Error: " . $e->getMessage());
+                    $failedCount++;
                     continue;
                 }
 
                 // Standard delay between messages
                 sleep(self::MESSAGE_DELAY_SECONDS);
+                $bar->advance();
             }
+
+            $bar->finish();
+            
+            $this->info("\nNotifications completed: $successCount successful, $failedCount failed");
+            return 0;
+
         } catch (\Exception $e) {
-            Log::error('Batch WhatsApp message job failed: ' . $e->getMessage());
-            throw $e;
+            $this->error('Command failed: ' . $e->getMessage());
+            Log::error('WhatsApp notification command failed: ' . $e->getMessage());
+            return 1;
         }
     }
 
     /**
      * Initialize rate limiting tracking
      */
-    private function initializeMessageRateLimiting(): void
+    private function initializeMessageRateLimiting($date): void
     {
-        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        $cacheKey = 'whatsapp_messages_count_' . $date->format('Y-m-d');
         
         // Reset or initialize the message count for the day
         Cache::put($cacheKey, 0, now()->addDay());
@@ -143,27 +160,27 @@ class SendWhatsAppMessages implements ShouldQueue
     /**
      * Check and wait if rate limit is approaching
      */
-    private function checkAndWaitForRateLimit(): void
+    private function checkAndWaitForRateLimit($date): void
     {
-        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        $cacheKey = 'whatsapp_messages_count_' . $date->format('Y-m-d');
         $messageCount = Cache::get($cacheKey, 0);
 
         // If messages are approaching the limit, wait
         if ($messageCount >= self::MAX_MESSAGES_PER_MINUTE) {
-            Log::info('Waiting due to rate limit: ' . $messageCount . ' messages sent');
+            $this->info("\nWaiting due to rate limit: " . $messageCount . " messages sent");
             sleep(60); // Wait for a minute
             
             // Reset the count after waiting
-            $this->initializeMessageRateLimiting();
+            $this->initializeMessageRateLimiting($date);
         }
     }
 
     /**
      * Increment message count
      */
-    private function incrementMessageCount(): void
+    private function incrementMessageCount($date): void
     {
-        $cacheKey = 'whatsapp_messages_count_' . $this->date;
+        $cacheKey = 'whatsapp_messages_count_' . $date->format('Y-m-d');
         
         // Increment the message count
         Cache::increment($cacheKey);
@@ -172,7 +189,7 @@ class SendWhatsAppMessages implements ShouldQueue
     /**
      * Prepare message log entry
      */
-    private function prepareMessageLog($user, $date): WhatsappMessageLog
+    private function prepareMessageLog($user): WhatsappMessageLog
     {
         return WhatsappMessageLog::create([
             'user_id' => $user->id,
@@ -331,13 +348,5 @@ class SendWhatsAppMessages implements ShouldQueue
             ->whereDate('created_at', Carbon::today())
             ->where('is_successful', 1)
             ->exists();
-    }
-
-    /**
-     * Handle a job failure.
-     */
-    public function failed(\Throwable $exception): void
-    {
-        Log::error('WhatsApp message job failed: ' . $exception->getMessage());
     }
 }
