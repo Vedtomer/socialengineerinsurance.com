@@ -171,16 +171,11 @@ class PolicyController extends Controller
     public function getMonthlyPolicyRates()
 {
     $currentDate = now();
-
-    // Determine financial year
-    $currentMonth = $currentDate->month;
-    $currentYear = $currentDate->year;
-
-    // If we're between January and March, we're in the latter part of the financial year
-    $startYear = $currentMonth >= 4 ? $currentYear : $currentYear - 1;
-    $startDate = Carbon::create($startYear, 4, 1)->startOfMonth();
-    $endDate = Carbon::create($startYear + 1, 3, 31)->endOfMonth();
-
+    
+    // Set start date to 12 months ago from current month for chart data
+    $startDate = Carbon::create($currentDate->year, $currentDate->month, 1)->subMonths(11)->startOfDay();
+    $endDate = Carbon::create($currentDate->year, $currentDate->month, $currentDate->daysInMonth)->endOfDay();
+    
     $policyRates = Policy::join('users', 'policies.agent_id', '=', 'users.id')
         ->select(
             'users.name as agent_name',
@@ -196,28 +191,48 @@ class PolicyController extends Controller
         ->get();
 
     $formattedData = [];
-    $monthNames = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-
-    // Initialize policyCounts for all months in the financial year
+    
+    // Create array of month names from current month back 12 months for chart data
+    $monthNames = [];
+    $monthYears = []; // Store both month and year for accurate matching
+    
+    for ($i = 11; $i >= 0; $i--) {
+        $monthDate = Carbon::create($currentDate->year, $currentDate->month, 1)->subMonths($i);
+        $monthNames[] = $monthDate->format('Y M');
+        $monthYears[] = [
+            'year' => $monthDate->year,
+            'month' => $monthDate->month
+        ];
+    }
+    
+    // Initialize policyCounts for all months
     $policyCounts = array_fill(0, 12, 0);
+
+    // For agent data, we only want the last 6 months
+    $lastSixMonthNames = array_slice($monthNames, 6, 6);
+    $lastSixMonthYears = array_slice($monthYears, 6, 6);
 
     foreach ($policyRates as $rate) {
         if (!isset($formattedData[$rate->agent_id])) {
             $formattedData[$rate->agent_id] = [
                 'agent_name' => $rate->agent_name,
-                'labels' => $monthNames,
-                'data' => array_fill(0, 12, 0)
+                'labels' => $lastSixMonthNames, // Only last 6 months for agent data
+                'data' => array_fill(0, 6, 0)   // Only 6 data points
             ];
         }
-
-        // Calculate the index in our array (0-11)
-        $monthIndex = $rate->month >= 4 ? $rate->month - 4 : $rate->month + 8;
-
-        // Update the agent's data
-        $formattedData[$rate->agent_id]['data'][$monthIndex] = $rate->policy_count;
-
-        // Update total policy counts
-        $policyCounts[$monthIndex] += $rate->policy_count;
+        
+        // For chart data - all 12 months
+        for ($i = 0; $i < 12; $i++) {
+            if ($monthYears[$i]['year'] == $rate->year && $monthYears[$i]['month'] == $rate->month) {
+                $policyCounts[$i] += $rate->policy_count;
+                
+                // For agent data - only if it's in the last 6 months
+                if ($i >= 6) {
+                    $formattedData[$rate->agent_id]['data'][$i - 6] = $rate->policy_count;
+                }
+                break;
+            }
+        }
     }
 
     // Prepare chart data

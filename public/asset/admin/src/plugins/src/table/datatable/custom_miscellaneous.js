@@ -242,7 +242,7 @@ $(document).ready(function() {
             "stripeClasses": [],
             "pageLength": -1,
             "ordering": true,
-            "order": [[ 9, "desc" ]]
+            "order": [[ 6, "asc" ]]
         });
 
 

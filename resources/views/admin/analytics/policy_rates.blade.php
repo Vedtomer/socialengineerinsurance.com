@@ -51,35 +51,12 @@
                                 <!-- Dynamic Month Headers -->
                                 @if (!empty($policyRates))
                                     @php
-                                        // Extract month labels from the first agent's data (assuming all agents have the same months)
 $monthLabels = collect($policyRates)->first()['labels'] ?? [];
 
-// Mapping of month names to their numeric values
-$monthMap = [
-    'Jan' => 1,
-    'Feb' => 2,
-    'Mar' => 3,
-    'Apr' => 4,
-    'May' => 5,
-    'Jun' => 6,
-    'Jul' => 7,
-    'Aug' => 8,
-    'Sep' => 9,
-    'Oct' => 10,
-    'Nov' => 11,
-    'Dec' => 12,
-                                        ];
                                     @endphp
                                     @foreach ($monthLabels as $monthYear)
-                                        @php
-                                            // Extract month name and map it to its numeric value
-                                            $monthNumeric = $monthMap[explode('-', $monthYear)[0]] ?? null;
-                                        @endphp
-                                        @if ($monthNumeric)
-                                            <th>{{ date('M', mktime(0, 0, 0, $monthNumeric)) }}</th>
-                                        @else
-                                            <th>Invalid Month</th>
-                                        @endif
+                                    <th> {{$monthYear}}</th>
+                                      
                                     @endforeach
 
                                 @endif
@@ -90,6 +67,7 @@ $monthMap = [
                         <tbody>
                             @foreach ($policyRates as $agentId => $agentData)
                                 @if (!empty($agentData['data']))
+                                @if($agentData['days_since_last_policy'] > 1)
                                     <tr>
                                         <!-- Agent Name and Total -->
 
@@ -153,6 +131,7 @@ $monthMap = [
                                     </td>
 
                                     </tr>
+                                @endif
                                 @endif
                             @endforeach
                         </tbody>
