@@ -33,6 +33,24 @@ class Policy extends Model
 
     protected $dates = ['deleted_at'];
     protected $appends = ['policy_link'];
+
+    const PAYMENT_BY_AGENT = 'agent_full_payment';
+    const PAYMENT_BY_COMPANY = 'company_paid';
+    const PAYMENT_BY_COMMISSION_DEDUCTED = 'commission_deducted';
+    const PAYMENT_BY_PAY_LATER_ADJUSTED = 'pay_later_with_adjustment';
+    const PAYMENT_BY_PAY_LATER = 'pay_later';
+
+    public static function getPaymentTypes()
+    {
+        return [
+            self::PAYMENT_BY_AGENT => 'Agent Pays Full',
+            self::PAYMENT_BY_COMPANY => 'Company Paid',
+            self::PAYMENT_BY_COMMISSION_DEDUCTED => 'Commission Deducted',
+            self::PAYMENT_BY_PAY_LATER_ADJUSTED => 'Pay Later (Adjustment)',
+            self::PAYMENT_BY_PAY_LATER => 'Pay Later',
+        ];
+    }
+
     public function agent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'agent_id')->withDefault([
@@ -69,4 +87,9 @@ class Policy extends Model
         // Return the agent's name if it exists
         return $agent ? $agent->name : null;
     }
+
+    
+
+
+   
 }

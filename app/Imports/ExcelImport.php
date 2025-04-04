@@ -20,25 +20,23 @@ class ExcelImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $existingRecord = Policy::firstOrNew(['policy_no' => $row['policy_no']]);
-    
+
         Log::info($row);
-    
+
         $existingRecord->policy_start_date = !empty($this->importDate)
             ? Carbon::parse($this->importDate)
             : $this->parseDate($row['policy_start_date']);
-    
+
         $existingRecord->policy_end_date = $existingRecord->policy_start_date->copy()->addYear();
-    
+
         $premium = $row['premium'] ?? null;
         $net_amount = $premium ? $premium * 0.8475 : null;
         $discount = $row['discount'] ?? null;
         $effectiveDiscount = $row['payout'] ?? null;
         $payout = ($net_amount && $effectiveDiscount) ? round($net_amount * $effectiveDiscount / 100, 2) : null;
-        
-        // Get policy type from row
+
         $policy_type = isset($row['policy_type']) ? strtolower(trim($row['policy_type'])) : null;
-        
-        // Calculate agent commission based on policy type
+
         $agent_commission = null;
         if (isset($row['commission_code'])) {
             if ($policy_type === 'two-wheeler') {
@@ -47,9 +45,9 @@ class ExcelImport implements ToModel, WithHeadingRow
                 $agent_commission = getCommission($row['commission_code'], $premium);
             }
         }
-    
+
         $existingRecord->fill([
-            'payment_by' => isset($row['payment_by']) ? strtoupper(trim($row['payment_by'])) : null,
+            'payment_by' => $this->validatePaymentBy($row['payment_by'] ?? null),
             'company_id' => isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null,
             'customername' => $row['customername'] ?? null,
             'discount' => $discount,
@@ -61,9 +59,9 @@ class ExcelImport implements ToModel, WithHeadingRow
             'payout' => $payout,
             'policy_type' => $policy_type,
         ]);
-    
+
         $existingRecord->save();
-    
+
         return $existingRecord;
     }
 
@@ -77,6 +75,21 @@ class ExcelImport implements ToModel, WithHeadingRow
         } else {
             return Carbon::createFromFormat('d/m/Y', $value)->startOfDay();
         }
+    }
+
+    protected function validatePaymentBy($value)
+    {
+        $allowedValues = [
+            'agent_full_payment',
+            'company_paid',
+            'commission_deducted',
+            'pay_later_with_adjustment',
+            'pay_later'
+        ];
+
+        $value = strtolower(trim($value));
+
+        return in_array($value, $allowedValues) ? $value : null;
     }
 
     public function headingRow(): int
