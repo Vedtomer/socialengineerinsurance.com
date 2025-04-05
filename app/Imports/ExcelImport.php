@@ -91,7 +91,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             $existingRecord->company_id = isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null;
             $existingRecord->customername = $row['customername'] ?? null;
             $existingRecord->discount = $discount;
-            $existingRecord->agent_id = isset($row['commission_code']) ? $this->getAgentId($row['commission_code']) : null;
+            $existingRecord->agent_id = isset($row['commission_code']) ? getAgentId($row['commission_code']) : null;
             $existingRecord->premium = $premium;
             $existingRecord->gst = $premium ? round($premium * 0.1525, 2) : null;
             $existingRecord->agent_commission = $agent_commission;
