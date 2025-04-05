@@ -208,7 +208,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
         // This is a placeholder - implement actual logic
         try {
             $agent = DB::table('commissions')->where('commission_code', $commissionCode)->first();
-            return $agent ? $agent->id : null;
+            return $agent ? $agent->agent_id : null;
         } catch (\Exception $e) {
             Log::error("Error getting agent ID: " . $e->getMessage());
             return null;
@@ -223,7 +223,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
         // Replace with actual implementation that queries the company table
         // This is a placeholder - implement actual logic
         try {
-            $company = DB::table('companies')->where('name', 'like', '%' . $companyName . '%')->first();
+            $company = DB::table('companies')->where('slug', 'like', '%' . $companyName . '%')->first();
             return $company ? $company->id : null;
         } catch (\Exception $e) {
             Log::error("Error getting company ID: " . $e->getMessage());
