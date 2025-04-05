@@ -93,15 +93,115 @@ class PolicyController extends Controller
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-        $query = Policy::with('agent', 'company')->where('deleted_at', null)->whereBetween('policy_start_date', [$start_date, $end_date])->orderBy('id', 'desc');
+        $query = Policy::with('agent', 'company')
+            ->where('deleted_at', null)
+            ->whereBetween('policy_start_date', [$start_date, $end_date])
+            ->orderBy('id', 'desc');
 
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
         }
+
         $data = $query->get();
         $agentData = User::role('agent')->get();
 
-        return view('admin.policy_list', ['data' => $data, 'agentData' => $agentData]);
+        // Calculate analytics
+        $analytics = [
+            // Vehicle type statistics
+            'total_policies' => $data->count(),
+            'total_two_wheeler' => $data->where('policy_type', 'two-wheeler')->count(),
+            'total_e_rickshaw' => $data->where('policy_type', '!=', 'two-wheeler')->count(), // Default is e-rickshaw
+
+            // Financial statistics
+            'total_premium' => $data->sum('premium'),
+            'total_commission' => $data->sum('agent_commission'),
+            'total_net_amount' => $data->sum('net_amount'),
+            'total_payout' => $data->sum('payout'),
+
+            // Payment method statistics - this is the main focus
+            'payment_methods' => [
+                'agent_full_payment' => [
+                    'count' => $data->where('payment_by', 'agent_full_payment')->count(),
+                    'amount' => $data->where('payment_by', 'agent_full_payment')->sum('premium'),
+                    'description' => 'Agent pays the full premium upfront'
+                ],
+                'company_paid' => [
+                    'count' => $data->where('payment_by', 'company_paid')->count(),
+                    'amount' => $data->where('payment_by', 'company_paid')->sum('premium'),
+                    'description' => 'SEI (company) directly pays the premium'
+                ],
+                'commission_deducted' => [
+                    'count' => $data->where('payment_by', 'commission_deducted')->count(),
+                    'amount' => $data->where('payment_by', 'commission_deducted')->sum('premium'),
+                    'description' => 'Premium paid after deducting agent\'s commission'
+                ],
+                'pay_later_with_adjustment' => [
+                    'count' => $data->where('payment_by', 'pay_later_with_adjustment')->count(),
+                    'amount' => $data->where('payment_by', 'pay_later_with_adjustment')->sum('premium'),
+                    'description' => 'Agent pays later with commission adjustment'
+                ],
+                'pay_later' => [
+                    'count' => $data->where('payment_by', 'pay_later')->count(),
+                    'amount' => $data->where('payment_by', 'pay_later')->sum('premium'),
+                    'description' => 'Agent pays later without immediate adjustment'
+                ]
+            ],
+
+            // Insurance company distribution
+            'company_distribution' => $data->groupBy('company_id')
+                ->map(function ($items, $company_id) {
+                    return [
+                        'count' => $items->count(),
+                        'premium' => $items->sum('premium'),
+                        'company_name' => $items->first()->company->name ?? 'Unknown'
+                    ];
+                }),
+
+            // Agent performance
+            'agent_performance' => $data->groupBy('agent_id')
+                ->map(function ($items, $agent_id) {
+                    return [
+                        'count' => $items->count(),
+                        'premium' => $items->sum('premium'),
+                        'commission' => $items->sum('agent_commission'),
+                        'agent_name' => $items->first()->agent->name ?? 'Unknown'
+                    ];
+                }),
+
+            // Monthly trend - FIX for the format() error
+            'monthly_trend' => $data->groupBy(function ($item) {
+                // Check if policy_start_date is already a Carbon instance
+                if ($item->policy_start_date instanceof \Carbon\Carbon) {
+                    return $item->policy_start_date->format('Y-m');
+                }
+
+                // If it's a string, convert it to Carbon first
+                return \Carbon\Carbon::parse($item->policy_start_date)->format('Y-m');
+            })->map(function ($items) {
+                return [
+                    'count' => $items->count(),
+                    'premium' => $items->sum('premium'),
+                    'commission' => $items->sum('agent_commission')
+                ];
+            })
+        ];
+
+        // Format currency values for display
+        $analytics['total_premium'] = number_format($analytics['total_premium'], 2);
+        $analytics['total_commission'] = number_format($analytics['total_commission'], 2);
+        $analytics['total_net_amount'] = number_format($analytics['total_net_amount'], 2);
+        $analytics['total_payout'] = number_format($analytics['total_payout'], 2);
+
+        // Format payment method amounts
+        foreach ($analytics['payment_methods'] as $key => $method) {
+            $analytics['payment_methods'][$key]['amount'] = number_format($method['amount'], 2);
+        }
+
+        return view('admin.policy_list', [
+            'data' => $data,
+            'agentData' => $agentData,
+            'analytics' => $analytics
+        ]);
     }
 
 
