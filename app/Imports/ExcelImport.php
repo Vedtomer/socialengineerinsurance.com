@@ -79,7 +79,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
                 if ($policy_type === 'two-wheeler') {
                     $agent_commission = 0;
                 } else {
-                    $agent_commission = $this->getCommission($row['commission_code'], $premium);
+                    $agent_commission = getCommission($row['commission_code'], $premium);
                 }
             }
 
@@ -88,7 +88,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             
             // Update model fields
             $existingRecord->payment_by = $this->validatePaymentBy($row['payment_by'] ?? null);
-            $existingRecord->company_id = isset($row['insurance_company']) ? $this->getCompanyId($row['insurance_company']) : null;
+            $existingRecord->company_id = isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null;
             $existingRecord->customername = $row['customername'] ?? null;
             $existingRecord->discount = $discount;
             $existingRecord->agent_id = isset($row['commission_code']) ? $this->getAgentId($row['commission_code']) : null;
@@ -199,56 +199,11 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
         return in_array($value, $allowedValues) ? $value : null;
     }
 
-    /**
-     * Get agent ID from code (moved from global helper)
-     */
-    protected function getAgentId($commissionCode)
-    {
-        // Replace with actual implementation that queries the agent table
-        // This is a placeholder - implement actual logic
-        try {
-            $agent = DB::table('commissions')->where('commission_code', $commissionCode)->first();
-            return $agent ? $agent->agent_id : null;
-        } catch (\Exception $e) {
-            Log::error("Error getting agent ID: " . $e->getMessage());
-            return null;
-        }
-    }
+   
 
-    /**
-     * Get company ID from name (moved from global helper)
-     */
-    protected function getCompanyId($companyName)
-    {
-        // Replace with actual implementation that queries the company table
-        // This is a placeholder - implement actual logic
-        try {
-            $company = DB::table('companies')->where('slug', 'like', '%' . $companyName . '%')->first();
-            return $company ? $company->id : null;
-        } catch (\Exception $e) {
-            Log::error("Error getting company ID: " . $e->getMessage());
-            return null;
-        }
-    }
+    
 
-    /**
-     * Get commission amount (moved from global helper)
-     */
-    protected function getCommission($commissionCode, $premium)
-    {
-        // Replace with actual implementation that calculates commission
-        // This is a placeholder - implement actual logic
-        try {
-            $agent = DB::table('commissions')->where('commission_code', $commissionCode)->first();
-            if ($agent && $agent->commission_percentage) {
-                return round($premium * ($agent->commission_percentage / 100), 2);
-            }
-            return 0;
-        } catch (\Exception $e) {
-            Log::error("Error calculating commission: " . $e->getMessage());
-            return 0;
-        }
-    }
+    
 
     /**
      * Define validation rules based on the requirements
