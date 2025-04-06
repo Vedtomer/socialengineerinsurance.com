@@ -83,11 +83,27 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
                 }
             }
 
-            // IMPORTANT: Don't set ID manually - let the database handle it!
-            // If the Excel has an 'id' column, we need to ignore it
+            // Process payment_by field
+            $payment_by = $this->validatePaymentBy($row['payment_by'] ?? null);
+            
+            // Calculate agent_amount_due for pay_later policies
+            $agent_amount_due = null;
+            if (in_array($payment_by, ['pay_later'])) {
+                $agent_amount_due = $premium ?? 0;
+            }
+
+            if (in_array($payment_by, ['pay_later_with_adjustment'])) {
+                $agent_amount_due = ($premium - $agent_commission ) ?? 0;
+            }
+
+            // if (in_array($payment_by, ['company_paid'])) {
+            //     $agent_amount_due = $premium ?? 0;
+            // }
+
+            
             
             // Update model fields
-            $existingRecord->payment_by = $this->validatePaymentBy($row['payment_by'] ?? null);
+            $existingRecord->payment_by = $payment_by;
             $existingRecord->company_id = isset($row['insurance_company']) ? getCompanyId($row['insurance_company']) : null;
             $existingRecord->customername = $row['customername'] ?? null;
             $existingRecord->discount = $discount;
@@ -99,6 +115,16 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             $existingRecord->payout = $payout;
             $existingRecord->policy_type = $policy_type;
             $existingRecord->status = $row['status'] ?? 'Unpaid';
+            
+            // Set agent_amount_due for pay_later policies
+            if ($agent_amount_due !== null) {
+                $existingRecord->agent_amount_due = $agent_amount_due;
+                
+                // Initialize agent_amount_paid if it's a new record
+                if ($isNewRecord) {
+                    $existingRecord->agent_amount_paid = 0;
+                }
+            }
             
             // If you have an insurance_company field in the policies table 
             if (isset($row['insurance_company'])) {
@@ -188,7 +214,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
         
         $allowedValues = [
             'agent_full_payment',
-            'company_paid',
+            // 'company_paid',
             'commission_deducted',
             'pay_later_with_adjustment',
             'pay_later'

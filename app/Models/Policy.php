@@ -21,6 +21,7 @@ class Policy extends Model
         'insurance_company',
         'agent_id',
         'premium',
+        'agent_amount_due',
         'gst',
         'agent_commission',
         'net_amount',
@@ -43,8 +44,8 @@ class Policy extends Model
     public static function getPaymentTypes()
     {
         return [
-            self::PAYMENT_BY_AGENT => 'Agent Pays Full',
-            self::PAYMENT_BY_COMPANY => 'Company Paid',
+            self::PAYMENT_BY_AGENT => 'Agent Paid',
+            // self::PAYMENT_BY_COMPANY => 'SEI Paid',
             self::PAYMENT_BY_COMMISSION_DEDUCTED => 'Commission Deducted',
             self::PAYMENT_BY_PAY_LATER_ADJUSTED => 'Pay Later (Adjustment)',
             self::PAYMENT_BY_PAY_LATER => 'Pay Later',
@@ -88,8 +89,32 @@ class Policy extends Model
         return $agent ? $agent->name : null;
     }
 
-    
 
+    /**
+     * Get the total amount paid by the agent for this policy
+     */
+    public function getTotalAgentPaymentsAttribute()
+    {
+        return $this->agentPayments()->sum('amount_paid');
+    }
 
-   
+    /**
+     * Get the remaining amount due from the agent
+     */
+    public function getRemainingAgentAmountAttribute()
+    {
+        return $this->agent_amount_due - $this->agent_amount_paid;
+    }
+
+    /**
+     * Check if the policy is fully paid by the agent
+     */
+    public function getIsFullyPaidByAgentAttribute()
+    {
+        if (in_array($this->payment_by, ['pay_later', 'pay_later_with_adjustment'])) {
+            return $this->agent_amount_paid >= $this->agent_amount_due;
+        }
+
+        return true; // Non-pay_later policies are considered fully paid
+    }
 }

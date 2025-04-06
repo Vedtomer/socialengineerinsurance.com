@@ -96,7 +96,10 @@ class PolicyController extends Controller
         $query = Policy::with('agent', 'company')
             ->where('deleted_at', null)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
+            ->select('*', DB::raw('CASE WHEN payment_by = "commission_deducted" THEN agent_commission ELSE NULL END as commission_deducted'), DB::raw('CASE WHEN payment_by = "pay_later_with_adjustment" THEN agent_commission ELSE NULL END as commission_will_adjustment'))
             ->orderBy('id', 'desc');
+
+    
 
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
@@ -114,35 +117,43 @@ class PolicyController extends Controller
 
             // Financial statistics
             'total_premium' => $data->sum('premium'),
-            'total_commission' => $data->sum('agent_commission'),
+            'total_gst' => $data->sum('gst'),
             'total_net_amount' => $data->sum('net_amount'),
+
+            'total_commission' => $data->sum('agent_commission'),
+            'total_commission_deducted' => $data->sum('commission_deducted'),
+            'total_commission_will_adjustment' => $data->sum('commission_will_adjustment'),
+            'Net_Commission_Payable_Agent'=>($data->sum('agent_commission') - $data->sum('commission_deducted') - 
+            $data->sum('commission_will_adjustment')),            
             'total_payout' => $data->sum('payout'),
+            'total_amount_due_agents' => $data->sum('agent_amount_due'),
+            'total_amount_paid_agents' => $data->sum('agent_amount_paid'),
+            
 
             // Payment method statistics - this is the main focus
             'payment_methods' => [
                 'agent_full_payment' => [
                     'count' => $data->where('payment_by', 'agent_full_payment')->count(),
                     'amount' => $data->where('payment_by', 'agent_full_payment')->sum('premium'),
+                    'commission' => $data->where('payment_by', 'agent_full_payment')->sum('agent_commission'),
                     'description' => 'Agent pays the full premium upfront'
-                ],
-                'company_paid' => [
-                    'count' => $data->where('payment_by', 'company_paid')->count(),
-                    'amount' => $data->where('payment_by', 'company_paid')->sum('premium'),
-                    'description' => 'SEI (company) directly pays the premium'
                 ],
                 'commission_deducted' => [
                     'count' => $data->where('payment_by', 'commission_deducted')->count(),
                     'amount' => $data->where('payment_by', 'commission_deducted')->sum('premium'),
+                    'commission' => $data->where('payment_by', 'commission_deducted')->sum('agent_commission'),
                     'description' => 'Premium paid after deducting agent\'s commission'
                 ],
                 'pay_later_with_adjustment' => [
                     'count' => $data->where('payment_by', 'pay_later_with_adjustment')->count(),
                     'amount' => $data->where('payment_by', 'pay_later_with_adjustment')->sum('premium'),
+                    'commission' => $data->where('payment_by', 'pay_later_with_adjustment')->sum('agent_commission'),
                     'description' => 'Agent pays later with commission adjustment'
                 ],
                 'pay_later' => [
                     'count' => $data->where('payment_by', 'pay_later')->count(),
                     'amount' => $data->where('payment_by', 'pay_later')->sum('premium'),
+                    'commission' => $data->where('payment_by', 'pay_later')->sum('agent_commission'),
                     'description' => 'Agent pays later without immediate adjustment'
                 ]
             ],
@@ -164,6 +175,8 @@ class PolicyController extends Controller
                         'count' => $items->count(),
                         'premium' => $items->sum('premium'),
                         'commission' => $items->sum('agent_commission'),
+                        'amount_due' => $items->sum('agent_amount_due'),
+                        'amount_paid' => $items->sum('agent_amount_paid'),
                         'agent_name' => $items->first()->agent->name ?? 'Unknown'
                     ];
                 }),
@@ -181,6 +194,8 @@ class PolicyController extends Controller
                 return [
                     'count' => $items->count(),
                     'premium' => $items->sum('premium'),
+                    'amount_due' => $items->sum('agent_amount_due'),
+                    'amount_paid' => $items->sum('agent_amount_paid'),
                     'commission' => $items->sum('agent_commission')
                 ];
             })
