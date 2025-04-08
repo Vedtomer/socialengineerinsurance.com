@@ -23,7 +23,8 @@ class PolicyController extends Controller
     public function upload(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.upload');
+            // Return the combined view instead of separate upload view
+            return view('admin.unified_policy_upload');
         }
 
         // Validate the incoming request
@@ -67,7 +68,8 @@ class PolicyController extends Controller
 
             return redirect()->back()->with([
                 'success' => 'Data imported successfully!',
-                'stats' => $stats
+                'stats' => $stats,
+                'activeTab' => 'excel'
             ]);
         } catch (ValidationException $e) {
             // Handle Excel validation errors
@@ -84,7 +86,7 @@ class PolicyController extends Controller
         } catch (\Exception $e) {
             // Handle general exceptions
             Log::error('Excel import failed: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Import failed: ' . $e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => 'Import failed: ' . $e->getMessage()])->withInput()->with('activeTab', 'excel');
         }
     }
 
@@ -233,29 +235,28 @@ class PolicyController extends Controller
 
     public function policyUpload(Request $request)
     {
-
         if ($request->isMethod('get')) {
-            return view('admin.policy_pdf_upload');
+            // Return the combined view instead of the separate PDF view
+            return view('admin.unified_policy_upload');
         }
-
+    
         $successFiles = [];
         $failedFiles = [];
-
+    
         try {
             $validator = Validator::make($request->all(), [
                 'files.*' => 'required|mimes:pdf',
             ]);
-
-
+    
             if ($validator->fails()) {
                 throw new \Exception('One or more files are invalid.');
             }
-
+    
             foreach ($request->file('files') as $file) {
                 $originalName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $uniqueName = $originalName;
-
+    
                 try {
                     $file->storeAs('public/policies', $uniqueName);
                     $successFiles[] = $originalName;
@@ -263,10 +264,11 @@ class PolicyController extends Controller
                     $failedFiles[$originalName] = $e->getMessage();
                 }
             }
-
-            return view('admin.policy_pdf_upload', compact('successFiles', 'failedFiles'));
+    
+            // Return the combined view with PDF upload results
+            return view('admin.unified_policy_upload', compact('successFiles', 'failedFiles'))->with('activeTab', 'pdf');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([$e->getMessage()])->withInput();
+            return redirect()->back()->withErrors([$e->getMessage()])->withInput()->with('activeTab', 'pdf');
         }
     }
 

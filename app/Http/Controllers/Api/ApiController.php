@@ -50,7 +50,7 @@ class ApiController extends Controller
                 ->sum('premium');
 
             $transaction = Transaction::where('agent_id', $agent_id)
-                ->sum('amount');
+                ->sum('amount_remaining');
 
             $pendingPremium = Policy::where('payment_by', 'self')
                 ->where('agent_id', $agent_id)

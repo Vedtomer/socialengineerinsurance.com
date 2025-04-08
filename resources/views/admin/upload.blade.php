@@ -60,11 +60,6 @@
                 <!-- Upload form -->
                 <form method="POST" action="{{ route('admin.upload') }}" enctype="multipart/form-data" id="uploadForm">
                     @csrf
-                    {{-- <div class="mb-4">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i> You don't need to add Policy date column in Excel
-                        </div>
-                    </div> --}}
                     
                     <div class="mb-3">
                         <label class="form-label">Select Date of Policy <span class="text-danger">*</span></label>
