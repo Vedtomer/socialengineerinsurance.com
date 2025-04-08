@@ -15,6 +15,7 @@ use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ContactController;
 
 use App\Console\Commands\CustomTask;
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -70,9 +71,20 @@ Route::prefix('admin')->group(function () {
         Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.analytics');
 
-        #transaction
-        route::get('transaction/{id?}', [AdminController::class, 'Transaction'])->name('admin.transaction');
-        Route::match(['get', 'post'], '/add-transaction', [AdminController::class, 'AddTransaction'])->name('add.transaction');
+        #account
+        // Transaction Routes
+        Route::get('/admin/transaction', [App\Http\Controllers\TransactionController::class, 'index'])->name('admin.transaction');
+        Route::get('/admin/transaction/create', [App\Http\Controllers\TransactionController::class, 'create'])->name('transaction.create');
+        Route::post('/admin/transaction', [App\Http\Controllers\TransactionController::class, 'store'])->name('add.transaction');
+        Route::get('/admin/transaction/edit/{transaction}', [App\Http\Controllers\TransactionController::class, 'edit'])->name('transaction.edit');
+        Route::put('/admin/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'update'])->name('update.transaction');
+        Route::delete('/admin/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'destroy'])->name('transaction.delete');
+
+        // API routes for dynamic data
+        Route::get('/admin/agent/policies', [App\Http\Controllers\TransactionController::class, 'getAgentPolicies'])->name('get.agent.policies');
+
+
+
         Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
         Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
 
@@ -136,6 +148,5 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
         Route::get('/app-activity', [AdminController::class, 'AppActivity'])->name('admin.app-activity');
-
     });
 });

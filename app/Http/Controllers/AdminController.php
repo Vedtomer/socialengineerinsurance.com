@@ -190,66 +190,7 @@ class AdminController extends Controller
 
 
 
-    public function Transaction(Request $request, $id = null)
-    {
 
-        $start_date = $request->input('start_date', now()->startOfMonth());
-        $end_date = $request->input('end_date', now()->endOfDay());
-        $payment_mode = ($request->input('payment_mode') === 'null') ? '' : $request->input('payment_mode');
-
-        $agent_id = ($request->input('agent_id') === 'null') ? '' : $request->input('agent_id');
-
-        if (empty($start_date) || $start_date == "null") {
-            $start_date = now()->startOfMonth();
-        } else {
-            $start_date = Carbon::parse($start_date)->startOfDay();
-        }
-
-        if (empty($end_date) || $end_date == "null") {
-            $end_date = now()->endOfDay();
-        } else {
-            $end_date = Carbon::parse($end_date)->endOfDay();
-        }
-
-        $query = Transaction::whereBetween('created_at', [$start_date, $end_date])->orderBy('payment_date', 'asc');
-
-        if (!empty($payment_mode)) {
-
-            if ($payment_mode === 'cash') {
-                $query->where('payment_mode', 'cash');
-            } else {
-                $query->where('payment_mode', "!=", 'cash');
-            }
-        }
-
-        if (!empty($agent_id)) {
-            $query->where('agent_id', $agent_id);
-        }
-
-        $users = $query->get();
-        $agents = User::role('agent')->get();
-
-        return view('admin.transaction', ['data' => $users, 'agent' => $agents]);
-    }
-
-    public function AddTransaction(Request $request)
-    {
-        if ($request->isMethod('get')) {
-            $agents = User::role('agent')->get();
-            return view('admin.transactionadd', ['data' => $agents]);
-        }
-
-        if ($request->isMethod('post')) {
-            $transaction = new Transaction();
-            $transaction->agent_id = $request->agent_id;
-            $transaction->payment_mode = $request->payment_mode;
-            $transaction->transaction_id = $request->transaction_id;
-            $transaction->amount = $request->amount;
-            $transaction->payment_date = $request->payment_date;
-            $transaction->save();
-            return redirect()->route('admin.transaction')->with('success', 'Transaction Add Successfully.');
-        }
-    }
 
     public function profile(Request $request)
     {

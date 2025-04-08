@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
+
 class Transaction extends Model
 {
     use HasFactory;
@@ -16,7 +17,7 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable = [
-        'policy_id',
+        
         'agent_id',
         'amount_paid',
         'amount_remaining',
@@ -42,17 +43,17 @@ class Transaction extends Model
     /**
      * Get the policy that this payment belongs to
      */
-    public function policy()
-    {
-        return $this->belongsTo(Policy::class);
-    }
+    // public function policy()
+    // {
+    //     return $this->belongsTo(Policy::class);
+    // }
 
     /**
      * Get the agent who made this payment
      */
     public function agent()
     {
-        return $this->belongsTo(Commission::class, 'agent_id');
+        return $this->belongsTo(User::class, 'agent_id');
     }
 
     /**
@@ -74,10 +75,10 @@ class Transaction extends Model
     /**
      * Scope a query to only include payments for a specific policy
      */
-    public function scopeForPolicy($query, $policyId)
-    {
-        return $query->where('policy_id', $policyId);
-    }
+    // public function scopeForPolicy($query, $policyId)
+    // {
+    //     return $query->where('policy_id', $policyId);
+    // }
 
     /**
      * Scope a query to only include payments from a specific agent
@@ -98,24 +99,31 @@ class Transaction extends Model
     /**
      * Update policy payment status after saving a payment
      */
-    protected static function booted()
+    // protected static function booted()
+    // {
+    //     static::saved(function ($payment) {
+    //         $policy = $payment->policy;
+
+    //         // Update the agent_amount_paid on the policy
+    //         $totalPaid = self::where('policy_id', $policy->id)->sum('amount_paid');
+    //         $policy->agent_amount_paid = $totalPaid;
+
+    //         // Check if fully paid
+    //         if ($policy->agent_amount_due <= $policy->agent_amount_paid) {
+    //             // If agent has fully paid, update the status if it was pay_later related
+    //             if (in_array($policy->payment_by, ['pay_later', 'pay_later_with_adjustment'])) {
+    //                 $policy->payment_by = 'agent_full_payment';
+    //             }
+    //         }
+
+    //         $policy->save();
+    //     });
+    // }
+
+    public function policies()
     {
-        static::saved(function ($payment) {
-            $policy = $payment->policy;
-            
-            // Update the agent_amount_paid on the policy
-            $totalPaid = self::where('policy_id', $policy->id)->sum('amount_paid');
-            $policy->agent_amount_paid = $totalPaid;
-            
-            // Check if fully paid
-            if ($policy->agent_amount_due <= $policy->agent_amount_paid) {
-                // If agent has fully paid, update the status if it was pay_later related
-                if (in_array($policy->payment_by, ['pay_later', 'pay_later_with_adjustment'])) {
-                    $policy->payment_by = 'agent_full_payment';
-                }
-            }
-            
-            $policy->save();
-        });
+        return $this->belongsToMany(Policy::class, 'policy_transaction')
+            ->withPivot('amount')
+            ->withTimestamps();
     }
 }

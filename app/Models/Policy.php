@@ -117,4 +117,11 @@ class Policy extends Model
 
         return true; // Non-pay_later policies are considered fully paid
     }
+
+    public function transactions()
+    {
+        return $this->belongsToMany(Transaction::class, 'policy_transaction')
+            ->withPivot('amount')
+            ->withTimestamps();
+    }
 }

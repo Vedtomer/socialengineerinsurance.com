@@ -133,4 +133,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CustomerPolicy::class, 'user_id');
     }
+
+    public function policies()
+    {
+        return $this->hasMany(Policy::class, 'agent_id');
+    }
 }

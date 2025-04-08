@@ -56,20 +56,34 @@
                    </a>
                </li>
 
-               <li class="menu {{ classActivePath('dashboard') }}">
-                <a href="{{ route('admin.analytics') }}" aria-expanded="false" class="dropdown-toggle">
+               <li class="menu {{ classActivePath('transaction') }}">
+                <a href="{{ route('admin.transaction') }}" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-columns">
-                            <path
-                                d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18">
-                            </path>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                            stroke-linejoin="round" class="feather feather-user">
+                            <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87M16 3.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
                         </svg>
-                        <span>Analytics</span>
+                        <span>Account</span>
                     </div>
                 </a>
             </li>
+            
+
+               <li class="menu {{ classActivePath('dashboard') }}">
+                   <a href="{{ route('admin.analytics') }}" aria-expanded="false" class="dropdown-toggle">
+                       <div class="">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-columns">
+                               <path
+                                   d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18">
+                               </path>
+                           </svg>
+                           <span>Analytics</span>
+                       </div>
+                   </a>
+               </li>
 
 
 
@@ -131,15 +145,16 @@
                    </a>
                    <ul class="collapse submenu list-unstyled {{ ariaExpanded('upload-policy') || ariaExpanded('policy-list') || ariaExpanded('policy-pdf-upload') ? 'show' : '' }}"
                        id="ecommerce" data-bs-parent="#accordionExample">
-                       <li class=" {{ classActivePath('upload-policy') }}">
-                           <a href="{{ route('admin.upload') }}"> Upload Policy </a>
-                       </li>
+
                        <li class=" {{ classActivePath('policy-list') }}">
-                           <a href="{{ route('admin.policy_list') }}"> Policy List </a>
+                           <a href="{{ route('admin.policy_list') }}">Listing </a>
                        </li>
-                       <li class=" {{ classActivePath('policy-pdf-upload') }}">
-                           <a id="openModalBtn" href="{{ route('admin.policy_pdf_upload') }}"> Upload Policy PDF </a>
+
+                       <li class=" {{ classActivePath('upload-policy') }}">
+                           <a href="{{ route('admin.upload') }}">Import</a>
                        </li>
+
+
                    </ul>
                </li>
 
@@ -176,7 +191,7 @@
                    </ul>
                </li>
 
-               <li class="menu {{ classActivePath('transaction') }}">
+               {{-- <li class="menu {{ classActivePath('transaction') }}">
                    <a href="{{ route('admin.transaction') }}" aria-expanded="false" class="dropdown-toggle">
                        <div class="">
                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -189,7 +204,7 @@
                            <span>Transaction</span>
                        </div>
                    </a>
-               </li>
+               </li> --}}
 
                <li class="menu {{ classActivePath('sliders') }}">
                    <a href="{{ route('sliders.index') }}" aria-expanded="false" class="dropdown-toggle">
@@ -269,42 +284,42 @@
                            <a href="{{ route('customer-policies.index') }}">Customer Policy </a>
                        </li>
                        <li class="menu {{ classActivePath('insurance-products') }}">
-                        <a href="{{ route('insurance-products.index') }}">Insurance Product </a>
-                    </li>
+                           <a href="{{ route('insurance-products.index') }}">Insurance Product </a>
+                       </li>
                    </ul>
                </li>
 
 
                <li class="menu {{ classActivePath('WhatsappMessageLog') }}">
-                <a href="{{ route('WhatsappMessageLog') }}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-layout">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="3" y1="9" x2="21" y2="9"></line>
-                            <line x1="9" y1="21" x2="9" y2="9"></line>
-                        </svg>
-                        <span>Logs</span>
-                    </div>
-                </a>
-            </li>
+                   <a href="{{ route('WhatsappMessageLog') }}" aria-expanded="false" class="dropdown-toggle">
+                       <div class="">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-layout">
+                               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                               <line x1="3" y1="9" x2="21" y2="9"></line>
+                               <line x1="9" y1="21" x2="9" y2="9"></line>
+                           </svg>
+                           <span>Logs</span>
+                       </div>
+                   </a>
+               </li>
 
 
-            <li class="menu {{ classActivePath('app-activity') }}">
-                <a href="{{ route('admin.app-activity') }}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-layout">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="3" y1="9" x2="21" y2="9"></line>
-                            <line x1="9" y1="21" x2="9" y2="9"></line>
-                        </svg>
-                        <span>App Activity</span>
-                    </div>
-                </a>
-            </li>
+               <li class="menu {{ classActivePath('app-activity') }}">
+                   <a href="{{ route('admin.app-activity') }}" aria-expanded="false" class="dropdown-toggle">
+                       <div class="">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-layout">
+                               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                               <line x1="3" y1="9" x2="21" y2="9"></line>
+                               <line x1="9" y1="21" x2="9" y2="9"></line>
+                           </svg>
+                           <span>App Activity</span>
+                       </div>
+                   </a>
+               </li>
 
 
            </ul>
