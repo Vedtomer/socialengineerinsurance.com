@@ -137,7 +137,7 @@ class AdminController extends Controller
         $policy = $policy->get();
 
         $policyCount = round($policy->count('policy_no'));
-        $amount = round($transactions->sum('amount'));
+        $amount = round($transactions->sum('amount_remaining'));
         $premiums = round($policy->sum('net_amount'));
         $payout = round($policy->sum('payout'));
 
