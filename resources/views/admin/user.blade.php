@@ -91,7 +91,7 @@
                                         <a class="dropdown-item " href="{{ route('agent.edit', $user->id) }}">Edit</a>
                                         <a class="dropdown-item " href="{{ route('agent.change.password', $user->id) }}">Change Paasword</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ route('agent.commission', $user->id) }}">Manage Commission</a>
+                                        <a class="dropdown-item" href="{{ route('commission.management', $user->id) }}">Manage code</a>
                                     </div>
                                 </div>
                             </td>

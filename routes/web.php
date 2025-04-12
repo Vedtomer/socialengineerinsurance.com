@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SliderController;
@@ -14,8 +15,10 @@ use App\Http\Controllers\InsuranceProductController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ContactController;
 
+
 use App\Console\Commands\CustomTask;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AgentCodeController;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -111,9 +114,17 @@ Route::prefix('admin')->group(function () {
 
 
         #commission
-        Route::match(['get', 'post'], '/commission/{id}', [AgentController::class, 'commission'])->name('agent.commission');
-        Route::match(['get', 'post'], '/commission-code', [AgentController::class, 'commissionCode'])->name('commission.code');
-        Route::get('/delete-commission/{id}', [AgentController::class, 'destroy'])->name('delete.commission');
+        // Main commission management route (handles listing, filtering, and editing)
+        Route::get('/agent-code-management', [AgentCodeController::class, 'index'])->name('commission.management');
+
+        // Store or update commission
+        Route::post('/commission-store', [AgentCodeController::class, 'store'])->name('commission.store');
+
+        // Delete a commission record
+        Route::delete('/commission-delete/{id}', [AgentCodeController::class, 'destroy'])->name('commission.delete');
+
+        // Bulk delete multiple commission records
+        Route::post('/commission-bulk-delete', [AgentCodeController::class, 'bulkDelete'])->name('commission.bulk-delete');
 
 
         #agent list route

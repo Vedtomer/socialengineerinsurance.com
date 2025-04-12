@@ -45,22 +45,17 @@ if (!function_exists('ariaExpanded')) {
 
 if (!function_exists('getCommission')) {
 
-    function getCommission($commission_code, $premium)
+    function getCommission($commissionDetails, $premium)
     {
 
-        if (!empty($commission_code) && !empty($premium)) {
-            $commission = Commission::where('commission_code', $commission_code)->get();
-            if ($commission->count() === 1) {
-                $commission = $commission->first();
-                if ($commission->commission_type === 'fixed') {
-                    return $commission->commission;
-                } elseif ($commission->commission_type === 'percentage') {
-                    $percentageCommission = ($commission->commission / 100) * ($premium - $premium * 0.1525);
-                    return $percentageCommission;
-                }
-            }
+        $commissionType = $commissionDetails->commission_type ?? 'percentage';
+        $commissionValue = $commissionDetails->commission ?? 0;
+
+        if ($commissionType === 'percentage') {
+            return round($premium * $commissionValue / 100, 2);
+        } else {
+            return $commissionValue;
         }
-        return null;
     }
 }
 

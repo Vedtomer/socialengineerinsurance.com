@@ -89,7 +89,7 @@ body.dark .mark, body.dark mark {
   background-color: #bfc9d4;
 }
 body.dark .modal-content {
-  background: #0e1726;
+  /* background: #0e1726; */
 }
 body.dark .code-section-container {
   margin-top: 20px;

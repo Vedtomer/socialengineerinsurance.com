@@ -157,23 +157,18 @@ class AgentController extends Controller
 
     }
 
-    public function importExcel(Request $request)
-    {
-        // dd('export');
-        // return Excel::download(new AgentExport, 'agents.xlsx');
-
-    }
-    public function commissionCode(Request $request)
-    {
-        $agent_id = $request->input('agent_id', "") === "null" ? "" : $request->input('agent_id', "");
-        $query = User::role('agent')->with('commissions')->orderBy('created_at', 'desc');
-        if (!empty($agent_id)) {
-            $query->where('id', $agent_id);
-        }
-        $users = $query->get();
-        $agent = User::role('agent')->get();
-        return view('admin.commissioncode', ['data' => $users, 'agent' => $agent]);
-    }
+   
+    // public function commissionCode(Request $request)
+    // {
+    //     $agent_id = $request->input('agent_id', "") === "null" ? "" : $request->input('agent_id', "");
+    //     $query = User::role('agent')->with('commissions')->orderBy('created_at', 'desc');
+    //     if (!empty($agent_id)) {
+    //         $query->where('id', $agent_id);
+    //     }
+    //     $users = $query->get();
+    //     $agent = User::role('agent')->get();
+    //     return view('admin.commissioncode', ['data' => $users, 'agent' => $agent]);
+    // }
 
     public function filtereddata(Request $request)
     {
@@ -197,48 +192,48 @@ class AgentController extends Controller
         return view('admin.user', compact('data'));
     }
 
-    public function commission(Request $request, $id)
-    {
+    // public function commission(Request $request, $id)
+    // {
 
-        $data = $id ? User::find($id) : new User();
+    //     $data = $id ? User::find($id) : new User();
 
 
-        if ($data === null) {
-            return redirect()->route('admin.user')->with('error', 'Agent not found');
-        }
+    //     if ($data === null) {
+    //         return redirect()->route('admin.user')->with('error', 'Agent not found');
+    //     }
 
-        $commissiondata = Commission::where('agent_id', $data->id)->get();
+    //     $commissiondata = Commission::where('agent_id', $data->id)->get();
 
-        if ($request->isMethod('post')) {
+    //     if ($request->isMethod('post')) {
 
-            $request->validate([
-                'commission.*' => 'required',
-                'commission_type.*' => 'required|in:fixed,percentage',
-            ]);
+    //         $request->validate([
+    //             'commission.*' => 'required',
+    //             'commission_type.*' => 'required|in:fixed,percentage',
+    //         ]);
 
-            $commissions = $request->input('commission');
-            $commissionTypes = $request->input('commission_type');
-            $id = $request->input('id');
+    //         $commissions = $request->input('commission');
+    //         $commissionTypes = $request->input('commission_type');
+    //         $id = $request->input('id');
 
-            foreach ($commissions as $key => $commissionValue) {
-                $commission = !empty($id[$key])
-                    ? Commission::firstOrNew(['id' => $id[$key]])
-                    : new Commission();
-                $commission->agent_id = $data->id;
-                $commission->commission_type = $commissionTypes[$key];
-                $commission->commission = $commissionValue;
+    //         foreach ($commissions as $key => $commissionValue) {
+    //             $commission = !empty($id[$key])
+    //                 ? Commission::firstOrNew(['id' => $id[$key]])
+    //                 : new Commission();
+    //             $commission->agent_id = $data->id;
+    //             $commission->commission_type = $commissionTypes[$key];
+    //             $commission->commission = $commissionValue;
 
-                $commission->save();
-                $commissionValue = intval($commissionValue);
-                $commissionCode = strtoupper(substr($commissionTypes[$key], 0, 1)) . $commissionValue . "IN" . $commission->id;
-                $commission->commission_code = $commissionCode;
-                $commission->save();
-            }
-            return redirect()->back()->with('success', 'Commission added successfully');
-        }
+    //             $commission->save();
+    //             $commissionValue = intval($commissionValue);
+    //             $commissionCode = strtoupper(substr($commissionTypes[$key], 0, 1)) . $commissionValue . "IN" . $commission->id;
+    //             $commission->commission_code = $commissionCode;
+    //             $commission->save();
+    //         }
+    //         return redirect()->back()->with('success', 'Commission added successfully');
+    //     }
 
-        return view('admin.commission', compact('data', 'commissiondata'));
-    }
+    //     return view('admin.commission', compact('data', 'commissiondata'));
+    // }
 
 
 
@@ -358,11 +353,11 @@ class AgentController extends Controller
         return redirect()->route('policy.list')->with('success', 'Agent and Policy updated successfully!');
     }
 
-    public function destroy($id)
-    {
-        $commission = Commission::findOrFail($id);
-        $commission->delete();
+    // public function destroy($id)
+    // {
+    //     $commission = Commission::findOrFail($id);
+    //     $commission->delete();
 
-        return redirect()->back()->with('success', 'Commission record deleted successfully');
-    }
+    //     return redirect()->back()->with('success', 'Commission record deleted successfully');
+    // }
 }

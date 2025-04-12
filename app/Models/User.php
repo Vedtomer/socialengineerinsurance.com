@@ -66,9 +66,9 @@ class User extends Authenticatable
         'otp_sent_at' => 'datetime',
     ];
 
-    public function commissions(): HasMany
+    public function agentCodes(): HasMany
     {
-        return $this->hasMany(Commission::class, 'agent_id');
+        return $this->hasMany(AgentCode::class,'user_id');
     }
 
     public function Policy(): HasMany
