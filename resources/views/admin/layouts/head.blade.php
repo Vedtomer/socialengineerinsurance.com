@@ -105,6 +105,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
        />
 
+
+
+
+
+       <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    
+   
+    
+  
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="{{ asset('asset/admin/src/plugins/src/animate/animate.css') }}" rel="stylesheet" type="text/css" />
+
+
+    <!-- END PAGE LEVEL PLUGINS -->
+    
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link href="{{ asset('asset/admin/src/assets/css/light/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('asset/admin/src/assets/css/light/components/carousel.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset/admin/src/assets/css/light/components/modal.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('asset/admin/src/assets/css/light/components/tabs.css') }}" rel="stylesheet" type="text/css">
+    
+    <link href="{{ asset('asset/admin/src/assets/css/dark/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('asset/admin/src/assets/css/dark/components/carousel.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset/admin/src/assets/css/dark/components/modal.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('asset/admin/src/assets/css/dark/components/tabs.css') }}" rel="stylesheet" type="text/css">
+
+    
+    <!--  END CUSTOM STYLE FILE  -->
+
+
+
     <style>
         body.dark .layout-px-spacing,
         .layout-px-spacing {
