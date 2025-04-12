@@ -49,14 +49,14 @@
                             <i class="fas fa-trash-alt me-1"></i> Delete Selected
                         </button>
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#commissionModal">
-                            <i class="fas fa-plus me-1"></i> Add Commission
+                            <i class="fas fa-plus me-1"></i> Add Agent Code
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
                     @if($agentsWithCommissions->isEmpty())
                         <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i> No commission records found.
+                            <i class="fas fa-info-circle me-2"></i> No Agent Code records found.
                         </div>
                     @endif
                     
@@ -194,7 +194,7 @@
             <div class="modal-content">
                 <div class="modal-header  ">
                     <h5 class="modal-title" id="commissionModalLabel">
-                        <i class="fas fa-plus-circle me-2"></i> <span id="modalTitle">Add New Commission</span>
+                        <i class="fas fa-plus-circle me-2"></i> <span id="modalTitle">Add New Agent Code</span>
                     </h5>
                     <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                 </div>
@@ -538,7 +538,7 @@
                 $('#commissionSettlement').prop('checked', settlement == 1);
                 
                 // Update modal title and button text
-                $('#modalTitle').text('Edit Commission');
+                $('#modalTitle').text('Edit Agent Code');
                 $('#saveButtonText').text('Update');
                 
                 // Show modal
@@ -549,7 +549,7 @@
             $('#commissionModal').on('hidden.bs.modal', function() {
                 $('#commissionForm')[0].reset();
                 $('#commissionId').val('');
-                $('#modalTitle').text('Add New Commission');
+                $('#modalTitle').text('Add New Agent Code');
                 $('#saveButtonText').text('Save');
                 $('#agentSelect').val('').trigger('change');
                 $('#commissionSettlement').prop('checked', false);
