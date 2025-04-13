@@ -10,9 +10,7 @@
                                alt="logo">
                        </a>
                    </div>
-                   {{-- <div class="nav-item theme-text">
-                       <a href="{{route("admin.dashboard")}}" class="nav-link"> SEI </a>
-                   </div> --}}
+
                </div>
 
                <div class="nav-item sidebar-toggle">
@@ -56,21 +54,6 @@
                    </a>
                </li>
 
-               <li class="menu {{ classActivePath('transaction') }}">
-                   <a href="{{ route('admin.transaction') }}" aria-expanded="false" class="dropdown-toggle">
-                       <div class="">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                               stroke-linejoin="round" class="feather feather-user">
-                               <path
-                                   d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87M16 3.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
-                           </svg>
-                           <span>Account</span>
-                       </div>
-                   </a>
-               </li>
-
-
                <li class="menu {{ classActivePath('dashboard') }}">
                    <a href="{{ route('admin.analytics') }}" aria-expanded="false" class="dropdown-toggle">
                        <div class="">
@@ -86,11 +69,24 @@
                    </a>
                </li>
 
+               <li class="menu {{ classActivePath('account-management') }}">
+                   <a href="{{ route('account.management') }}" aria-expanded="false" class="dropdown-toggle">
+                       <div class="d-flex align-items-center gap-2">
+                           <i class="fas fa-users-cog fa-lx"></i> {{-- Font Awesome icon for account management --}}
+                           <span>Account Manage</span>
+                       </div>
+                   </a>
+               </li>
+
+
+
+
+
 
 
                <li class="menu">
                    <a href="#home" data-bs-toggle="collapse"
-                       aria-expanded="{{ ariaExpanded('agent-list') || ariaExpanded('agent-code-management') ? 'true' : 'false' }}"
+                       aria-expanded="{{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') ? 'true' : 'false' }}"
                        class="dropdown-toggle">
 
                        <div class="">
@@ -111,10 +107,10 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-list') || ariaExpanded('agent-code-management') ? 'show' : '' }}"
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') ? 'show' : '' }}"
                        id="home" data-bs-parent="#accordionExample">
-                       <li class="menu {{ classActivePath('agent-list') }}">
-                           <a href="{{ route('agent.list') }}">Listing </a>
+                       <li class="menu {{ classActivePath('agent-management') }}">
+                           <a href="{{ route('agent.management') }}">Listing </a>
                        </li>
                        <li class="menu {{ classActivePath('agent-code-management') }}">
                            <a href="{{ route('commission.management') }}">Code </a>
@@ -263,7 +259,7 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('customer-policies')  ? 'show' : '' }}"
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('customers') || ariaExpanded('customer-policies') ? 'show' : '' }}"
                        id="Customers" data-bs-parent="#accordionExample">
                        <li class="menu {{ classActivePath('customers') }}">
                            <a href="{{ route('customers.index') }}"> Customer List </a>
@@ -271,7 +267,7 @@
                        <li class="menu {{ classActivePath('customer-policies') }}">
                            <a href="{{ route('customer-policies.index') }}">Customer Policy </a>
                        </li>
-                       
+
                    </ul>
                </li>
 
@@ -308,13 +304,13 @@
                </li>
 
                <li class="menu {{ classActivePath('insurance-products') }}">
-                <a href="{{ route('insurance-products.index') }}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-briefcase-medical fa-lx"></i>
-                        <span>Insurance Product</span>
-                    </div>
-                </a>
-            </li>
+                   <a href="{{ route('insurance-products.index') }}" aria-expanded="false" class="dropdown-toggle">
+                       <div class="d-flex align-items-center gap-2">
+                           <i class="fas fa-briefcase-medical fa-lx"></i>
+                           <span>Insurance Product</span>
+                       </div>
+                   </a>
+               </li>
 
 
            </ul>

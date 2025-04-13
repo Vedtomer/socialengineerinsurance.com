@@ -74,30 +74,39 @@ Route::prefix('admin')->group(function () {
         Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
         Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.analytics');
 
-        #account
-        // Transaction Routes
-        Route::get('/admin/transaction', [App\Http\Controllers\TransactionController::class, 'index'])->name('admin.transaction');
-        Route::get('/admin/transaction/create', [App\Http\Controllers\TransactionController::class, 'create'])->name('transaction.create');
-        Route::post('/admin/transaction', [App\Http\Controllers\TransactionController::class, 'store'])->name('add.transaction');
-        Route::get('/admin/transaction/edit/{transaction}', [App\Http\Controllers\TransactionController::class, 'edit'])->name('transaction.edit');
-        Route::put('/admin/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'update'])->name('update.transaction');
-        Route::delete('/admin/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'destroy'])->name('transaction.delete');
-
-        // API routes for dynamic data
-        Route::get('/admin/agent/policies', [App\Http\Controllers\TransactionController::class, 'getAgentPolicies'])->name('get.agent.policies');
 
 
+        // Account Routes
+        Route::get('/account-management', [App\Http\Controllers\AccountController::class, 'index'])->name('account.management');
+        Route::post('/account-store', [App\Http\Controllers\AccountController::class, 'store'])->name('account.store');
+        Route::delete('/account-delete/{id}', [App\Http\Controllers\AccountController::class, 'delete'])->name('account.delete');
 
-        Route::match(['get', 'post'], 'agent-edit/{id}', [AgentController::class, 'AgentEdit'])->name('agent.edit');
-        Route::match(['get', 'post'], 'change-password/{id}', [AgentController::class, 'ChangePassword'])->name('agent.change.password');
 
-        Route::match(['get', 'post'], '/agent-pandding-balance', [PolicyController::class, 'panddingblance'])->name('agentpandding.blance');
+        #commission
+        // Main commission management route (handles listing, filtering, and editing and deleting)
+        Route::get('/agent-code-management', [AgentCodeController::class, 'index'])->name('commission.management');
+        Route::post('/commission-store', [AgentCodeController::class, 'store'])->name('commission.store');
+        Route::delete('/commission-delete/{id}', [AgentCodeController::class, 'destroy'])->name('commission.delete');
+        Route::post('/commission-bulk-delete', [AgentCodeController::class, 'bulkDelete'])->name('commission.bulk-delete');
+
+
+
+
+
+
+
+        Route::get('/agent-management', [AgentController::class, 'index'])->name('agent.management');
+        Route::post('/agent/store', [AgentController::class, 'store'])->name('agent.store');
+        Route::get('/agent/get/{id?}', [AgentController::class, 'getAgent'])->name('agent.get');
+        Route::post('/agent/update-password', [AgentController::class, 'updatePassword'])->name('agent.update.password');
+
+
+
 
         #manage policy
         Route::match(['get', 'post'], '/upload-policy', [PolicyController::class, 'upload'])->name('admin.upload');
-        Route::match(['get', 'post'], '/updateagentid/{royalsundaram_id?}/{agent_id?}', [AgentController::class, 'updateagentid'])->name('updateagentid');
         Route::match(['get', 'post'], '/policy-list', [PolicyController::class, 'PolicyList'])->name('admin.policy_list');
-        Route::get('/royalsundaram/{id?}', [AdminController::class, 'royalsundaram'])->name('royalsundaram');
+
         Route::match(['get', 'post'], '/policy-pdf-upload', [PolicyController::class, 'policyUpload'])->name('admin.policy_pdf_upload');
         Route::post('/policy-list/delete/{id}', [PolicyController::class, 'policyDelete']);
 
@@ -113,18 +122,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy');
 
 
-        #commission
-        // Main commission management route (handles listing, filtering, and editing)
-        Route::get('/agent-code-management', [AgentCodeController::class, 'index'])->name('commission.management');
 
-        // Store or update commission
-        Route::post('/commission-store', [AgentCodeController::class, 'store'])->name('commission.store');
-
-        // Delete a commission record
-        Route::delete('/commission-delete/{id}', [AgentCodeController::class, 'destroy'])->name('commission.delete');
-
-        // Bulk delete multiple commission records
-        Route::post('/commission-bulk-delete', [AgentCodeController::class, 'bulkDelete'])->name('commission.bulk-delete');
 
 
         #agent list route

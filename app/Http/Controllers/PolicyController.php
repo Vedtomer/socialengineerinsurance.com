@@ -61,10 +61,7 @@ class PolicyController extends Controller
             // Record success stats
             $stats = $importClass->getImportStats();
 
-            // Dispatch job to send WhatsApp messages if needed
-            // if ($request->has('send_notifications')) {
-            //     dispatch(new SendWhatsAppMessages($request->date));
-            // }
+            
 
             return redirect()->back()->with([
                 'success' => 'Data imported successfully!',
@@ -112,12 +109,8 @@ class PolicyController extends Controller
 
         // Calculate analytics
         $analytics = [
-            // Vehicle type statistics
+         
             'total_policies' => $data->count(),
-            'total_two_wheeler' => $data->where('policy_type', 'two-wheeler')->count(),
-            'total_e_rickshaw' => $data->where('policy_type', '!=', 'two-wheeler')->count(), // Default is e-rickshaw
-
-            // Financial statistics
             'total_premium' => $data->sum('premium'),
             'total_gst' => $data->sum('gst'),
             'total_net_amount' => $data->sum('net_amount'),
@@ -131,76 +124,6 @@ class PolicyController extends Controller
             'total_amount_due_agents' => $data->sum('agent_amount_due'),
             'total_amount_paid_agents' => $data->sum('agent_amount_paid'),
             
-
-            // Payment method statistics - this is the main focus
-            'payment_methods' => [
-                'agent_full_payment' => [
-                    'count' => $data->where('payment_by', 'agent_full_payment')->count(),
-                    'amount' => $data->where('payment_by', 'agent_full_payment')->sum('premium'),
-                    'commission' => $data->where('payment_by', 'agent_full_payment')->sum('agent_commission'),
-                    'description' => 'Agent pays the full premium upfront'
-                ],
-                'commission_deducted' => [
-                    'count' => $data->where('payment_by', 'commission_deducted')->count(),
-                    'amount' => $data->where('payment_by', 'commission_deducted')->sum('premium'),
-                    'commission' => $data->where('payment_by', 'commission_deducted')->sum('agent_commission'),
-                    'description' => 'Premium paid after deducting agent\'s commission'
-                ],
-                'pay_later_with_adjustment' => [
-                    'count' => $data->where('payment_by', 'pay_later_with_adjustment')->count(),
-                    'amount' => $data->where('payment_by', 'pay_later_with_adjustment')->sum('premium'),
-                    'commission' => $data->where('payment_by', 'pay_later_with_adjustment')->sum('agent_commission'),
-                    'description' => 'Agent pays later with commission adjustment'
-                ],
-                'pay_later' => [
-                    'count' => $data->where('payment_by', 'pay_later')->count(),
-                    'amount' => $data->where('payment_by', 'pay_later')->sum('premium'),
-                    'commission' => $data->where('payment_by', 'pay_later')->sum('agent_commission'),
-                    'description' => 'Agent pays later without immediate adjustment'
-                ]
-            ],
-
-            // Insurance company distribution
-            'company_distribution' => $data->groupBy('company_id')
-                ->map(function ($items, $company_id) {
-                    return [
-                        'count' => $items->count(),
-                        'premium' => $items->sum('premium'),
-                        'company_name' => $items->first()->company->name ?? 'Unknown'
-                    ];
-                }),
-
-            // Agent performance
-            'agent_performance' => $data->groupBy('agent_id')
-                ->map(function ($items, $agent_id) {
-                    return [
-                        'count' => $items->count(),
-                        'premium' => $items->sum('premium'),
-                        'commission' => $items->sum('agent_commission'),
-                        'amount_due' => $items->sum('agent_amount_due'),
-                        'amount_paid' => $items->sum('agent_amount_paid'),
-                        'agent_name' => $items->first()->agent->name ?? 'Unknown'
-                    ];
-                }),
-
-            // Monthly trend - FIX for the format() error
-            'monthly_trend' => $data->groupBy(function ($item) {
-                // Check if policy_start_date is already a Carbon instance
-                if ($item->policy_start_date instanceof \Carbon\Carbon) {
-                    return $item->policy_start_date->format('Y-m');
-                }
-
-                // If it's a string, convert it to Carbon first
-                return \Carbon\Carbon::parse($item->policy_start_date)->format('Y-m');
-            })->map(function ($items) {
-                return [
-                    'count' => $items->count(),
-                    'premium' => $items->sum('premium'),
-                    'amount_due' => $items->sum('agent_amount_due'),
-                    'amount_paid' => $items->sum('agent_amount_paid'),
-                    'commission' => $items->sum('agent_commission')
-                ];
-            })
         ];
 
         // Format currency values for display
@@ -208,11 +131,6 @@ class PolicyController extends Controller
         $analytics['total_commission'] = number_format($analytics['total_commission'], 2);
         $analytics['total_net_amount'] = number_format($analytics['total_net_amount'], 2);
         $analytics['total_payout'] = number_format($analytics['total_payout'], 2);
-
-        // Format payment method amounts
-        foreach ($analytics['payment_methods'] as $key => $method) {
-            $analytics['payment_methods'][$key]['amount'] = number_format($method['amount'], 2);
-        }
 
         return view('admin.policy_list', [
             'data' => $data,
@@ -224,11 +142,9 @@ class PolicyController extends Controller
 
     public function policyDelete(Request $request, $id)
     {
-        // $policyDelete = Policy::where('policy_no', $policy_no)->firstOrFail();
-        // $policyDelete->is_deleted = 0;
-        // $policyDelete->save();
+       
         $policy = Policy::findOrFail($id);
-        $policy->delete(); // Soft delete the policy
+        $policy->delete();
         return response()->json(['success' => 'Policy Delete successful.']);
     }
 
@@ -236,7 +152,6 @@ class PolicyController extends Controller
     public function policyUpload(Request $request)
     {
         if ($request->isMethod('get')) {
-            // Return the combined view instead of the separate PDF view
             return view('admin.unified_policy_upload');
         }
     
@@ -272,56 +187,7 @@ class PolicyController extends Controller
         }
     }
 
-    public function panddingblance(Request $request)
-    {
-        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
-
-        // Check if start date and end date are provided, otherwise set them accordingly
-        $start_date = $request->input('start_date') ?? Carbon::now()->startOfMonth();
-        $end_date = $request->input('end_date') ?? Carbon::today();
-        $agent_id = $request->input('agent_id') ?? "";
-
-        // Parse dates if they are not null
-        if ($start_date !== null) {
-            $start_date = Carbon::parse($start_date);
-        }
-
-        if ($end_date !== null) {
-            $end_date = Carbon::parse($end_date);
-        }
-        $policy = DB::table('policies')
-            ->whereBetween('policy_start_date', [$start_date, $end_date])
-            ->leftJoin('agents', function ($join) {
-                $join->on('policies.agent_id', '=', 'agents.id');
-            })
-            ->leftJoin(DB::raw('(SELECT agent_id, SUM(amount) as total_amount,created_at FROM transactions GROUP BY agent_id) AS trans'), function ($join) use ($start_date, $end_date) {
-                $join->on('policies.agent_id', '=', 'trans.agent_id')
-                    ->whereBetween(DB::raw('trans.created_at'), [$start_date, $end_date]);
-            })
-            ->where('payment_by', 'SELF')
-            ->select(
-                'policies.agent_id',
-                'agents.name',
-                DB::raw('SUM(policies.premium) as total_premium'),
-                DB::raw('SUM(CASE WHEN agents.cut_and_pay = 1 THEN policies.agent_commission ELSE 0 END) as total_agent_commission'),
-                DB::raw('COALESCE(trans.total_amount, 0) as total_amount'),
-                DB::raw('ROUND(SUM(policies.premium) - COALESCE(trans.total_amount, 0)) as balance'),
-                'agents.cut_and_pay' // Include cut_and_pay column
-            )
-            ->groupBy('policies.agent_id', 'agents.name', 'agents.cut_and_pay') // Group by cut_and_pay as well
-            ->havingRaw('balance > 0')
-            ->orderBy('balance', "desc")
-            ->get();
-
-
-        // Calculate sum for each column
-        $totalPremium = $policy->sum('total_premium');
-        $totalAmount = $policy->sum('total_amount');
-        $totalBalance = $policy->sum('balance') - $policy->sum('total_agent_commission');
-
-        $agentData = Agent::get();
-        return view('admin.agent_pandding_blance', compact('policy', 'agentData', 'totalPremium', 'totalAmount', 'totalBalance'));
-    }
+  
 
 
     public function showPolicyRates()
