@@ -82,7 +82,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
 
             // Get policy type from insurance product related to commission code
             $policy_type = $commissionDetails->insurance_product_id;
-            $agent_commission = getCommission($commissionDetails, $premium);
+            $agent_commission = getCommission($commissionDetails, $net_amount);
 
 
             // Process payment_by field from commission details
