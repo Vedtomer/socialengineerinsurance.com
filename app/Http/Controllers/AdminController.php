@@ -6,9 +6,9 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Policy;
 use App\Models\UserActivity;
 use App\Models\WhatsappMessageLog;
@@ -58,64 +58,13 @@ class AdminController extends Controller
     }
 
 
-    // public function login(Request $request)
-    // {
-    //     // Check if the user is already authenticated and has the 'admin' role
-    //     if (Auth::check() && Auth::user()->hasRole('admin')) {
-    //         return redirect()->route('admin.dashboard');
-    //     }
-
-    //     // Handle GET request (show the login form)
-    //         // Handle GET request (show the login form or auto-login if credentials match)
-    // if ($request->isMethod('get')) {
-    //     // If the user is not authenticated, attempt to auto-login
-    //     $credentials = ['email' => 'admin@admin.com', 'password' => 'admin'];
-
-    //     if (Auth::attempt($credentials)) {
-    //         // Check if the user has the 'admin' role
-    //         $user = Auth::user();
-    //         if ($user->hasRole('admin')) {
-    //             return redirect()->route('admin.dashboard');
-    //         } else {
-    //             Auth::logout();
-    //             return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-    //         }
-    //     }
-
-    //     // If the auto-login fails, show the login form
-    //     return view('admin.login')->with('error', 'Auto-login failed. Please log in manually.');
-    // }
-
-
-    //     // Handle POST request (authenticate the user)
-    //     // if ($request->isMethod('post')) {
-    //     //     $credentials = $request->only('email', 'password');
-
-    //     //     if (Auth::attempt($credentials, $request->filled('remember'))) {
-    //     //         // Authenticate and check if the user has the 'admin' role
-    //     //         $user = Auth::user();
-    //     //         if ($user->hasRole('admin')) {
-    //     //             return redirect()->intended(route('admin.dashboard'));
-    //     //         } else {
-    //     //             Auth::logout();
-    //     //             return redirect()->route('login')->with('error', 'You do not have the required permissions to access the admin area.');
-    //     //         }
-    //     //     }
-
-    //     //     return redirect()->route('login')->with('error', 'Invalid login credentials');
-    //     // }
-
-    //     return redirect()->route('login')->with('error', 'Invalid login credentials');
-    // }
-
-
 
 
     public function dashboard(Request $request)
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
         // Define the transaction and policy queries
-        $transactions = Transaction::orderBy('id', 'ASC');
+        $transactions = Account::orderBy('id', 'ASC');
         $policy = Policy::orderBy('id', 'ASC');
 
         // Apply date range filter to transactions and policies

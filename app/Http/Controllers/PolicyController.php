@@ -6,7 +6,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Agent;
 use App\Models\Policy;
-use App\Models\Transaction;
 use App\Imports\ExcelImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
