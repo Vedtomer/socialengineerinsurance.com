@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Claim;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -49,7 +50,7 @@ class ApiController extends Controller
                 ->where('agent_id', $agent_id)
                 ->sum('premium');
 
-            $transaction = Transaction::where('agent_id', $agent_id)
+            $transaction = Account::where('user_id', $agent_id)
                 ->sum('amount_remaining');
 
             $pendingPremium = Policy::where('payment_by', 'self')
@@ -535,7 +536,7 @@ class ApiController extends Controller
             $currentMonthStart = $startDate->copy()->startOfMonth();
 
             // Calculate the opening balance for the previous month
-            $submitBalance = Transaction::where('agent_id', $agentId)
+            $submitBalance = Account::where('user_id', $agentId)
                 ->where('payment_date', '<', $currentMonthStart)
                 ->sum('amount');
 
@@ -568,7 +569,7 @@ class ApiController extends Controller
                 ->get();
 
             // Retrieve transactions
-            $transactions = Transaction::where('agent_id', $agentId)
+            $transactions = Account::where('user_id', $agentId)
                 ->whereBetween('payment_date', [$startDate, $endDate])
                 ->select(
                     DB::raw('payment_date as date'),
