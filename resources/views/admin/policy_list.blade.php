@@ -128,7 +128,7 @@
                                                 <button class="btn btn-sm btn-outline-primary view-details me-2"
                                                     data-bs-toggle="modal" data-bs-target="#viewDetailsModal"
                                                     data-policy="{{ $user->policy_no }}"
-                                                    data-type="{{ $user->policy_type ?? 'E-Rickshaw' }}"
+                                                    data-type="{{ $user->policy_type }}"
                                                     data-customer="{{ $user->customername }}"
                                                     data-date="{{ date('M d, Y', strtotime($user->policy_start_date)) }}"
                                                     data-net="{{ $user->net_amount }}" data-gst="{{ $user->gst }}"

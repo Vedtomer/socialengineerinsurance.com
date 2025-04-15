@@ -56,7 +56,7 @@ class Policy extends Model
     {
         return $this->belongsTo(User::class, 'agent_id')->withDefault([
             'name' => 'No Agent Assigned',
-            // Add more default attributes as needed
+            
         ]);
     }
 
@@ -64,7 +64,7 @@ class Policy extends Model
     {
         return $this->belongsTo(Company::class, 'company_id')->withDefault([
             'name' => 'No Company Assigned',
-            // Add more default attributes as needed
+            
         ]);
     }
 
@@ -82,10 +82,7 @@ class Policy extends Model
 
     public function getAgentNameAttribute()
     {
-        // Ensure that the 'agent' relationship is loaded
         $agent = $this->agent;
-
-        // Return the agent's name if it exists
         return $agent ? $agent->name : null;
     }
 
