@@ -201,6 +201,7 @@ class GenerateMonthlyCommissions extends Command
             $totalGst = $policies->sum('gst');
             $totalNetAmount = $policies->sum('net_amount');
             $totalAgentAmountDue = $policies->sum('agent_amount_due');
+            $totalPayout = $policies->sum('payout');
             $policiesCount = $policies->count();
             
             // Find or create monthly commission record

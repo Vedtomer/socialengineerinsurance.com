@@ -23,7 +23,10 @@ class CreateMonthlyCommissionsTable extends Migration
             $table->decimal('total_gst', 12, 2)->default(0); 
             $table->decimal('total_net_amount', 12, 2)->default(0);
             $table->decimal('total_agent_amount_due', 12, 2)->default(0);
+            $table->decimal('total_payout', 12, 2)->default(0);
             $table->integer('policies_count')->default(0);
+            $table->boolean('is_paid')->default(false);
+            $table->date('paid_date')->nullable();
             $table->string('payment_reference')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

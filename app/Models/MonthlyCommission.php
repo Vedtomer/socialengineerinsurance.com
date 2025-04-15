@@ -20,7 +20,10 @@ class MonthlyCommission extends Model
         'total_gst',
         'total_net_amount',
         'total_agent_amount_due',
+        'total_payout',
         'policies_count',
+        'is_paid',
+        'paid_date',
         'payment_reference',
         'notes',
     ];
