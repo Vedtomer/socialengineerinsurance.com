@@ -180,7 +180,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
                         <div>
                             <p class="text-muted mb-0 small">Total Due Amount</p>
-                            <h4 class="text-danger mb-0 fw-bold">₹{{ $analytics['total_amount_due_agents'] }}</h4>
+                            <h4 class="text-danger mb-0 fw-bold">₹{{ $analytics['total_amount_due_agents'] ?? "" }}</h4>
                             <p class="text-muted small mt-1 fst-italic">(Amount to be collected from market)</p>
                         </div>
                         <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
@@ -191,7 +191,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-0 small">Total Due Paid</p>
-                            <h5 class="text-success mb-0">₹{{ $analytics['total_amount_paid_agents'] }}</h5>
+                            <h5 class="text-success mb-0">₹{{ $analytics['total_amount_paid_agents'] ?? "" }}</h5>
                             <p class="text-muted small mt-1 fst-italic">(Amount collected from market)</p>
                         </div>
                         <div class="bg-success bg-opacity-10 p-3 rounded-circle">

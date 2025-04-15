@@ -68,6 +68,16 @@ class Policy extends Model
         ]);
     }
 
+    public function insuranceProduct(): BelongsTo
+    {
+        return $this->belongsTo(InsuranceProduct::class, 'policy_type')->withDefault([
+            'name' => 'N/A',
+            
+        ]);
+    }
+
+    
+
     public function getPolicyLinkAttribute()
     {
 
@@ -87,38 +97,7 @@ class Policy extends Model
     }
 
 
-    /**
-     * Get the total amount paid by the agent for this policy
-     */
-    public function getTotalAgentPaymentsAttribute()
-    {
-        return $this->agentPayments()->sum('amount_paid');
-    }
+    
 
-    /**
-     * Get the remaining amount due from the agent
-     */
-    public function getRemainingAgentAmountAttribute()
-    {
-        return $this->agent_amount_due - $this->agent_amount_paid;
-    }
-
-    /**
-     * Check if the policy is fully paid by the agent
-     */
-    public function getIsFullyPaidByAgentAttribute()
-    {
-        if (in_array($this->payment_by, ['pay_later', 'pay_later_with_adjustment'])) {
-            return $this->agent_amount_paid >= $this->agent_amount_due;
-        }
-
-        return true; // Non-pay_later policies are considered fully paid
-    }
-
-    public function transactions()
-    {
-        return $this->belongsToMany(Transaction::class, 'policy_transaction')
-            ->withPivot('amount')
-            ->withTimestamps();
-    }
+    
 }

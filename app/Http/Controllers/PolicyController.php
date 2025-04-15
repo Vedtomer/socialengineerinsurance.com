@@ -91,7 +91,7 @@ class PolicyController extends Controller
     {
         list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
 
-        $query = Policy::with('agent', 'company')
+        $query = Policy::with('agent', 'company','insuranceProduct')
             ->where('deleted_at', null)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
             ->select('*', DB::raw('CASE WHEN payment_by = "commission_deducted" THEN agent_commission ELSE NULL END as commission_deducted'), DB::raw('CASE WHEN payment_by = "pay_later_with_adjustment" THEN agent_commission ELSE NULL END as commission_will_adjustment'))
@@ -108,21 +108,16 @@ class PolicyController extends Controller
 
         // Calculate analytics
         $analytics = [
-         
             'total_policies' => $data->count(),
             'total_premium' => $data->sum('premium'),
             'total_gst' => $data->sum('gst'),
             'total_net_amount' => $data->sum('net_amount'),
-
             'total_commission' => $data->sum('agent_commission'),
             'total_commission_deducted' => $data->sum('commission_deducted'),
             'total_commission_will_adjustment' => $data->sum('commission_will_adjustment'),
             'Net_Commission_Payable_Agent'=>($data->sum('agent_commission') - $data->sum('commission_deducted') - 
             $data->sum('commission_will_adjustment')),            
-            'total_payout' => $data->sum('payout'),
-            'total_amount_due_agents' => $data->sum('agent_amount_due'),
-            'total_amount_paid_agents' => $data->sum('agent_amount_paid'),
-            
+            'total_payout' => $data->sum('payout'),       
         ];
 
         // Format currency values for display
