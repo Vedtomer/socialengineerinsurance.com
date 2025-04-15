@@ -90,7 +90,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/commission-bulk-delete', [AgentCodeController::class, 'bulkDelete'])->name('commission.bulk-delete');
 
 
-
+        // Monthly Commission Routes
+        Route::match(['get'], '/monthly-commissions/{id?}', 'App\Http\Controllers\MonthlyCommissionController@handle')->name('monthly-commissions');
+        
 
 
 

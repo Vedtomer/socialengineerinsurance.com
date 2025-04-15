@@ -29,7 +29,8 @@ class Policy extends Model
         'company_id',
         'discount',
         'payout',
-        'policy_type'
+        'policy_type',
+        'settled_for_previous_month'
     ];
 
     protected $dates = ['deleted_at'];

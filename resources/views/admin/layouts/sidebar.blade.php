@@ -86,7 +86,7 @@
 
                <li class="menu">
                    <a href="#home" data-bs-toggle="collapse"
-                       aria-expanded="{{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') ? 'true' : 'false' }}"
+                       aria-expanded="{{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') || ariaExpanded('monthly-commissions') ? 'true' : 'false' }}"
                        class="dropdown-toggle">
 
                        <div class="">
@@ -107,7 +107,7 @@
                            </svg>
                        </div>
                    </a>
-                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') ? 'show' : '' }}"
+                   <ul class="collapse submenu list-unstyled {{ ariaExpanded('agent-management') || ariaExpanded('agent-code-management') || ariaExpanded('monthly-commissions') ? 'show' : '' }}"
                        id="home" data-bs-parent="#accordionExample">
                        <li class="menu {{ classActivePath('agent-management') }}">
                            <a href="{{ route('agent.management') }}">Listing </a>
@@ -115,6 +115,10 @@
                        <li class="menu {{ classActivePath('agent-code-management') }}">
                            <a href="{{ route('commission.management') }}">Code </a>
                        </li>
+                       <li class="menu {{ classActivePath('monthly-commissions') }}">
+                        <a href="{{ route('monthly-commissions') }}">Monthly Commissions </a>
+                    </li>
+                       
                    </ul>
                </li>
 
