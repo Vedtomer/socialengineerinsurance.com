@@ -211,12 +211,6 @@ class GenerateMonthlyCommissions extends Command
                 'year' => $year,
             ]);
             
-            // If record exists and force not set, skip
-            if ($monthlyCommission->exists && !$force) {
-                DB::rollBack();
-                return;
-            }
-            
             // Update or create record
             $monthlyCommission->fill([
                 'total_premium' => $totalPremium,
@@ -224,6 +218,7 @@ class GenerateMonthlyCommissions extends Command
                 'total_gst' => $totalGst,
                 'total_net_amount' => $totalNetAmount,
                 'total_agent_amount_due' => $totalAgentAmountDue,
+                'total_payout' => $totalPayout,
                 'policies_count' => $policiesCount,
             ]);
             
