@@ -39,6 +39,20 @@
 
                     @foreach ($agentsWithCommissions as $agent)
                         @if (!empty($agent->agentCodes) && $agent->agentCodes->count() > 0)
+
+                        @php
+                        $softColors = [
+                            '#f0f9ff', // Soft Blue
+                            '#fff7ed', // Soft Orange
+                            '#fefce8', // Soft Yellow
+                            '#f0fdf4', // Soft Green
+                            '#fdf2f8', // Soft Pink
+                            '#ede9fe', // Soft Purple
+                            '#ecfdf5', // Mint
+                        ];
+                        $randomColor = $softColors[array_rand($softColors)];
+                    @endphp
+
                             <div class="commission-group mb-4">
                                 <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
                                     <div class="d-flex align-items-center">
@@ -54,7 +68,7 @@
 
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
-                                        <thead class="table-light">
+                                        <thead class="table-light" >
                                             <tr>
                                                 <th style="width: 40px;">
                                                     <div class="form-check">
@@ -70,9 +84,9 @@
                                                 <th style="width: 100px;">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody >
                                             @foreach ($agent->agentCodes as $commission)
-                                                <tr>
+                                                <tr style="background-color: {{ $randomColor }}; border-radius: 0.5rem; padding: 10px;">
                                                     <td>
                                                         <div class="form-check">
                                                             <input class="form-check-input commission-checkbox"
@@ -217,3 +231,4 @@
 @push('scripts')
     @include('admin.agent.script')
 @endpush
+
