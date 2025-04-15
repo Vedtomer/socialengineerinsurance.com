@@ -168,36 +168,49 @@
         </div>
 
         <!-- Due Amount -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 rounded-4">
-                <div class="card-header bg-white border-bottom-0 pt-4">
-                    <h5 class="card-title m-0 d-flex align-items-center">
-                        <i class="fas fa-hand-holding-usd text-danger me-2"></i>
-                        Market Due Summary
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-                        <div>
-                            <p class="text-muted mb-0 small">Total Due Amount</p>
-                            <h4 class="text-danger mb-0 fw-bold">₹{{ $analytics['total_amount_due_agents'] ?? "" }}</h4>
-                            <p class="text-muted small mt-1 fst-italic">(Amount to be collected from market)</p>
-                        </div>
-                        <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
-                            <i class="fas fa-funnel-dollar text-danger"></i>
-                        </div>
-                    </div>
+       <!-- Due Amount -->
+<div class="col-md-4">
+    <div class="card border-0 shadow-sm h-100 rounded-4">
+        <div class="card-header bg-white border-bottom-0 pt-4">
+            <h5 class="card-title m-0 d-flex align-items-center">
+                <i class="fas fa-hand-holding-usd text-danger me-2"></i>
+                Market Due Summary
+            </h5>
+        </div>
+        <div class="card-body">
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0 small">Total Due Paid</p>
-                            <h5 class="text-success mb-0">₹{{ $analytics['total_amount_paid_agents'] ?? "" }}</h5>
-                            <p class="text-muted small mt-1 fst-italic">(Amount collected from market)</p>
-                        </div>
-                        <div class="bg-success bg-opacity-10 p-3 rounded-circle">
-                            <i class="fas fa-check-double text-success"></i>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                <div>
+                    <p class="text-muted mb-0 small">Pending Due Amount</p>
+                    <h4 class="text-danger mb-0 fw-bold">₹{{ $analytics['pending_amount_due'] ?? $analytics['total_amount_due_agents']  - $analytics['total_amount_paid_agents'] }}</h4>
+                    <p class="text-muted small mt-1 fst-italic">(Amount pending to be collected)</p>
+                </div>
+                <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
+                    <i class="fas fa-exclamation-circle text-danger"></i>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                <div>
+                    <p class="text-muted mb-0 small">Total Due Amount</p>
+                    <h4 class="text-primary mb-0 fw-bold">₹{{ $analytics['total_amount_due_agents'] ?? "" }}</h4>
+                    <p class="text-muted small mt-1 fst-italic">(Total amount to be collected from market)</p>
+                </div>
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
+                    <i class="fas fa-funnel-dollar text-primary"></i>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-muted mb-0 small">Amount Collected</p>
+                    <h5 class="text-success mb-0">₹{{ $analytics['total_amount_paid_agents'] ?? "" }}</h5>
+                    <p class="text-muted small mt-1 fst-italic">(Amount already collected from market)</p>
+                </div>
+                <div class="bg-success bg-opacity-10 p-3 rounded-circle">
+                    <i class="fas fa-check-double text-success"></i>
                 </div>
             </div>
         </div>
+    </div>
+</div>
