@@ -90,12 +90,11 @@ class AdminController extends Controller
         $premiums = round($policy->sum('net_amount'));
         $payout = round($policy->sum('payout'));
 
-        $premium = round(Policy::where('payment_by', 'SELF')->sum('premium'));
+        $premium = 0;
 
         $agentIdsWithCutAndPay =0;
 
-        $sumCommission = Policy::where('payment_by', 'SELF')
-            ->whereIn('agent_id', $agentIdsWithCutAndPay);
+        $sumCommission = 0;
 
         if (!empty($start_date) && !empty($end_date)) {
             $sumCommission->where('policy_start_date', '>=', $start_date)
