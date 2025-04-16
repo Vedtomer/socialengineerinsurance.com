@@ -155,7 +155,7 @@
                                 <tbody>
                                     @forelse($settlements as $settlement)
                                         <tr>
-                                            <td>{{ $settlement->settlement_month->format('M Y') }}</td>
+                                            <td>{{ $settlement->month }}</td>
                                             <td>{{ $settlement->agent->name ?? 'N/A' }}</td>
                                             <td>
                                                 <span class="text-success">
@@ -219,7 +219,7 @@
                                                                 <h5 class="modal-title"
                                                                     id="detailsModalLabel{{ $settlement->id }}">
                                                                     Settlement Details -
-                                                                    {{ $settlement->settlement_month->format('M Y') }}
+                                                                    {{ $settlement->month }}
                                                                 </h5>
                                                                 <button type="button" class="btn-close btn-close-white"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -239,7 +239,7 @@
                                                                         <p>
                                                                             <i class="fas fa-calendar-alt me-2"></i>
                                                                             <strong>Month:</strong>
-                                                                            {{ $settlement->settlement_month->format('F Y') }}
+                                                                            {{ $settlement->month }}
                                                                         </p>
                                                                     </div>
                                                                 </div>
