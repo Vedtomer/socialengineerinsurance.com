@@ -109,7 +109,11 @@
                                         <th style="width: 200px;">Name</th>
                                         <th style="width: 150px;">Location</th>
                                         <th style="width: 100px;">Status</th>
-                                        <th style="width: 120px;">Commission</th>
+                                        <th style="max-width: 50px;">
+                                            Commission <br>
+                                            <small class="text-muted">Settlement Previous Month</small>
+                                          </th>
+                                          
                                         <th style="width: 150px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -123,10 +127,13 @@
                                                         <i class="fas fa-user-tie text-primary fs-5"></i>
                                                     </div>
                                                     <div>
-                                                        <h6 class="mb-0 fw-medium">{{ $agent->name }}</h6>
+                                                        <h6 class="mb-0 fw-medium" data-bs-toggle="tooltip"  title="{{ $agent->name }}">
+                                                            {{ \Illuminate\Support\Str::limit($agent->name, 20) }}
+                                                        </h6>
                                                         <span class="fw-light">{{ $agent->mobile_number }}</span>
                                                     </div>
                                                 </div>
+                                                
                                             </td>
                                             <td>
                                                 <span class="badge bg-light text-dark">
@@ -140,12 +147,12 @@
                                             </td>
                                             <td>
                                                 @if($agent->commission_settlement)
-                                                    <span class="badge bg-success" data-bs-toggle="tooltip" title="Commission Settlement Enabled">
-                                                        <i class="fas fa-check-circle"></i> Settled
+                                                    <span class="badge " data-bs-toggle="tooltip" title="Commission Settlement Enabled">
+                                                        <i class="fas fa-check-circle text-success"></i> 
                                                     </span>
                                                 @else
-                                                    <span class="badge bg-secondary" data-bs-toggle="tooltip" title="Commission Settlement Not Enabled">
-                                                        <i class="fas fa-times-circle"></i> Pending
+                                                    <span class="badge " data-bs-toggle="tooltip" title="Commission Settlement Not Enabled">
+                                                        <i class="fas fa-times-circle text-danger"></i> 
                                                     </span>
                                                 @endif
                                             </td>
