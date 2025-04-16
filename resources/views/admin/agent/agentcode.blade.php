@@ -166,7 +166,7 @@
                                                             </span>
                                                             
                                                             <!-- Commission Settlement Status - only show if settled -->
-                                                            @if($agent->commission_settlement)
+                                                            @if($commission->commission_settlement)
                                                                 <span class="badge  text-muted
 
 ">
