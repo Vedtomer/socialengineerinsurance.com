@@ -88,6 +88,7 @@ class AgentController extends Controller
             $agent->city = $request->city;
             $agent->address = $request->address;
             $agent->status = $request->active ?? 0;
+            $agent->commission_settlement = $request->has('commission_settlement') ? 1 : 0;
             $agent->save();
 
             DB::commit();

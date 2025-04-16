@@ -109,6 +109,7 @@
                                         <th style="width: 200px;">Name</th>
                                         <th style="width: 150px;">Location</th>
                                         <th style="width: 100px;">Status</th>
+                                        <th style="width: 120px;">Commission</th>
                                         <th style="width: 150px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -136,6 +137,17 @@
                                                 <span class="badge {{ $agent->status ? 'bg-success' : 'bg-danger' }}">
                                                     {{ $agent->status ? 'Active' : 'Inactive' }}
                                                 </span>
+                                            </td>
+                                            <td>
+                                                @if($agent->commission_settlement)
+                                                    <span class="badge bg-success" data-bs-toggle="tooltip" title="Commission Settlement Enabled">
+                                                        <i class="fas fa-check-circle"></i> Settled
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary" data-bs-toggle="tooltip" title="Commission Settlement Not Enabled">
+                                                        <i class="fas fa-times-circle"></i> Pending
+                                                    </span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -259,6 +271,21 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><i class="fas fa-check-circle text-success me-2"></i> Commission Settlement</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input @error('commission_settlement') is-invalid @enderror" 
+                                        type="checkbox" name="commission_settlement" id="commissionSettlement" 
+                                        value="1" {{ old('commission_settlement') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="commissionSettlement">
+                                        Mark as settled (Previous month's commission will be adjusted in next policy premium)
+                                    </label>
+                                </div>
+                                @error('commission_settlement')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -349,7 +376,7 @@
             });
             
             // Show modal if there are validation errors for agent form
-            @if($errors->has('name') || $errors->has('mobile_number') || $errors->has('email') || $errors->has('state') || $errors->has('city') || $errors->has('address') || $errors->has('active'))
+            @if($errors->has('name') || $errors->has('mobile_number') || $errors->has('email') || $errors->has('state') || $errors->has('city') || $errors->has('address') || $errors->has('active') || $errors->has('commission_settlement'))
                 $('#agentModal').modal('show');
             @endif
             
@@ -386,6 +413,7 @@
                     $('#city').val(response.city);
                     $('#address').val(response.address);
                     $('#agentStatus').prop('checked', response.status == 1);
+                    $('#commissionSettlement').prop('checked', response.commission_settlement == 1);
                     $('#agentModal').modal('show');
                 }
             });

@@ -141,7 +141,7 @@
                             @enderror
                         </div>
                         
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <label class="form-label fw-bold"><i class="fas fa-check-circle text-success me-2"></i> Commission Settlement</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input @error('commission_settlement') is-invalid @enderror" 
@@ -154,7 +154,7 @@
                             @error('commission_settlement')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>

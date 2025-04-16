@@ -37,7 +37,7 @@ class Policy extends Model
     protected $appends = ['policy_link'];
 
     const PAYMENT_BY_AGENT = 'agent_full_payment';
-    const PAYMENT_BY_COMPANY = 'company_paid';
+   
     const PAYMENT_BY_COMMISSION_DEDUCTED = 'commission_deducted';
     const PAYMENT_BY_PAY_LATER_ADJUSTED = 'pay_later_with_adjustment';
     const PAYMENT_BY_PAY_LATER = 'pay_later';

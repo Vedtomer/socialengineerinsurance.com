@@ -76,11 +76,7 @@ class User extends Authenticatable
         return $this->hasMany(Policy::class, 'agent_id');
     }
 
-    public function Transaction(): HasMany
-    {
-        return $this->hasMany(Transaction::class, 'agent_id');
-    }
-
+    
     public function getPoliciesCount($request = null)
     {
         try {
@@ -137,5 +133,10 @@ class User extends Authenticatable
     public function policies()
     {
         return $this->hasMany(Policy::class, 'agent_id');
+    }
+
+
+    public function agentSettlements(){
+        return $this->hasMany(AgentMonthlySettlement::class, 'agent_id');
     }
 }

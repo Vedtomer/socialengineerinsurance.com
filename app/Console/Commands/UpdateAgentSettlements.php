@@ -40,137 +40,108 @@ class UpdateAgentSettlements extends Command
             ? Carbon::createFromFormat('Y-m', $this->option('month'))->startOfMonth() 
             : Carbon::now()->startOfMonth();
         
-        $previousMonth = $targetMonth->copy()->subMonth();
+        // Get all policies for the target month
+        $policies = Policy::whereMonth('policy_start_date', $targetMonth->month)
+            ->whereYear('policy_start_date', $targetMonth->year)
+            ->get();
         
-        // Get all agents
-        $agents = User::role('agent')->get();
-        $bar = $this->output->createProgressBar(count($agents));
+        // Group policies by agent
+        $policyDataByAgent = [];
+        foreach ($policies as $policy) {
+            $agentId = $policy->agent_id;
+            
+            if (!isset($policyDataByAgent[$agentId])) {
+                $policyDataByAgent[$agentId] = [
+                    'total_commission' => 0,
+                    'total_premium_due' => 0,
+                    'policies' => []
+                ];
+            }
+            
+            $policyDataByAgent[$agentId]['total_commission'] += $policy->agent_commission;
+            
+            // Calculate premium due based on payment type
+            $premiumDue = 0;
+            switch ($policy->payment_by) {
+                case 'agent_full_payment':
+                    $premiumDue = 0; // No premium due
+                    break;
+                case 'commission_deducted':
+                    $premiumDue = 0; // No premium due
+                    break;
+                case 'pay_later_with_adjustment':
+                    $premiumDue = $policy->premium - $policy->agent_commission; // Premium minus commission
+                    break;
+                case 'pay_later':
+                    $premiumDue = $policy->premium; // Full premium due
+                    break;
+            }
+            
+            $policyDataByAgent[$agentId]['total_premium_due'] += $premiumDue;
+            $policyDataByAgent[$agentId]['policies'][] = $policy;
+        }
+        
+        // Process settlements for each agent
+        $bar = $this->output->createProgressBar(count($policyDataByAgent));
         $bar->start();
         
-        foreach ($agents as $agent) {
+        foreach ($policyDataByAgent as $agentId => $data) {
             DB::beginTransaction();
             try {
-                // Get or create settlement record for current month
-                $settlement = AgentMonthlySettlement::firstOrNew([
-                    'agent_id' => $agent->id,
-                    'settlement_month' => $targetMonth,
-                ]);
-                
-                // Calculate total commission and premiums for current month
-                $policies = Policy::where('agent_id', $agent->id)
-                    ->whereMonth('policy_start_date', $targetMonth->month)
-                    ->whereYear('policy_start_date', $targetMonth->year)
-                    ->get();
-                
-                // Reset calculated values
-                $totalCommission = 0;
-                $totalPremiumDue = 0;
-                $payLaterAmount = 0;
-                $payLaterWithAdjustmentAmount = 0;
-                
-                foreach ($policies as $policy) {
-                    $totalCommission += $policy->agent_commission;
-                    
-                    if ($policy->payment_by == Policy::PAYMENT_BY_PAY_LATER) {
-                        $payLaterAmount += $policy->premium;
-                        $totalPremiumDue += $policy->premium;
-                    }
-                    
-                    if ($policy->payment_by == Policy::PAYMENT_BY_PAY_LATER_ADJUSTED) {
-                        $payLaterWithAdjustmentAmount += $policy->premium - $policy->agent_commission;
-                        $totalPremiumDue += $policy->premium - $policy->agent_commission;
-                    }
-                }
-                
-                // Get payments made by agent during this month
-                $payments = Account::where('user_id', $agent->id)
+                // Get agent payments for this month
+                $payments = Account::where('user_id', $agentId)
                     ->whereMonth('payment_date', $targetMonth->month)
                     ->whereYear('payment_date', $targetMonth->year)
                     ->sum('amount_paid');
                 
-                // Get all previous months' accumulated settlements (not just the last month)
-                // This helps us track carried forward dues from multiple months
-                $previousSettlement = AgentMonthlySettlement::forAgent($agent->id)
-                    ->previousMonth($targetMonth)
+                // Calculate pending amount for current month
+                $pendingAmount = $data['total_premium_due'] - $payments;
+                
+                // Get previous month's settlement
+                $previousSettlement = AgentMonthlySettlement::where('agent_id', $agentId)
+                    ->where(function($query) use ($targetMonth) {
+                        $query->where('year', $targetMonth->copy()->subMonth()->year)
+                              ->where('month', $targetMonth->copy()->subMonth()->month);
+                    })
                     ->first();
                 
-                $previousMonthCommission = 0;
-                $previousMonthDue = 0;
-                $adjustedCommission = 0;
                 $carryForwardDue = 0;
-                
-                // Calculate previous month's commission and accumulated dues
                 if ($previousSettlement) {
-                    // Get the pending amount from previous month (accumulated)
-                    $previousMonthCommission = $previousSettlement->total_commission;
-                    $previousMonthDue = $previousSettlement->final_amount_due;
-                    $carryForwardDue = $previousMonthDue;
-                    
-                    // Check policies that need adjustment from previous month's commission
-                    $adjustmentPolicies = Policy::where('agent_id', $agent->id)
-                        ->where('settled_for_previous_month', 1)
-                        ->whereMonth('policy_start_date', $targetMonth->month)
-                        ->whereYear('policy_start_date', $targetMonth->year)
-                        ->get();
-                    
-                    foreach ($adjustmentPolicies as $policy) {
-                        // For policies marked for adjustment, deduct from previous month's commission
-                        if ($previousMonthCommission > 0) {
-                            // Adjust either the full premium or whatever commission is left, whichever is smaller
-                            $adjustment = min($previousMonthCommission, $policy->premium);
-                            $adjustedCommission += $adjustment;
-                            $previousMonthCommission -= $adjustment;
-                            $carryForwardDue -= $adjustment; // Reduce the carry forward due
-                        }
-                    }
+                    $carryForwardDue = $previousSettlement->final_amount_due;
                 }
-
-                 // Calculate current month's pending amount
-                 $currentMonthPending = $totalPremiumDue - $payments;
-
-                // Calculate final amount due (current month + carried forward - adjustments)
-                $totalAmountDue = $currentMonthPending + $carryForwardDue;
-
-                  // Skip record creation if all values are zero or insignificant
-                  if ( abs($totalPremiumDue) < 0.01 && 
-                  abs($payments) < 0.01 && abs($carryForwardDue) < 0.01 && 
-                  abs($totalAmountDue) < 0.01) {
-                  DB::commit();
-                  $bar->advance();
-                  continue;
-              }
                 
-               
+                // Calculate final amount due
+                $finalAmountDue = $pendingAmount + $carryForwardDue;
                 
-                
-                
-                // Update the settlement record with comprehensive tracking
-                $settlement->total_commission = $totalCommission;
-                $settlement->total_premium_due = $totalPremiumDue;
-                $settlement->pay_later_amount = $payLaterAmount;
-                $settlement->pay_later_with_adjustment_amount = $payLaterWithAdjustmentAmount;
-                $settlement->amount_paid = $payments;
-                $settlement->pending_amount = $currentMonthPending;
-                $settlement->previous_month_commission = $previousMonthCommission;
-                $settlement->adjusted_commission = $adjustedCommission;
-                $settlement->carry_forward_due = $carryForwardDue;
-                $settlement->final_amount_due = $totalAmountDue;
-                
-                // Add notes for clarity
-                $settlement->notes = "Month: {$targetMonth->format('F Y')} | " .
-                    "Current Month Due: {$currentMonthPending} | " .
-                    "Previous Dues: {$carryForwardDue} | " .
-                    "Adjusted Commission: {$adjustedCommission} | " .
-                    "Total Due: {$totalAmountDue}";
-                
-
-
-                $settlement->save();
+                // Only create/update settlement if there are significant amounts
+                if (abs($pendingAmount) >= 0.01 || abs($carryForwardDue) >= 0.01 || abs($finalAmountDue) >= 0.01) {
+                    // Create or update settlement record
+                    $settlement = AgentMonthlySettlement::firstOrNew([
+                        'agent_id' => $agentId,
+                        'year' => $targetMonth->year,
+                        'month' => $targetMonth->month,
+                    ]);
+                    
+                    $settlement->total_commission = $data['total_commission'];
+                    $settlement->total_premium_due = $data['total_premium_due'];
+                    $settlement->amount_paid = $payments;
+                    $settlement->pending_amount = $pendingAmount;
+                    $settlement->carry_forward_due = $carryForwardDue;
+                    $settlement->final_amount_due = $finalAmountDue;
+                    
+                    // Create detailed notes
+                    $settlement->notes = "Month: {$targetMonth->format('F Y')} | " .
+                        "Current Month Due: {$pendingAmount} | " .
+                        "Previous Dues: {$carryForwardDue} | " .
+                        "Total Due: {$finalAmountDue}";
+                    
+                    $settlement->save();
+                }
                 
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                $this->error("Error processing agent ID {$agent->id}: " . $e->getMessage());
+                $this->error("Error processing agent ID {$agentId}: " . $e->getMessage());
             }
             
             $bar->advance();

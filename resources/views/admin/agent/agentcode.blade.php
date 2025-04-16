@@ -166,7 +166,7 @@
                                                             </span>
                                                             
                                                             <!-- Commission Settlement Status - only show if settled -->
-                                                            @if($commission->commission_settlement)
+                                                            @if($agent->commission_settlement)
                                                                 <span class="badge  text-muted
 
 ">
@@ -189,7 +189,7 @@
                                                                 data-gst="{{ $commission->gst }}"
                                                                 data-discount="{{ $commission->discount ?? 0 }}"
                                                                 data-payout="{{ $commission->payout ?? 0 }}"
-                                                                data-settlement="{{ $commission->commission_settlement }}"
+                                                                {{-- data-settlement="{{ $commission->commission_settlement }}" --}}
                                                                 data-bs-toggle="tooltip" title="Edit">
                                                                 <i class="fa-solid fa-pen-to-square"></i>
                                                             </a>

@@ -82,7 +82,7 @@ class AgentCodeController extends Controller
         $agentCode->gst = $request->gst;
         $agentCode->discount = $request->discount ?? 0;
         $agentCode->payout = $request->payout ?? 0;
-        $agentCode->commission_settlement = $request->has('commission_settlement') ? 1 : 0;
+       // $agentCode->commission_settlement = $request->has('commission_settlement') ? 1 : 0;
 
         // Save to get ID if new record
         $agentCode->save();
