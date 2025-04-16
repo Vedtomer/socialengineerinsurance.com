@@ -37,7 +37,7 @@ class AgentCodeController extends Controller
         // Other data needed for forms
         $agents = User::role('agent')->get();
         $insuranceProducts = InsuranceProduct::all();
-     return   $insuranceCompanies = InsuranceCompany::all();
+        $insuranceCompanies = InsuranceCompany::all();
         $editAgentCode = $request->has('edit') ? AgentCode::find($request->edit) : null;
 
         return view('admin.agent.agentcode', compact(
