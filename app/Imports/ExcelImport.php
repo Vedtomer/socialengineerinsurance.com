@@ -170,7 +170,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
      */
     protected function getCompanyName($company_id)
     {
-        return DB::table('companies')->where('id', $company_id)->value('name');
+        return DB::table('insurance_companies')->where('id', $company_id)->value('name');
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Policy;
-use App\Models\Company;
+use App\Models\InsuranceCompany;
 use App\Models\User;
 use App\Models\InsuranceProduct;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class ReportController extends Controller
     public function index()
     {
         // Get data for filters
-        $companies = Company::orderBy('name')->get();
+        $companies = InsuranceCompany::orderBy('name')->get();
         $agents = User::role('agent')->get();
         $insuranceProducts = InsuranceProduct::orderBy('name')->get();
         $paymentTypes = Policy::getPaymentTypes();

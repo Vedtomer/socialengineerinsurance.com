@@ -63,7 +63,7 @@ class Policy extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class, 'company_id')->withDefault([
+        return $this->belongsTo(InsuranceCompany::class, 'company_id')->withDefault([
             'name' => 'No Company Assigned',
             
         ]);

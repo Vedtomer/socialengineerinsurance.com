@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\InsuranceCompany;
 use App\Models\Policy;
 use App\Models\UserActivity;
 use App\Models\WhatsappMessageLog;
@@ -108,7 +109,7 @@ class AdminController extends Controller
         $sumCommissioncutandpay = round($sumCommission->sum('agent_commission'));
         $paymentby = round($premium - $amount - $sumCommissioncutandpay);
 
-        $companies = Company::where('status', 1)->get();
+        $companies = InsuranceCompany::where('status', 1)->get();
 
         // Get the company IDs from the companies
         $companyIds = $companies->pluck('id');

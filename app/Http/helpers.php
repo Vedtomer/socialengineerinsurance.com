@@ -3,6 +3,7 @@
 use App\Models\Commission;
 use App\Models\Company;
 use App\Models\CustomerPolicy;
+use App\Models\InsuranceCompany;
 use App\Models\InsuranceProduct;
 use App\Models\User;
 use App\Models\Policy;
@@ -79,7 +80,7 @@ if (!function_exists('getCompanyId')) {
     {
         if (!empty($insurance_company)) {
             $code = trim($insurance_company);
-            $commission = Company::where('slug', $code)->first();
+            $commission = InsuranceCompany::where('slug', $code)->first();
             if ($commission && !empty($commission->id)) {
                 return $commission->id;
             }

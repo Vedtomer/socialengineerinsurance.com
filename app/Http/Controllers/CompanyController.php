@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+
+use App\Models\InsuranceCompany;
 use Illuminate\Http\Request;
 class CompanyController extends Controller
 {
@@ -13,7 +14,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
+        $companies = InsuranceCompany::all();
         return view('admin.companies.index', compact('companies'));
     }
 
@@ -49,7 +50,7 @@ class CompanyController extends Controller
             $image->storeAs('public/company', $imageName);
 
             // Save company details to the database
-            $company = new Company();
+            $company = new InsuranceCompany();
             $company->image = $imageName;
             $company->name = $request->name;
             $company->status = $request->status ?? 1; // assuming status is passed in the request
@@ -78,7 +79,7 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show(Company $company)
+    public function show(InsuranceCompany $company)
     {
         return view('companies.show', compact('company'));
     }
@@ -89,7 +90,7 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function edit(Company $company)
+    public function edit(InsuranceCompany $company)
     {
         return view('admin.companies.edit', compact('company'));
     }
@@ -101,7 +102,7 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, InsuranceCompany $company)
 {
  
     $request->validate([
@@ -133,10 +134,10 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Company  $company
+     * @param  \App\Models\InsuranceCompany  $company
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Company $company)
+    public function destroy(InsuranceCompany $company)
     {
         $company->delete();
         return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
