@@ -36,7 +36,7 @@ class ApiController extends Controller
         $agent_id = $user->id;
         if ($user->hasRole('agent')) {
 
-            $cutAndPayTrue = $user->cut_and_pay;
+            $cutAndPayTrue = 0;
 
             $totalCommission = Policy::whereBetween('policy_start_date', [$startDate, $endDate])
                 ->where('agent_id', $agent_id)
@@ -168,7 +168,7 @@ class ApiController extends Controller
             return response([
                 'status' => true,
                 'data' => $data,
-                'cut_and_pay' => auth()->guard('api')->user()->cut_and_pay,
+                'cut_and_pay' => 0,
                 'message' => 'Points History'
             ]);
         } catch (\Exception $e) {
@@ -205,9 +205,9 @@ class ApiController extends Controller
             return response()->json(['message' => 'Agent not found.', 'status' => false, 'data' => null], 404);
         }
 
-        if ($agent->cut_and_pay) {
-            return response()->json(['message' => 'You are not allowed to redeem points because "cut and pay" is enabled for your account.', 'status' => false, 'data' => null], 403);
-        }
+        // if ($agent->cut_and_pay) {
+        //     return response()->json(['message' => 'You are not allowed to redeem points because "cut and pay" is enabled for your account.', 'status' => false, 'data' => null], 403);
+        // }
 
         $inProgressRedemption = PointRedemption::where('agent_id', $agent_id)
             ->whereYear('policy_period_month_year', Carbon::parse($start_date)->year)

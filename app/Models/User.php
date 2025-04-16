@@ -34,7 +34,7 @@ class User extends Authenticatable
         'commission',
         'status',
         'agent_code',
-        'cut_and_pay',
+       
         'otp',
         'otp_sent_at',
         'username'

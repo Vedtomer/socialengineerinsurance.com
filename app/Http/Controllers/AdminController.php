@@ -92,7 +92,7 @@ class AdminController extends Controller
 
         $premium = round(Policy::where('payment_by', 'SELF')->sum('premium'));
 
-        $agentIdsWithCutAndPay = User::where('cut_and_pay', 1)->pluck('id');
+        $agentIdsWithCutAndPay =0;
 
         $sumCommission = Policy::where('payment_by', 'SELF')
             ->whereIn('agent_id', $agentIdsWithCutAndPay);
