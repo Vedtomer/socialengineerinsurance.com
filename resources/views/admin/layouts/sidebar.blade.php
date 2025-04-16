@@ -78,11 +78,16 @@
                    </a>
                </li>
 
-
-
-
-
-
+               <li class="menu {{ classActivePath('agent-settlements') }}">
+                <a href="{{ route('agent.settlements.index') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-file-invoice-dollar fa-lg"></i> {{-- Better icon for settlements --}}
+                        <span>Agent Statement</span>
+                    </div>
+                </a>
+            </li>
+            
+            
 
                <li class="menu">
                    <a href="#home" data-bs-toggle="collapse"
