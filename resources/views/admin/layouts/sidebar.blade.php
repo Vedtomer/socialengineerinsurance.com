@@ -81,11 +81,21 @@
                <li class="menu {{ classActivePath('agent-settlements') }}">
                 <a href="{{ route('agent.settlements.index') }}" aria-expanded="false" class="dropdown-toggle">
                     <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-file-invoice-dollar fa-lg"></i> {{-- Better icon for settlements --}}
+                        <i class="fas fa-solid fa-receipt fa-lx"></i> {{-- Better icon for settlements --}}
                         <span>Agent Statement</span>
                     </div>
                 </a>
             </li>
+
+            <li class="menu {{ classActivePath('reports') }}">
+                <a href="{{ route('reports.index') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-file-invoice-dollar fa-lx"></i> {{-- Updated icon for settlements --}}
+                        <span>Reports</span>
+                    </div>
+                </a>
+            </li>
+            
             
             
 

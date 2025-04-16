@@ -93,7 +93,7 @@ Route::prefix('admin')->group(function () {
 
         // Monthly Commission Routes
         Route::match(['get'], '/monthly-commissions/{id?}', 'App\Http\Controllers\MonthlyCommissionController@handle')->name('monthly-commissions');
-        
+
         Route::get('/agent-settlements', [AgentSettlementController::class, 'index'])->name('agent.settlements.index');
 
 
@@ -157,6 +157,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/policy-rates', [PolicyController::class, 'showPolicyRates'])->name('admin.dashboard');
 
 
+        #Report
+        Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+        Route::post('/reports/policy/download', [App\Http\Controllers\ReportController::class, 'downloadPolicyReport'])->name('reports.policy.download');
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
         Route::get('/app-activity', [AdminController::class, 'AppActivity'])->name('admin.app-activity');
