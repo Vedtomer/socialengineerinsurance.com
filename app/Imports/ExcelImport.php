@@ -127,7 +127,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             // $existingRecord->insurance_company = $this->getCompanyName($commissionDetails->insurance_company_id);
 
             // Default value for is_agent_commission_paid
-            $existingRecord->settled_for_previous_month =$commissionDetails->commission_settlement;
+           // $existingRecord->settled_for_previous_month =$commissionDetails->commission_settlement;
 
             // Save the record
             $existingRecord->save();
