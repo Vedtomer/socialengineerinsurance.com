@@ -96,17 +96,10 @@ class AdminController extends Controller
 
         $sumCommission = 0;
 
-        if (!empty($start_date) && !empty($end_date)) {
-            $sumCommission->where('policy_start_date', '>=', $start_date)
-                ->where('policy_start_date', '<=', $end_date);
-        }
+       
 
-        if (!empty($agent_id)) {
-            $sumCommission->where('agent_id', $agent_id);
-        }
-
-        $sumCommissioncutandpay = round($sumCommission->sum('agent_commission'));
-        $paymentby = round($premium - $amount - $sumCommissioncutandpay);
+        
+        $paymentby = round($premium - $amount );
 
         $companies = InsuranceCompany::where('status', 1)->get();
 
