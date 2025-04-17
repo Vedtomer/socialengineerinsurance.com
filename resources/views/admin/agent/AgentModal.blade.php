@@ -85,7 +85,7 @@
                                 <input type="file" class="form-control @error('pan_image') is-invalid @enderror" 
                                     name="pan_image" id="panImage" 
                                     accept="image/jpeg,image/png,image/jpg,image/gif,image/webp">
-                                <label class="input-group-text" for="panImage">Upload</label>
+                               
                             </div>
                             <div class="form-text">Allowed formats: JPG, JPEG, PNG, GIF, WEBP (Max: 2MB)</div>
                             @error('pan_image')
