@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class AgentController extends Controller
 {
@@ -65,6 +66,7 @@ class AgentController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:100',
             'mobile_number' => 'required|regex:/^[0-9]{10}$/',
@@ -96,20 +98,22 @@ class AgentController extends Controller
             // Handle PAN Card image upload
             if ($request->hasFile('pan_image')) {
                 // Delete old image if it exists
-                if ($agent->pan_image && file_exists(public_path('uploads/pan_images/' . $agent->pan_image))) {
-                    unlink(public_path('uploads/pan_images/' . $agent->pan_image));
+                if ($agent->pan_image && Storage::disk('public')->exists('pan_images/' . $agent->pan_image)) {
+                    Storage::disk('public')->delete('pan_images/' . $agent->pan_image);
                 }
 
                 $panImage = $request->file('pan_image');
                 $imageName = time() . '_' . $agent->id . '.' . $panImage->getClientOriginalExtension();
-                $panImage->move(public_path('uploads/pan_images'), $imageName);
+
+                // Store the file using Storage facade
+                Storage::disk('public')->putFileAs('pan_images', $panImage, $imageName);
                 $agent->pan_image = $imageName;
             }
 
             // Check if the remove flag is set to remove the image
             if ($request->remove_pan_image == 1 && $agent->pan_image) {
-                if (file_exists(public_path('uploads/pan_images/' . $agent->pan_image))) {
-                    unlink(public_path('uploads/pan_images/' . $agent->pan_image));
+                if (Storage::disk('public')->exists('pan_images/' . $agent->pan_image)) {
+                    Storage::disk('public')->delete('pan_images/' . $agent->pan_image);
                 }
                 $agent->pan_image = null;
             }
