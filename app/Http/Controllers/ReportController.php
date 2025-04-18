@@ -207,10 +207,10 @@ class ReportController extends Controller
                     'C1' => 'PAN Number',
                     'D1' => 'Status',
                     'E1' => 'Date Joined',
-                    'F1' => 'Commission – Last Month Settlement',
-                    'G1' => 'Total Policies',
-                    'H1' => 'Total Commission',
-                    'I1' => 'Address',
+                    'F1' => 'Total Policies',
+                    'G1' => 'Total Commission',
+                    'H1' => 'Address',
+                    'I1' => 'Commission – Last Month Settlement',
                 ];
             } else { // customer
                 $headers = [
@@ -234,12 +234,11 @@ class ReportController extends Controller
             $row = 2;
             foreach ($users as $user) {
                 $sheet->setCellValue('A' . $row, $user->name);
+                $sheet->setCellValue('B' . $row, $user->mobile_number);
                 
                 // Combine state, city, and address into a single address field
                 $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
-                $sheet->setCellValue('I' . $row, $fullAddress);
-                
-                $sheet->setCellValue('B' . $row, $user->mobile_number);
+                $sheet->setCellValue('H' . $row, $fullAddress);
                 
                 if ($role === 'agent') {
                     // Get agent's policy count and commission with date filters
@@ -259,9 +258,9 @@ class ReportController extends Controller
                     $sheet->setCellValue('C' . $row, $user->pan_number);
                     $sheet->setCellValue('D' . $row, ucfirst($user->status));
                     $sheet->setCellValue('E' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('F' . $row, $user->commission_settlement ? 'yes' : '-');
-                    $sheet->setCellValue('G' . $row, $policyCount);
-                    $sheet->setCellValue('H' . $row, $totalCommission);
+                    $sheet->setCellValue('F' . $row, $policyCount);
+                    $sheet->setCellValue('G' . $row, $totalCommission);
+                    $sheet->setCellValue('I' . $row, $user->commission_settlement ? 'yes' : '-');
                 } else {
                     // Get customer's policy count and total premium with date filters
                     $policyQuery = CustomerPolicy::where('user_id', $user->id);
