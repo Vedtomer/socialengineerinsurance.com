@@ -103,7 +103,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        {{-- <div class="col-md-3 mb-3">
                                             <label class="form-label">Date Range</label>
                                             <div class="input-group">
                                                 <input type="month" name="start_date" id="start_date" class="form-control"
@@ -111,7 +111,7 @@
                                                 <input type="month" name="end_date" id="end_date" class="form-control"
                                                     value="{{ $endDate }}" placeholder="To">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
