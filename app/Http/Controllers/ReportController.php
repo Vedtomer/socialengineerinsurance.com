@@ -202,27 +202,27 @@ class ReportController extends Controller
             // Set headers based on role
             if ($role === 'agent') {
                 $headers = [
-                    'A1' => 'Name',
-                    'B1' => 'Address',
-                    'C1' => 'Mobile Number',
-                    'D1' => 'PAN Number',
-                    'E1' => 'Status',
-                    'F1' => 'Date Joined',
-                    'G1' => 'Commission – Last Month Settlement',
-                    'H1' => 'Total Policies',
-                    'I1' => 'Total Commission',
+                    'A1' => 'Name', 
+                    'B1' => 'Mobile Number',
+                    'C1' => 'PAN Number',
+                    'D1' => 'Status',
+                    'E1' => 'Date Joined',
+                    'F1' => 'Commission – Last Month Settlement',
+                    'G1' => 'Total Policies',
+                    'H1' => 'Total Commission',
+                    'I1' => 'Address',
                 ];
             } else { // customer
                 $headers = [
                     'A1' => 'Name',
-                    'B1' => 'Address',
-                    'C1' => 'Mobile Number',
-                    'D1' => 'Aadhar Number',
-                    'E1' => 'PAN Number',
-                    'F1' => 'Status',
-                    'G1' => 'Date Joined',
-                    'H1' => 'Total Policies',
-                    'I1' => 'Total Premium',
+                    'B1' => 'Mobile Number',
+                    'C1' => 'Aadhar Number',
+                    'D1' => 'PAN Number',
+                    'E1' => 'Status',
+                    'F1' => 'Date Joined',
+                    'G1' => 'Total Policies',
+                    'H1' => 'Total Premium',
+                    'I1' => 'Address',
                 ];
             }
             
@@ -237,9 +237,9 @@ class ReportController extends Controller
                 
                 // Combine state, city, and address into a single address field
                 $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
-                $sheet->setCellValue('B' . $row, $fullAddress);
+                $sheet->setCellValue('I' . $row, $fullAddress);
                 
-                $sheet->setCellValue('C' . $row, $user->mobile_number);
+                $sheet->setCellValue('B' . $row, $user->mobile_number);
                 
                 if ($role === 'agent') {
                     // Get agent's policy count and commission with date filters
@@ -256,12 +256,12 @@ class ReportController extends Controller
                     $policyCount = $policyQuery->count();
                     $totalCommission = $policyQuery->sum('agent_commission');
                     
-                    $sheet->setCellValue('D' . $row, $user->pan_number);
-                    $sheet->setCellValue('E' . $row, ucfirst($user->status));
-                    $sheet->setCellValue('F' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('G' . $row, $user->commission_settlement ? 'yes' : '-');
-                    $sheet->setCellValue('H' . $row, $policyCount);
-                    $sheet->setCellValue('I' . $row, $totalCommission);
+                    $sheet->setCellValue('C' . $row, $user->pan_number);
+                    $sheet->setCellValue('D' . $row, ucfirst($user->status));
+                    $sheet->setCellValue('E' . $row, $user->created_at->format('Y-m-d'));
+                    $sheet->setCellValue('F' . $row, $user->commission_settlement ? 'yes' : '-');
+                    $sheet->setCellValue('G' . $row, $policyCount);
+                    $sheet->setCellValue('H' . $row, $totalCommission);
                 } else {
                     // Get customer's policy count and total premium with date filters
                     $policyQuery = CustomerPolicy::where('user_id', $user->id);
@@ -277,12 +277,12 @@ class ReportController extends Controller
                     $policyCount = $policyQuery->count();
                     $totalPremium = $policyQuery->sum('premium');
                     
-                    $sheet->setCellValue('D' . $row, $user->aadhar_number);
-                    $sheet->setCellValue('E' . $row, $user->pan_number);
-                    $sheet->setCellValue('F' . $row, ucfirst($user->status));
-                    $sheet->setCellValue('G' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('H' . $row, $policyCount);
-                    $sheet->setCellValue('I' . $row, $totalPremium);
+                    $sheet->setCellValue('C' . $row, $user->aadhar_number);
+                    $sheet->setCellValue('D' . $row, $user->pan_number);
+                    $sheet->setCellValue('E' . $row, ucfirst($user->status));
+                    $sheet->setCellValue('F' . $row, $user->created_at->format('Y-m-d'));
+                    $sheet->setCellValue('G' . $row, $policyCount);
+                    $sheet->setCellValue('H' . $row, $totalPremium);
                 }
                 $row++;
             }
