@@ -256,7 +256,7 @@ class ReportController extends Controller
                     $totalCommission = $policyQuery->sum('agent_commission');
                     
                     $sheet->setCellValue('C' . $row, $user->pan_number);
-                    $sheet->setCellValue('D' . $row, ucfirst($user->status));
+                    $sheet->setCellValue('D' . $row, ucfirst($user->status ? 'Active' : 'InActive'));
                     $sheet->setCellValue('E' . $row, $user->created_at->format('Y-m-d'));
                     $sheet->setCellValue('F' . $row, $policyCount);
                     $sheet->setCellValue('G' . $row, $totalCommission);
