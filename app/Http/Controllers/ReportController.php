@@ -190,29 +190,6 @@ class ReportController extends Controller
             // Fetch all users with the specified role and filters
             $users = $query->get();
             
-            // Filter users based on their policies' date range
-            if ($request->filled('from_date') || $request->filled('to_date')) {
-                $users = $users->filter(function ($user) use ($request, $role) {
-                    // Query to check if user has policies within date range
-                    if ($role === 'agent') {
-                        $policyQuery = Policy::where('agent_id', $user->id);
-                    } else { // customer
-                        $policyQuery = CustomerPolicy::where('user_id', $user->id);
-                    }
-                    
-                    // Apply date filters to policy_start_date
-                    if ($request->filled('from_date')) {
-                        $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
-                    }
-                    if ($request->filled('to_date')) {
-                        $policyQuery->whereDate('policy_start_date', '<=', $request->to_date);
-                    }
-                    
-                    // Return true if user has policies within date range
-                    return $policyQuery->exists();
-                });
-            }
-    
             // Handle no records
             if ($users->isEmpty()) {
                 return redirect()->back()->with('error', "No {$role}s found for the selected filters.");
@@ -226,32 +203,26 @@ class ReportController extends Controller
             if ($role === 'agent') {
                 $headers = [
                     'A1' => 'Name',
-                    'B1' => 'Email',
-                    'C1' => 'State',
-                    'D1' => 'City',
-                    'E1' => 'Address',
-                    'F1' => 'Mobile Number',
-                    'G1' => 'PAN Number',
-                    'H1' => 'Status',
-                    'I1' => 'Date Joined',
-                    'J1' => 'Commission Settlement Status',
-                    'K1' => 'Total Policies',
-                    'L1' => 'Total Commission',
+                    'B1' => 'Address',
+                    'C1' => 'Mobile Number',
+                    'D1' => 'PAN Number',
+                    'E1' => 'Status',
+                    'F1' => 'Date Joined',
+                    'G1' => 'Commission – Last Month Settlement',
+                    'H1' => 'Total Policies',
+                    'I1' => 'Total Commission',
                 ];
             } else { // customer
                 $headers = [
                     'A1' => 'Name',
-                    'B1' => 'Email',
-                    'C1' => 'State',
-                    'D1' => 'City',
-                    'E1' => 'Address',
-                    'F1' => 'Mobile Number',
-                    'G1' => 'Aadhar Number',
-                    'H1' => 'PAN Number',
-                    'I1' => 'Status',
-                    'J1' => 'Date Joined',
-                    'K1' => 'Total Policies',
-                    'L1' => 'Total Premium',
+                    'B1' => 'Address',
+                    'C1' => 'Mobile Number',
+                    'D1' => 'Aadhar Number',
+                    'E1' => 'PAN Number',
+                    'F1' => 'Status',
+                    'G1' => 'Date Joined',
+                    'H1' => 'Total Policies',
+                    'I1' => 'Total Premium',
                 ];
             }
             
@@ -263,17 +234,18 @@ class ReportController extends Controller
             $row = 2;
             foreach ($users as $user) {
                 $sheet->setCellValue('A' . $row, $user->name);
-                $sheet->setCellValue('B' . $row, $user->email);
-                $sheet->setCellValue('C' . $row, $user->state);
-                $sheet->setCellValue('D' . $row, $user->city);
-                $sheet->setCellValue('E' . $row, $user->address);
-                $sheet->setCellValue('F' . $row, $user->mobile_number);
+                
+                // Combine state, city, and address into a single address field
+                $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
+                $sheet->setCellValue('B' . $row, $fullAddress);
+                
+                $sheet->setCellValue('C' . $row, $user->mobile_number);
                 
                 if ($role === 'agent') {
                     // Get agent's policy count and commission with date filters
                     $policyQuery = Policy::where('agent_id', $user->id);
                     
-                    // Apply date filters to policy query
+                    // Apply date filters to policy query if provided
                     if ($request->filled('from_date')) {
                         $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
                     }
@@ -284,17 +256,17 @@ class ReportController extends Controller
                     $policyCount = $policyQuery->count();
                     $totalCommission = $policyQuery->sum('agent_commission');
                     
-                    $sheet->setCellValue('G' . $row, $user->pan_number);
-                    $sheet->setCellValue('H' . $row, ucfirst($user->status));
-                    $sheet->setCellValue('I' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('J' . $row, $user->commission_settlement ? 'yes' : '-');
-                    $sheet->setCellValue('K' . $row, $policyCount);
-                    $sheet->setCellValue('L' . $row, $totalCommission);
+                    $sheet->setCellValue('D' . $row, $user->pan_number);
+                    $sheet->setCellValue('E' . $row, ucfirst($user->status));
+                    $sheet->setCellValue('F' . $row, $user->created_at->format('Y-m-d'));
+                    $sheet->setCellValue('G' . $row, $user->commission_settlement ? 'yes' : '-');
+                    $sheet->setCellValue('H' . $row, $policyCount);
+                    $sheet->setCellValue('I' . $row, $totalCommission);
                 } else {
                     // Get customer's policy count and total premium with date filters
                     $policyQuery = CustomerPolicy::where('user_id', $user->id);
                     
-                    // Apply date filters to policy query
+                    // Apply date filters to policy query if provided
                     if ($request->filled('from_date')) {
                         $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
                     }
@@ -305,18 +277,18 @@ class ReportController extends Controller
                     $policyCount = $policyQuery->count();
                     $totalPremium = $policyQuery->sum('premium');
                     
-                    $sheet->setCellValue('G' . $row, $user->aadhar_number);
-                    $sheet->setCellValue('H' . $row, $user->pan_number);
-                    $sheet->setCellValue('I' . $row, ucfirst($user->status));
-                    $sheet->setCellValue('J' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('K' . $row, $policyCount);
-                    $sheet->setCellValue('L' . $row, $totalPremium);
+                    $sheet->setCellValue('D' . $row, $user->aadhar_number);
+                    $sheet->setCellValue('E' . $row, $user->pan_number);
+                    $sheet->setCellValue('F' . $row, ucfirst($user->status));
+                    $sheet->setCellValue('G' . $row, $user->created_at->format('Y-m-d'));
+                    $sheet->setCellValue('H' . $row, $policyCount);
+                    $sheet->setCellValue('I' . $row, $totalPremium);
                 }
                 $row++;
             }
     
             // Auto-size columns
-            foreach (range('A', 'L') as $column) {
+            foreach (range('A', 'I') as $column) {
                 $sheet->getColumnDimension($column)->setAutoSize(true);
             }
     
