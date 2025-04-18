@@ -157,9 +157,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/policy-rates', [PolicyController::class, 'showPolicyRates'])->name('admin.dashboard');
 
 
-        #Report
-        Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
-        Route::post('/reports/policy/download', [App\Http\Controllers\ReportController::class, 'downloadPolicyReport'])->name('reports.policy.download');
+        Route::prefix('reports')->name('reports.')->group(function () {
+            // Reports dashboard
+            Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
+            
+            // Policy reports
+            Route::post('/policy/download', [App\Http\Controllers\ReportController::class, 'downloadPolicyReport'])->name('policy.download');
+            
+            // User reports (for both agents and customers)
+            Route::post('/user/download', [App\Http\Controllers\ReportController::class, 'downloadUserReport'])->name('user.download');
+        });
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
         Route::get('/app-activity', [AdminController::class, 'AppActivity'])->name('admin.app-activity');

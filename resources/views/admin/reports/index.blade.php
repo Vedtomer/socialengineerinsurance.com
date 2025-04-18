@@ -4,90 +4,119 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Reports Dashboard</h4>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="fas fa-chart-line me-2"></i>Reports Dashboard</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-tabs mb-4" id="reportTabs" role="tablist">
+                    <!-- Report Type Selection -->
+                    <ul class="nav nav-pills mb-4" id="reportTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="policy-tab" data-bs-toggle="tab" data-bs-target="#policy-report" type="button" role="tab" aria-controls="policy-report" aria-selected="true">Policy Reports</button>
+                            <button class="nav-link active" id="policy-tab" data-bs-toggle="tab" 
+                                data-bs-target="#policy-report" type="button" role="tab">
+                                <i class="fas fa-file-contract me-1"></i> Policy Reports
+                            </button>
                         </li>
-                        <!-- Add more report tabs as needed -->
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="future-tab" data-bs-toggle="tab" data-bs-target="#future-report" type="button" role="tab" aria-controls="future-report" aria-selected="false">Other Reports</button>
+                            <button class="nav-link" id="agent-tab" data-bs-toggle="tab" 
+                                data-bs-target="#agent-report" type="button" role="tab">
+                                <i class="fas fa-user-tie me-1"></i> Agent Reports
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="customer-tab" data-bs-toggle="tab" 
+                                data-bs-target="#customer-report" type="button" role="tab">
+                                <i class="fas fa-users me-1"></i> Customer Reports
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="future-tab" data-bs-toggle="tab" 
+                                data-bs-target="#future-report" type="button" role="tab">
+                                <i class="fas fa-plus-circle me-1"></i> Other Reports
+                            </button>
                         </li>
                     </ul>
+                    
+                    <!-- Flash Messages -->
+                    @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+                    
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
                     
                     <div class="tab-content" id="reportTabsContent">
                         <!-- Policy Report Tab -->
                         <div class="tab-pane fade show active" id="policy-report" role="tabpanel" aria-labelledby="policy-tab">
-                            <form action="{{ route('reports.policy.download') }}" method="POST">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="from_date" class="form-label">From Date</label>
-                                        <input type="date" class="form-control" id="from_date" name="from_date">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="to_date" class="form-label">To Date</label>
-                                        <input type="date" class="form-control" id="to_date" name="to_date">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="company_id" class="form-label">Company</label>
-                                        <select class="form-select" id="company_id" name="company_id">
-                                            <option value="">All Companies</option>
-                                            @foreach($companies as $company)
-                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="card border-light mb-3">
+                                <div class="card-header bg-light">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-filter me-2"></i>Policy Report Filters
+                                    </h5>
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="agent_id" class="form-label">Agent</label>
-                                        <select class="form-select" id="agent_id" name="agent_id">
-                                            <option value="">All Agents</option>
-                                            @foreach($agents as $agent)
-                                                <option value="{{ $agent->id }}">{{ $agent->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="policy_type" class="form-label">Policy Type</label>
-                                        <select class="form-select" id="policy_type" name="policy_type">
-                                            <option value="">All Types</option>
-                                            @foreach($insuranceProducts as $product)
-                                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="payment_by" class="form-label">Payment Type</label>
-                                        <select class="form-select" id="payment_by" name="payment_by">
-                                            <option value="">All Payment Types</option>
-                                            @foreach($paymentTypes as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="card-body">
+                                    @include('admin.reports.partials.policy_filters', [
+                                        'companies' => $companies,
+                                        'agents' => $agents,
+                                        'insuranceProducts' => $insuranceProducts,
+                                        'paymentTypes' => $paymentTypes
+                                    ])
                                 </div>
-                                
-                                
-                                
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-download"></i> Download Excel
-                                    </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Agent Report Tab -->
+                        <div class="tab-pane fade" id="agent-report" role="tabpanel" aria-labelledby="agent-tab">
+                            <div class="card border-light mb-3">
+                                <div class="card-header bg-light">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-filter me-2"></i>Agent Report Filters
+                                    </h5>
                                 </div>
-                            </form>
+                                <div class="card-body">
+                                    @include('admin.reports.partials.user_filters', [
+                                        'users' => $agents,
+                                        'states' => $states,
+                                        'cities' => $cities,
+                                        'statuses' => $statuses,
+                                        'role' => 'agent'
+                                    ])
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Report Tab -->
+                        <div class="tab-pane fade" id="customer-report" role="tabpanel" aria-labelledby="customer-tab">
+                            <div class="card border-light mb-3">
+                                <div class="card-header bg-light">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-filter me-2"></i>Customer Report Filters
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @include('admin.reports.partials.user_filters', [
+                                        'users' => $customers,
+                                        'states' => $states,
+                                        'cities' => $cities,
+                                        'statuses' => $statuses,
+                                        'role' => 'customer'
+                                    ])
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Future Report Tab (placeholder) -->
                         <div class="tab-pane fade" id="future-report" role="tabpanel" aria-labelledby="future-tab">
                             <div class="alert alert-info">
-                                <p>Additional report types will be added here in the future.</p>
+                                <i class="fas fa-info-circle me-2"></i>
+                                Additional report types will be added here in the future.
                             </div>
                         </div>
                     </div>
@@ -101,9 +130,7 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Optional: Add client-side validation or dynamic filtering
-        
-        // Example: Set default date range to current month
+        // Set default date range to current month
         const today = new Date();
         const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
         
@@ -115,8 +142,22 @@
             return `${year}-${month}-${day}`;
         };
         
-        document.getElementById('from_date').value = formatDate(firstDay);
-        document.getElementById('to_date').value = formatDate(today);
+        // Set default dates for all date inputs
+        document.querySelectorAll('input[type="date"][name="from_date"]').forEach(input => {
+            input.value = formatDate(firstDay);
+        });
+        
+        document.querySelectorAll('input[type="date"][name="to_date"]').forEach(input => {
+            input.value = formatDate(today);
+        });
+        
+        // Enable select2 for dropdowns if available
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('.select2').select2({
+                placeholder: "Select an option",
+                allowClear: true
+            });
+        }
     });
 </script>
 @endsection
