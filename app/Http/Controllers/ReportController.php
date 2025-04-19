@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\CustomerPolicy;
 use App\Models\Policy;
 use App\Models\InsuranceCompany;
@@ -28,18 +29,39 @@ class ReportController extends Controller
         $states = User::distinct('state')->whereNotNull('state')->pluck('state');
         $cities = User::distinct('city')->whereNotNull('city')->pluck('city');
         $statuses = ['active' => 'Active', 'inactive' => 'Inactive'];
+
+        // Get count data for dashboard
+        $policyCounts = [
+            'total' => Policy::count(),
+            
+        ];
+
+        $userCounts = [
+            'agents' => User::role('agent')->count(),
+            'customers' => User::role('customer')->count()
+        ];
+
+       
         
+        $productCounts = InsuranceProduct::count();
+        $companyCounts = InsuranceCompany::count();
+
         return view('admin.reports.index', compact(
-            'companies', 
-            'agents', 
+            'companies',
+            'agents',
             'customers',
-            'insuranceProducts', 
+            'insuranceProducts',
             'paymentTypes',
             'states',
             'cities',
-            'statuses'
+            'statuses',
+            'policyCounts',
+            'userCounts',
+            'productCounts',
+            'companyCounts'
         ));
     }
+
 
     /**
      * Generate and download policy report
@@ -172,37 +194,37 @@ class ReportController extends Controller
                 'user_id' => 'nullable|exists:users,id',
                 'role' => 'required|in:agent,customer',
             ]);
-    
+
             $role = $request->role;
-            
+
             // Start query for users with the specified role
             $query = User::role($role);
-            
+
             // Apply non-date filters to users
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
-            }  
-    
+            }
+
             if ($request->filled('user_id')) {
                 $query->where('id', $request->user_id);
             }
-    
+
             // Fetch all users with the specified role and filters
             $users = $query->get();
-            
+
             // Handle no records
             if ($users->isEmpty()) {
                 return redirect()->back()->with('error', "No {$role}s found for the selected filters.");
             }
-    
+
             // Start Excel export
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
-    
+
             // Set headers based on role
             if ($role === 'agent') {
                 $headers = [
-                    'A1' => 'Name', 
+                    'A1' => 'Name',
                     'B1' => 'Mobile Number',
                     'C1' => 'PAN Number',
                     'D1' => 'Status',
@@ -225,25 +247,25 @@ class ReportController extends Controller
                     'I1' => 'Address',
                 ];
             }
-            
+
             foreach ($headers as $cell => $label) {
                 $sheet->setCellValue($cell, $label);
             }
-    
+
             // Fill data
             $row = 2;
             foreach ($users as $user) {
                 $sheet->setCellValue('A' . $row, $user->name);
                 $sheet->setCellValue('B' . $row, $user->mobile_number);
-                
+
                 // Combine state, city, and address into a single address field
                 $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
                 $sheet->setCellValue('H' . $row, $fullAddress);
-                
+
                 if ($role === 'agent') {
                     // Get agent's policy count and commission with date filters
                     $policyQuery = Policy::where('agent_id', $user->id);
-                    
+
                     // Apply date filters to policy query if provided
                     if ($request->filled('from_date')) {
                         $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
@@ -251,10 +273,10 @@ class ReportController extends Controller
                     if ($request->filled('to_date')) {
                         $policyQuery->whereDate('policy_start_date', '<=', $request->to_date);
                     }
-                    
+
                     $policyCount = $policyQuery->count();
                     $totalCommission = $policyQuery->sum('agent_commission');
-                    
+
                     $sheet->setCellValue('C' . $row, $user->pan_number);
                     $sheet->setCellValue('D' . $row, ucfirst($user->status ? 'Active' : 'InActive'));
                     $sheet->setCellValue('E' . $row, $user->created_at->format('Y-m-d'));
@@ -264,7 +286,7 @@ class ReportController extends Controller
                 } else {
                     // Get customer's policy count and total premium with date filters
                     $policyQuery = CustomerPolicy::where('user_id', $user->id);
-                    
+
                     // Apply date filters to policy query if provided
                     if ($request->filled('from_date')) {
                         $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
@@ -272,10 +294,10 @@ class ReportController extends Controller
                     if ($request->filled('to_date')) {
                         $policyQuery->whereDate('policy_start_date', '<=', $request->to_date);
                     }
-                    
+
                     $policyCount = $policyQuery->count();
                     $totalPremium = $policyQuery->sum('premium');
-                    
+
                     $sheet->setCellValue('C' . $row, $user->aadhar_number);
                     $sheet->setCellValue('D' . $row, $user->pan_number);
                     $sheet->setCellValue('E' . $row, ucfirst($user->status));
@@ -285,26 +307,126 @@ class ReportController extends Controller
                 }
                 $row++;
             }
-    
+
             // Auto-size columns
             foreach (range('A', 'I') as $column) {
                 $sheet->getColumnDimension($column)->setAutoSize(true);
             }
-    
+
             // Save the file
             $filename = $role . '_report_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
             $filePath = storage_path('app/public/reports/' . $filename);
-    
+
             if (!file_exists(dirname($filePath))) {
                 mkdir(dirname($filePath), 0755, true);
             }
-    
+
             $writer = new Xlsx($spreadsheet);
             $writer->save($filePath);
-    
+
             return response()->download($filePath, $filename)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
             \Log::error($request->role . ' report export failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Generate and download account report
+     */
+    public function downloadAccountReport(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'from_date' => 'nullable|date',
+                'to_date' => 'nullable|date|after_or_equal:from_date',
+                'agent_id' => 'nullable|exists:users,id',
+                'month' => 'nullable|integer|between:1,12',
+                'year' => 'nullable|integer|min:2000',
+            ]);
+
+            // Start query
+            $query = Account::query();
+
+            // Apply filters
+            if ($request->filled('from_date')) {
+                $query->whereDate('payment_date', '>=', $request->from_date);
+            }
+            if ($request->filled('to_date')) {
+                $query->whereDate('payment_date', '<=', $request->to_date);
+            }
+            if ($request->filled('agent_id')) {
+                $query->where('user_id', $request->agent_id);
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('payment_date', $request->month);
+            }
+            if ($request->filled('year')) {
+                $query->whereYear('payment_date', $request->year);
+            }
+
+            // Fetch records with agent relationship
+            $accounts = $query->with(['agent'])->get();
+
+            // Handle no records
+            if ($accounts->isEmpty()) {
+                return redirect()->back()->with('error', 'No records found for the selected filters.');
+            }
+
+            // Start Excel export
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Headers
+            $headers = [
+                'A1' => 'Agent Name',
+                'B1' => 'Payment Date',
+                'C1' => 'Amount Paid',
+                'D1' => 'Amount Remaining',
+                'E1' => 'Payment Method',
+                'F1' => 'Transaction ID',
+                'G1' => 'Notes',
+                // 'H1' => 'Status'
+            ];
+            foreach ($headers as $cell => $label) {
+                $sheet->setCellValue($cell, $label);
+            }
+
+            // Fill data
+            $row = 2;
+            foreach ($accounts as $account) {
+                $sheet->setCellValue('A' . $row, optional($account->agent)->name);
+                $sheet->setCellValue('B' . $row, $account->payment_date->format('Y-m-d'));
+                $sheet->setCellValue('C' . $row, $account->amount_paid);
+                $sheet->setCellValue('D' . $row, $account->amount_remaining);
+                $sheet->setCellValue('E' . $row, $account->payment_method);
+                $sheet->setCellValue('F' . $row, $account->transaction_id);
+                $sheet->setCellValue('G' . $row, $account->notes);
+                // $sheet->setCellValue('H' . $row, $account->status);
+                $row++;
+            }
+
+            // Auto-size columns
+            foreach (range('A', 'H') as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
+            }
+
+            // Save the file
+            $filename = 'account_report_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+            $filePath = storage_path('app/public/reports/' . $filename);
+
+            if (!file_exists(dirname($filePath))) {
+                mkdir(dirname($filePath), 0755, true);
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($filePath);
+
+            return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            \Log::error('Account report export failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
         }
     }

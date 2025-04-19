@@ -73,7 +73,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
         Route::get('/profile/edit', [AdminController::class, 'ProfileEdit'])->name('edit.profile');
         Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
-       
+
 
 
         // Account Routes
@@ -160,12 +160,15 @@ Route::prefix('admin')->group(function () {
         Route::prefix('reports')->name('reports.')->group(function () {
             // Reports dashboard
             Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
-            
+
             // Policy reports
             Route::post('/policy/download', [App\Http\Controllers\ReportController::class, 'downloadPolicyReport'])->name('policy.download');
-            
+
             // User reports (for both agents and customers)
             Route::post('/user/download', [App\Http\Controllers\ReportController::class, 'downloadUserReport'])->name('user.download');
+
+            // Account reports
+            Route::post('/account/download', [App\Http\Controllers\ReportController::class, 'downloadAccountReport'])->name('account.download');
         });
 
         Route::get('/logs', [AdminController::class, 'WhatsappMessageLog'])->name('WhatsappMessageLog');
