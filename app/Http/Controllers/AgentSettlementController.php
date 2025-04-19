@@ -55,7 +55,7 @@ class AgentSettlementController extends Controller
         // Get summary statistics
         $totalDue = $query->sum('final_amount_due');
         $totalPaid = $query->sum('amount_paid');
-        $totalPending = $query->sum('pending_amount');
+        // $totalPending = $query->sum('pending_amount');
 
         // Get all settlements for calculation
         $allSettlements = $query->get();

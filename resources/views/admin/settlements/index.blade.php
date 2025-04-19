@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="card bg-warning text-white">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <!-- Enhanced Filter Form -->
