@@ -9,9 +9,7 @@
     <div class="row layout-top-spacing">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
             <div class="widget widget-chart-three">
-                <div class="widget-heading">
-                    <h5 class="">Policy Analytics Dashboard</h5>
-                </div>
+              
                 <div class="widget-content">
                     <form id="filter-form" method="post" action="{{ route('admin.dashboard') }}" class="row g-3 align-items-end">
                         @csrf
@@ -183,8 +181,8 @@
                                 </span>
                             </div>
                             <div class="balance-info">
-                                <h6>Payment Received</h6>
-                                <p>₹{{ $data['paymentby'] }}</p>
+                                <h6>Payment Due</h6>
+                                <p>₹{{ $data['final_amount_due'] }}</p>
                             </div>
                         </div>
                     </div>

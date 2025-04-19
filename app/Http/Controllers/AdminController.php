@@ -672,13 +672,12 @@ class AdminController extends Controller
         $policyCount = $monthlyCommissions->sum('policies_count');
         $premiums = $monthlyCommissions->sum('total_premium');
         $payout = $monthlyCommissions->sum('total_payout');
-        $amount = $agentSettlements->sum('final_amount_due');
-        $paymentby = round($premiums - $amount);
-
+        $final_amount_due = $agentSettlements->sum('final_amount_due');
+        
         // Get insurance company data
         $companies = InsuranceCompany::where('status', 1)->get();
         $companyIds = $companies->pluck('id');
-
+        
         // Get policy data by company
         $policyData = Policy::whereIn('company_id', $companyIds)
             ->where('policy_start_date', '>=', $start_date)
@@ -689,7 +688,7 @@ class AdminController extends Controller
             ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
             ->groupBy('company_id')
             ->get();
-
+        
         // Combine the company data with the policy data
         $companies = $companies->map(function ($company) use ($policyData) {
             $policy = $policyData->firstWhere('company_id', $company->id);
@@ -698,13 +697,18 @@ class AdminController extends Controller
             $company->total_payout = $policy ? round($policy->total_payout) : 0;
             return $company;
         });
+        
+        // Filter companies with amount greater than 0
+        $companies = $companies->filter(function ($company) {
+            return $company->total_premium > 0;
+        });
 
         $agents = User::role('agent')->where('status', 1)->get();
         
         return [
             'agents' => $agents,
             'policyCount' => round($policyCount),
-            'paymentby' => $paymentby,
+            'final_amount_due' => $final_amount_due,
             'premiums' => round($premiums),
             'payout' => round($payout),
             'companies' => $companies
