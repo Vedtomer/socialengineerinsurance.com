@@ -433,7 +433,8 @@
                     document.querySelectorAll('.monthly-filter').forEach(el => el.style.display = 'block');
                     document.getElementById('month').parentElement.style.display = 'none';
                     document.querySelectorAll('.custom-filter').forEach(el => el.style.display = 'none');
-                // } else if (filterType === 'custom') {
+                 }
+                 // else if (filterType === 'custom') {
                 //     document.querySelectorAll('.monthly-filter').forEach(el => el.style.display = 'none');
                 //     document.querySelectorAll('.custom-filter').forEach(el => el.style.display = 'block');
                 // }
