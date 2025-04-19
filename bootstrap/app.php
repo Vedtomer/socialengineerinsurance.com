@@ -29,8 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:custom-task')->dailyAt('10:00');
         $schedule->command('app:policy-expiration-task')->dailyAt('10:30');
         $schedule->command('whatsapp:send-notifications')->dailyAt('13:00');
-        $schedule->command('commissions:generate')->dailyAt('12:00');
-        $schedule->command('commissions:generate')->dailyAt('18:00');
+        $schedule->command('commissions:generate')->hourly();
+        $schedule->command('agent:update-settlements')->hourly();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
