@@ -226,7 +226,120 @@
                 </button>
             </div>
         </div>
+
+        <!-- Stats Cards -->
+    <div class="row layout-top-spacing">
+        <!-- Total Premium Card -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="card border-0 shadow-sm h-100 bg-soft-primary">
+                <div class="card-body position-relative p-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1 text-primary fw-bold">Total Premium</h6>
+                            <h3 class="mb-0 fw-bold">₹{{ $data['premiums'] }}</h3>
+                            <p class="text-muted mb-0 mt-2">Total Premium Generated</p>
+                        </div>
+                        <div class="stat-icon">
+                            <div class="avatar avatar-lg rounded-circle bg-primary bg-opacity-10 p-3">
+                                <i class="fas fa-rupee-sign fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                            <path fill="rgba(66, 135, 245, 0.1)" fill-opacity="1"
+                                d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,202.7C672,224,768,224,864,197.3C960,171,1056,117,1152,112C1248,107,1344,149,1392,170.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policies Issued Card -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="card border-0 shadow-sm h-100 bg-soft-success">
+                <div class="card-body position-relative p-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1 text-success fw-bold">Policies Issued</h6>
+                            <h3 class="mb-0 fw-bold">{{ $data['policyCount'] }}</h3>
+                            <p class="text-muted mb-0 mt-2">Total Number of Policies</p>
+                        </div>
+                        <div class="stat-icon">
+                            <div class="avatar avatar-lg rounded-circle bg-success bg-opacity-10 p-3">
+                                <i class="fas fa-file-contract fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                            <path fill="rgba(45, 193, 125, 0.1)" fill-opacity="1"
+                                d="M0,96L48,128C96,160,192,224,288,240C384,256,480,224,576,213.3C672,203,768,213,864,202.7C960,192,1056,160,1152,165.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Payout Card -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="card border-0 shadow-sm h-100 bg-soft-warning">
+                <div class="card-body position-relative p-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1 text-warning fw-bold">Total Payout</h6>
+                            <h3 class="mb-0 fw-bold">₹{{ $data['payout'] }}</h3>
+                            <p class="text-muted mb-0 mt-2">Total Payouts Made</p>
+                        </div>
+                        <div class="stat-icon">
+                            <div class="avatar avatar-lg rounded-circle bg-warning bg-opacity-10 p-3">
+                                <i class="fas fa-hand-holding-usd fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                            <path fill="rgba(255, 186, 43, 0.1)" fill-opacity="1"
+                                d="M0,224L48,213.3C96,203,192,181,288,154.7C384,128,480,96,576,106.7C672,117,768,171,864,197.3C960,224,1056,224,1152,202.7C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Due Card -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <div class="card border-0 shadow-sm h-100 bg-soft-danger">
+                <div class="card-body position-relative p-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1 text-danger fw-bold">Payment Due</h6>
+                            <h3 class="mb-0 fw-bold">₹{{ number_format($data['final_amount_due'], 0) }}</h3>
+                            <p class="text-muted mb-0 mt-2">Outstanding Payments</p>
+                        </div>
+                        <div class="stat-icon">
+                            <div class="avatar avatar-lg rounded-circle bg-danger bg-opacity-10 p-3">
+                                <i class="fas fa-credit-card fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                            <path fill="rgba(231, 81, 90, 0.1)" fill-opacity="1"
+                                d="M0,160L48,149.3C96,139,192,117,288,133.3C384,149,480,203,576,208C672,213,768,171,864,144C960,117,1056,107,1152,128C1248,149,1344,203,1392,229.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    </div>
+
+    
 
     <!-- Filter Modal -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true"
@@ -361,116 +474,7 @@
     </div>
 
 
-    <!-- Stats Cards -->
-    <div class="row layout-top-spacing">
-        <!-- Total Premium Card -->
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-            <div class="card border-0 shadow-sm h-100 bg-soft-primary">
-                <div class="card-body position-relative p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title mb-1 text-primary fw-bold">Total Premium</h6>
-                            <h3 class="mb-0 fw-bold">₹{{ $data['premiums'] }}</h3>
-                            <p class="text-muted mb-0 mt-2">Total Premium Generated</p>
-                        </div>
-                        <div class="stat-icon">
-                            <div class="avatar avatar-lg rounded-circle bg-primary bg-opacity-10 p-3">
-                                <i class="fas fa-rupee-sign fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                            <path fill="rgba(66, 135, 245, 0.1)" fill-opacity="1"
-                                d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,202.7C672,224,768,224,864,197.3C960,171,1056,117,1152,112C1248,107,1344,149,1392,170.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Policies Issued Card -->
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-            <div class="card border-0 shadow-sm h-100 bg-soft-success">
-                <div class="card-body position-relative p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title mb-1 text-success fw-bold">Policies Issued</h6>
-                            <h3 class="mb-0 fw-bold">{{ $data['policyCount'] }}</h3>
-                            <p class="text-muted mb-0 mt-2">Total Number of Policies</p>
-                        </div>
-                        <div class="stat-icon">
-                            <div class="avatar avatar-lg rounded-circle bg-success bg-opacity-10 p-3">
-                                <i class="fas fa-file-contract fa-2x text-success"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                            <path fill="rgba(45, 193, 125, 0.1)" fill-opacity="1"
-                                d="M0,96L48,128C96,160,192,224,288,240C384,256,480,224,576,213.3C672,203,768,213,864,202.7C960,192,1056,160,1152,165.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Payout Card -->
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-            <div class="card border-0 shadow-sm h-100 bg-soft-warning">
-                <div class="card-body position-relative p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title mb-1 text-warning fw-bold">Total Payout</h6>
-                            <h3 class="mb-0 fw-bold">₹{{ $data['payout'] }}</h3>
-                            <p class="text-muted mb-0 mt-2">Total Payouts Made</p>
-                        </div>
-                        <div class="stat-icon">
-                            <div class="avatar avatar-lg rounded-circle bg-warning bg-opacity-10 p-3">
-                                <i class="fas fa-hand-holding-usd fa-2x text-warning"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                            <path fill="rgba(255, 186, 43, 0.1)" fill-opacity="1"
-                                d="M0,224L48,213.3C96,203,192,181,288,154.7C384,128,480,96,576,106.7C672,117,768,171,864,197.3C960,224,1056,224,1152,202.7C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payment Due Card -->
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-            <div class="card border-0 shadow-sm h-100 bg-soft-danger">
-                <div class="card-body position-relative p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title mb-1 text-danger fw-bold">Payment Due</h6>
-                            <h3 class="mb-0 fw-bold">₹{{ number_format($data['final_amount_due'], 0) }}</h3>
-                            <p class="text-muted mb-0 mt-2">Outstanding Payments</p>
-                        </div>
-                        <div class="stat-icon">
-                            <div class="avatar avatar-lg rounded-circle bg-danger bg-opacity-10 p-3">
-                                <i class="fas fa-credit-card fa-2x text-danger"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stat-wave position-absolute bottom-0 start-0 w-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                            <path fill="rgba(231, 81, 90, 0.1)" fill-opacity="1"
-                                d="M0,160L48,149.3C96,139,192,117,288,133.3C384,149,480,203,576,208C672,213,768,171,864,144C960,117,1056,107,1152,128C1248,149,1344,203,1392,229.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Add this CSS to your stylesheet -->
     <style>
