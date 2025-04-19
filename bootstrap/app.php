@@ -30,7 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:policy-expiration-task')->dailyAt('10:30');
         $schedule->command('whatsapp:send-notifications')->dailyAt('13:00');
         $schedule->command('commissions:generate')->hourly();
-        $schedule->command('agent:update-settlements')->hourly();
+        $schedule->command('agent:update-settlements')->everyFifteenMinutes();
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
