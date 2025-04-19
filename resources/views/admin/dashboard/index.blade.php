@@ -191,62 +191,84 @@
         </div>
     </div>
 
-    <!-- Insurance Companies -->
     <div class="row layout-top-spacing">
         <div class="col-md-12">
-            <h4 class="mb-3">Insurance Companies Performance</h4>
+            <h4 class="mb-4 fw-bold text-primary"><i class="fas fa-chart-line me-2"></i>Insurance Companies Performance</h4>
         </div>
-
+    
         @forelse ($data['companies'] as $company)
-            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                <div class="widget widget-six">
-                    <div class="widget-heading">
-                        <h6 class="mb-3">
-                            {{ $company->name }}
-                            <span class="badge badge-light-dark mb-2 me-4">{{ $company->total_policies }} Policies</span>
-                        </h6>
-                        <div class="task-action">
-                            @if($company->image)
-                                <img src="{{ $company->image }}" alt="{{ $company->name }}" width="50px" height="50px">
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                </svg>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="w-chart my-4">
-                        <div class="w-chart-section">
-                            <div class="w-detail">
-                                <p class="w-title">Premium</p>
-                                <p class="w-stats">₹{{ $company->total_premium }}</p>
-                            </div>
-                        </div>
-                        <div class="w-chart-section">
-                            <div class="w-detail">
-                                <p class="w-title">Payout</p>
-                                <p class="w-stats">₹{{ $company->total_payout }}</p>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-gradient-light border-0 py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0 fw-bold text-dark">{{ $company->name }}</h5>
+                            <div class="company-logo">
+                                @if($company->image)
+                                    <img src="{{ $company->image }}" alt="{{ $company->name }}" class="rounded-circle" width="50px" height="50px">
+                                @else
+                                    <div class="bg-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-building text-primary fa-lg"></i>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Progress bar showing premium to payout ratio -->
-                    @php
-                        $ratio = ($company->total_premium > 0) 
-                                ? min(100, round(($company->total_payout / $company->total_premium) * 100)) 
-                                : 0;
-                    @endphp
-                    <div class="progress br-30 mb-2">
-                        <div class="progress-bar bg-primary" role="progressbar" 
-                             style="width: {{ $ratio }}%" aria-valuenow="{{ $ratio }}" 
-                             aria-valuemin="0" aria-valuemax="100">{{ $ratio }}%</div>
+                    <div class="card-body bg-light bg-opacity-50">
+                        <div class="text-center mb-3">
+                            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
+                                <i class="fas fa-file-contract me-1"></i> {{ $company->total_policies }} Policies
+                            </span>
+                        </div>
+                        
+                        <div class="row g-0 text-center mb-4">
+                            <div class="col-6 border-end">
+                                <div class="p-3">
+                                    <h6 class="text-muted mb-1"><i class="fas fa-money-bill-wave me-1 text-success"></i> Premium</h6>
+                                    <h4 class="mb-0 fw-bold text-success">₹{{ $company->total_premium }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3">
+                                    <h6 class="text-muted mb-1"><i class="fas fa-hand-holding-dollar me-1 text-danger"></i> Payout</h6>
+                                    <h4 class="mb-0 fw-bold text-danger">₹{{ $company->total_payout }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @php
+                            $ratio = ($company->total_premium > 0) 
+                                    ? min(100, round(($company->total_payout / $company->total_premium) * 100)) 
+                                    : 0;
+                            
+                            // Determine progress bar color based on ratio
+                            $progressColor = "bg-success";
+                            if ($ratio > 50 && $ratio <= 75) {
+                                $progressColor = "bg-warning";
+                            } else if ($ratio > 75) {
+                                $progressColor = "bg-danger";
+                            }
+                        @endphp
+                        
+                        <div class="px-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">Payout to Premium Ratio</span>
+                                <span class="fw-bold">{{ $ratio }}%</span>
+                            </div>
+                            <div class="progress" style="height: 10px; border-radius: 10px;">
+                                <div class="progress-bar {{ $progressColor }}" role="progressbar" 
+                                    style="width: {{ $ratio }}%;" aria-valuenow="{{ $ratio }}" 
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-muted text-center">Payout to Premium Ratio</p>
+                  
                 </div>
             </div>
         @empty
             <div class="col-12">
-                <div class="alert alert-info">No company data available for the selected period.</div>
+                <div class="alert alert-info border-0 shadow-sm">
+                    <i class="fas fa-info-circle me-2"></i> No company data available for the selected period.
+                </div>
             </div>
         @endforelse
     </div>
