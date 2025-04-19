@@ -598,13 +598,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent border-0 py-3">
-                                <div class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-chart-pie me-1"></i> View Details
-                                    </a>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
 
