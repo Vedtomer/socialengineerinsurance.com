@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Company;
+use App\Models\MonthlyCommission;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\AgentMonthlySettlement;
 use App\Models\InsuranceCompany;
 use App\Models\Policy;
 use App\Models\UserActivity;
@@ -61,72 +63,7 @@ class AdminController extends Controller
 
 
 
-    public function dashboard(Request $request)
-    {
-        list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
-        // Define the transaction and policy queries
-        $transactions = Account::orderBy('id', 'ASC');
-        $policy = Policy::orderBy('id', 'ASC');
 
-        // Apply date range filter to transactions and policies
-        if (!empty($start_date) && !empty($end_date)) {
-            $transactions->where('payment_date', '>=', $start_date)->where('payment_date', '<=', $end_date);
-            $policy->whereRaw('DATE(policy_start_date) >= ?', [$start_date])
-                ->whereRaw('DATE(policy_start_date) <= ?', [$end_date]);
-        }
-
-        // Apply agent_id filter if provided
-        if (!empty($agent_id)) {
-            $transactions->where('agent_id', $agent_id);
-            $policy->where('agent_id', $agent_id);
-        }
-
-
-
-
-        $policy = $policy->get();
-        $policyCount = round($policy->count('policy_no'));
-        $amount = round($transactions->sum('amount_remaining'));
-        $premiums = round($policy->sum('net_amount'));
-        $payout = round($policy->sum('payout'));
-
-        $premium = 0;
-
-        $agentIdsWithCutAndPay =0;
-
-        $sumCommission = 0;
-
-       
-
-        
-        $paymentby = round($premium - $amount );
-
-        $companies = InsuranceCompany::where('status', 1)->get();
-
-        // Get the company IDs from the companies
-        $companyIds = $companies->pluck('id');
-
-        // Query the policies table to get the sum of premiums and count of records for the active companies
-        $policyData = Policy::whereIn('company_id', $companyIds)
-            ->where('policy_start_date', '>=', $start_date)
-            ->where('policy_start_date', '<=', $end_date)
-            ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
-            ->groupBy('company_id')
-            ->get();
-
-        // Combine the company data with the policy data
-        $companies = $companies->map(function ($company) use ($policyData) {
-            $policy = $policyData->firstWhere('company_id', $company->id);
-            $company->total_premium = $policy ? round($policy->total_premium) : 0;
-            $company->total_policies = $policy ? round($policy->total_policies) : 0;
-            $company->total_payout = $policy ? round($policy->total_payout) : 0;
-            return $company;
-        });
-
-        $agent = User::get();
-        $data = compact('agent', 'policyCount', 'paymentby', 'premiums', 'payout', 'policy', 'companies');
-        return view('admin.dashboard', ['data' => $data]);
-    }
 
 
 
@@ -483,14 +420,14 @@ class AdminController extends Controller
             'users.name as user_name',
             DB::raw('MAX(user_activities.created_at) as last_active') // Fetch last active timestamp
         )
-        ->leftJoin('users', 'user_activities.user_id', '=', 'users.id')
-        ->whereBetween('user_activities.created_at', [$startDate, $endDate])
-        ->groupBy('user_activities.user_type', 'users.name')
-        ->orderBy('user_activities.user_type', 'ASC')
-        ->orderBy('users.name', 'ASC')
-        ->get();
-    
-           
+            ->leftJoin('users', 'user_activities.user_id', '=', 'users.id')
+            ->whereBetween('user_activities.created_at', [$startDate, $endDate])
+            ->groupBy('user_activities.user_type', 'users.name')
+            ->orderBy('user_activities.user_type', 'ASC')
+            ->orderBy('users.name', 'ASC')
+            ->get();
+
+
 
         // Calculate counts for top boxes - Active users within the selected date range
         $activeUsersCount = UserActivity::whereBetween('created_at', [$startDate, $endDate])->distinct('user_id')->count();
@@ -502,7 +439,7 @@ class AdminController extends Controller
 
         $customerCount = User::role('customer')->count();
         $agentCount = User::role('agent')->count();
-        
+
 
         return view('admin.app-activity.index', [
             'activitySummary' => $activitySummary,
@@ -512,9 +449,299 @@ class AdminController extends Controller
             'activeUsersCount' => $activeUsersCount,       // Pass total active users count
             'activeAgentsCount' => $activeAgentsCount,     // Pass total active agents count
             'activeCustomersCount' => $activeCustomersCount, // Pass total active customers count
-            'totalUsersCount'=>$totalUsersCount,
-            'customerCount'=>$customerCount,
-            'agentCount'=>$agentCount
+            'totalUsersCount' => $totalUsersCount,
+            'customerCount' => $customerCount,
+            'agentCount' => $agentCount
         ]);
+    }
+
+    public function analytics(Request $request)
+    {
+        // Get filter parameters
+        $start_date = $request->input('start_date', now()->startOfMonth()->format('Y-m-d'));
+        $end_date = $request->input('end_date', now()->endOfMonth()->format('Y-m-d'));
+        $agent_id = $request->input('agent_id');
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+        $filter_type = $request->input('filter_type', 'monthly'); // Options: monthly, yearly, custom
+
+        // Determine date range based on filter type
+        if ($filter_type === 'monthly') {
+            $start_date = Carbon::createFromDate($year, $month, 1)->startOfMonth()->format('Y-m-d');
+            $end_date = Carbon::createFromDate($year, $month, 1)->endOfMonth()->format('Y-m-d');
+        } elseif ($filter_type === 'yearly') {
+            $start_date = Carbon::createFromDate($year, 1, 1)->startOfYear()->format('Y-m-d');
+            $end_date = Carbon::createFromDate($year, 12, 31)->endOfYear()->format('Y-m-d');
+        }
+        // custom date range is already handled by the input fields
+
+        $currentDate = Carbon::parse($end_date);
+
+        // Get Policy Rates Data
+        $policyRatesData = $this->getFilteredPolicyRates($currentDate, $start_date, $end_date, $agent_id);
+        $policyRates = $policyRatesData['agentData'];
+        $chartData = $policyRatesData['chartData'];
+
+        // Get Dashboard Data
+        $dashboardData = $this->getFilteredDashboardData($start_date, $end_date, $agent_id);
+
+        // Combine all data
+        $data = array_merge($dashboardData, [
+            'policyRates' => $policyRates,
+            'chartData' => $chartData,
+            'filter_type' => $filter_type,
+            'selected_year' => $year,
+            'selected_month' => $month,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'selected_agent_id' => $agent_id
+        ]);
+
+        return view('admin.dashboard.index', compact('data'));
+    }
+
+    /**
+     * Get filtered policy rates data
+     */
+    private function getFilteredPolicyRates($currentDate, $start_date, $end_date, $agent_id = null)
+    {
+        // Set start date to 12 months ago from current month for chart data
+        $chartStartDate = Carbon::create($currentDate->year, $currentDate->month, 1)->subMonths(11)->startOfDay();
+        $chartEndDate = Carbon::create($currentDate->year, $currentDate->month, $currentDate->daysInMonth)->endOfDay();
+
+        // Query using the MonthlyCommission model instead of raw Policy data
+        $query = MonthlyCommission::join('users', 'monthly_commissions.agent_id', '=', 'users.id')
+            ->select(
+                'users.name as agent_name',
+                'monthly_commissions.agent_id',
+                'monthly_commissions.year',
+                'monthly_commissions.month',
+                'monthly_commissions.policies_count as policy_count'
+            )
+            ->where('users.status', '=', 1);
+
+        // Apply agent filter if provided
+        if ($agent_id) {
+            $query->where('monthly_commissions.agent_id', $agent_id);
+        }
+
+        // Apply date range filter for chart data
+        $query->where(function ($q) use ($chartStartDate, $chartEndDate) {
+            $startYear = $chartStartDate->year;
+            $startMonth = $chartStartDate->month;
+            $endYear = $chartEndDate->year;
+            $endMonth = $chartEndDate->month;
+
+            $q->where(function ($q) use ($startYear, $startMonth) {
+                $q->where('monthly_commissions.year', '>', $startYear)
+                    ->orWhere(function ($q) use ($startYear, $startMonth) {
+                        $q->where('monthly_commissions.year', $startYear)
+                            ->where('monthly_commissions.month', '>=', $startMonth);
+                    });
+            })->where(function ($q) use ($endYear, $endMonth) {
+                $q->where('monthly_commissions.year', '<', $endYear)
+                    ->orWhere(function ($q) use ($endYear, $endMonth) {
+                        $q->where('monthly_commissions.year', $endYear)
+                            ->where('monthly_commissions.month', '<=', $endMonth);
+                    });
+            });
+        });
+
+        $policyRates = $query->get();
+
+        $formattedData = [];
+
+        // Create array of month names from current month back 12 months for chart data
+        $monthNames = [];
+        $monthYears = []; // Store both month and year for accurate matching
+
+        for ($i = 11; $i >= 0; $i--) {
+            $monthDate = Carbon::create($currentDate->year, $currentDate->month, 1)->subMonths($i);
+            $monthNames[] = $monthDate->format('Y M');
+            $monthYears[] = [
+                'year' => $monthDate->year,
+                'month' => $monthDate->month
+            ];
+        }
+
+        // Initialize policyCounts for all months
+        $policyCounts = array_fill(0, 12, 0);
+
+        // For agent data, we only want the last 6 months
+        $lastSixMonthNames = array_slice($monthNames, 6, 6);
+        $lastSixMonthYears = array_slice($monthYears, 6, 6);
+
+        foreach ($policyRates as $rate) {
+            if (!isset($formattedData[$rate->agent_id])) {
+                $formattedData[$rate->agent_id] = [
+                    'agent_name' => $rate->agent_name,
+                    'labels' => $lastSixMonthNames, // Only last 6 months for agent data
+                    'data' => array_fill(0, 6, 0)   // Only 6 data points
+                ];
+            }
+
+            // For chart data - all 12 months
+            for ($i = 0; $i < 12; $i++) {
+                if ($monthYears[$i]['year'] == $rate->year && $monthYears[$i]['month'] == $rate->month) {
+                    $policyCounts[$i] += $rate->policy_count;
+
+                    // For agent data - only if it's in the last 6 months
+                    if ($i >= 6) {
+                        $formattedData[$rate->agent_id]['data'][$i - 6] = $rate->policy_count;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Prepare chart data
+        $chartData = [
+            'categories' => array_map(
+                function ($month, $count) {
+                    return "$month($count)";
+                },
+                $monthNames,
+                $policyCounts
+            ),
+            'data' => $policyCounts,
+            'series' => [
+                [
+                    'name' => 'Policy Count',
+                    'data' => $policyCounts
+                ]
+            ]
+        ];
+
+        return [
+            'agentData' => $this->addDaysSinceLastPolicy($formattedData),
+            'chartData' => $chartData
+        ];
+    }
+
+    /**
+     * Get filtered dashboard data
+     */
+    private function getFilteredDashboardData($start_date, $end_date, $agent_id = null)
+    {
+        // Use the AgentMonthlySettlement model instead of raw transactions
+        $agentSettlements = AgentMonthlySettlement::query();
+
+        // Apply date range filter
+        if (!empty($start_date) && !empty($end_date)) {
+            $startDate = Carbon::parse($start_date);
+            $endDate = Carbon::parse($end_date);
+            $agentSettlements->dateRange($startDate, $endDate);
+        }
+
+        // Apply agent filter if provided
+        if (!empty($agent_id)) {
+            $agentSettlements->where('agent_id', $agent_id);
+        }
+
+        // Get montly commission data
+        $monthlyCommissions = MonthlyCommission::query();
+
+        // Apply date range filter
+        if (!empty($start_date) && !empty($end_date)) {
+            $startDate = Carbon::parse($start_date);
+            $endDate = Carbon::parse($end_date);
+
+            $monthlyCommissions->where(function ($q) use ($startDate, $endDate) {
+                $q->where(function ($q) use ($startDate) {
+                    $q->where('year', '>', $startDate->year)
+                        ->orWhere(function ($q) use ($startDate) {
+                            $q->where('year', $startDate->year)
+                                ->where('month', '>=', $startDate->month);
+                        });
+                })->where(function ($q) use ($endDate) {
+                    $q->where('year', '<', $endDate->year)
+                        ->orWhere(function ($q) use ($endDate) {
+                            $q->where('year', $endDate->year)
+                                ->where('month', '<=', $endDate->month);
+                        });
+                });
+            });
+        }
+
+        // Apply agent filter if provided
+        if (!empty($agent_id)) {
+            $monthlyCommissions->where('agent_id', $agent_id);
+        }
+
+        // Get the aggregated data
+        $policyCount = $monthlyCommissions->sum('policies_count');
+        $premiums = $monthlyCommissions->sum('total_premium');
+        $payout = $monthlyCommissions->sum('total_payout');
+        $amount = $agentSettlements->sum('final_amount_due');
+        $paymentby = round($premiums - $amount);
+
+        // Get insurance company data
+        $companies = InsuranceCompany::where('status', 1)->get();
+        $companyIds = $companies->pluck('id');
+
+        // Get policy data by company
+        $policyData = Policy::whereIn('company_id', $companyIds)
+            ->where('policy_start_date', '>=', $start_date)
+            ->where('policy_start_date', '<=', $end_date)
+            ->when($agent_id, function ($query) use ($agent_id) {
+                return $query->where('agent_id', $agent_id);
+            })
+            ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
+            ->groupBy('company_id')
+            ->get();
+
+        // Combine the company data with the policy data
+        $companies = $companies->map(function ($company) use ($policyData) {
+            $policy = $policyData->firstWhere('company_id', $company->id);
+            $company->total_premium = $policy ? round($policy->total_premium) : 0;
+            $company->total_policies = $policy ? round($policy->total_policies) : 0;
+            $company->total_payout = $policy ? round($policy->total_payout) : 0;
+            return $company;
+        });
+
+        $agents = User::role('agent')->where('status', 1)->get();
+        
+        return [
+            'agents' => $agents,
+            'policyCount' => round($policyCount),
+            'paymentby' => $paymentby,
+            'premiums' => round($premiums),
+            'payout' => round($payout),
+            'companies' => $companies
+        ];
+    }
+
+    /**
+     * Add days since last policy for each agent
+     */
+    public function addDaysSinceLastPolicy($formattedData)
+    {
+        $today = strtotime(date('Y-m-d'));
+        $latestPolicyDates = DB::table('policies')
+            ->select('agent_id', DB::raw('MAX(DATE(policy_start_date)) as last_policy_date'))
+            ->groupBy('agent_id')
+            ->get()
+            ->keyBy('agent_id');
+
+        foreach ($formattedData as $agentId => &$agentData) {
+            if (isset($latestPolicyDates[$agentId])) {
+                $lastPolicyDate = strtotime($latestPolicyDates[$agentId]->last_policy_date);
+
+                // Calculate the difference in days
+                $daysDifference = ($today - $lastPolicyDate) / (60 * 60 * 24);
+
+                // Ensure the difference is not negative
+                $agentData['days_since_last_policy'] = max(0, (int)$daysDifference);
+            } else {
+                // If no policy found for the agent, set a high number
+                $agentData['days_since_last_policy'] = 9999;
+            }
+        }
+
+        uasort($formattedData, function ($a, $b) {
+            return $b['days_since_last_policy'] <=> $a['days_since_last_policy'];
+        });
+
+        return $formattedData;
     }
 }

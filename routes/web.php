@@ -73,8 +73,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
         Route::get('/profile/edit', [AdminController::class, 'ProfileEdit'])->name('edit.profile');
         Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
-        Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard'])->name('admin.analytics');
-
+       
 
 
         // Account Routes
@@ -154,7 +153,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('insurance-products', InsuranceProductController::class);
 
 
-        Route::get('/policy-rates', [PolicyController::class, 'showPolicyRates'])->name('admin.dashboard');
+        Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'analytics'])->name('admin.dashboard');
+
 
 
         Route::prefix('reports')->name('reports.')->group(function () {
