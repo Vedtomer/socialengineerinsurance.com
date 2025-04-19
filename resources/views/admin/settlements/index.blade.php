@@ -20,7 +20,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6 class="text-uppercase mb-1">Total Due</h6>
-                                                <h3 class="mb-0">{{ number_format($totalDue, 2) }}</h3>
+                                                <h3 class="mb-0">{{ number_format($totalDue) }}</h3>
                                             </div>
                                             <div class="rounded-circle bg-white text-info p-3">
                                                 <i class="fas fa-wallet fa-2x"></i>
@@ -50,7 +50,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6 class="text-uppercase mb-1">Total Pending</h6>
-                                                <h3 class="mb-0">{{ number_format($totalPending, 2) }}</h3>
+                                                <h3 class="mb-0">{{ number_format($totalPending) }}</h3>
                                             </div>
                                             <div class="rounded-circle bg-white text-warning p-3">
                                                 <i class="fas fa-hourglass-half fa-2x"></i>
