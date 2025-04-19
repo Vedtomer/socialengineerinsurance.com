@@ -239,9 +239,10 @@
                             <h3 class="mb-0 fw-bold">₹{{ $data['premiums'] }}</h3>
                             <p class="text-muted mb-0 mt-2">Total Premium Generated</p>
                         </div>
-                        <div class="stat-icon">
+                        <div class="">
                             <div class="avatar avatar-lg rounded-circle bg-primary bg-opacity-10 p-3">
-                                <i class="fas fa-rupee-sign fa-2x text-primary"></i>
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                                
                             </div>
                         </div>
                     </div>
@@ -268,7 +269,7 @@
                         </div>
                         <div class="stat-icon">
                             <div class="avatar avatar-lg rounded-circle bg-success bg-opacity-10 p-3">
-                                <i class="fas fa-file-contract fa-2x text-success"></i>
+                                <i class="fa-solid fa-file-contract "></i>
                             </div>
                         </div>
                     </div>
@@ -295,7 +296,7 @@
                         </div>
                         <div class="stat-icon">
                             <div class="avatar avatar-lg rounded-circle bg-warning bg-opacity-10 p-3">
-                                <i class="fas fa-hand-holding-usd fa-2x text-warning"></i>
+                                <i class="fas fa-hand-holding-usd  bold"></i>
                             </div>
                         </div>
                     </div>
@@ -322,7 +323,7 @@
                         </div>
                         <div class="stat-icon">
                             <div class="avatar avatar-lg rounded-circle bg-danger bg-opacity-10 p-3">
-                                <i class="fas fa-credit-card fa-2x text-danger"></i>
+                                <i class="fas fa-credit-card "></i>
                             </div>
                         </div>
                     </div>
