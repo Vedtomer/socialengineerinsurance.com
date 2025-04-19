@@ -182,7 +182,7 @@
                             </div>
                             <div class="balance-info">
                                 <h6>Payment Due</h6>
-                                <p>₹{{ $data['final_amount_due'] }}</p>
+                                <p>₹{{ number_format($data['final_amount_due'], 0) }}</p>
                             </div>
                         </div>
                     </div>
