@@ -1,7 +1,7 @@
 <form action="{{ route('reports.policy.download') }}" method="POST">
     @csrf
     <div class="row g-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label for="from_date" class="form-label">
                     <i class="fas fa-calendar-alt me-1"></i> From Date
@@ -9,7 +9,7 @@
                 <input type="date" class="form-control" id="from_date" name="from_date">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label for="to_date" class="form-label">
                     <i class="fas fa-calendar-alt me-1"></i> To Date
@@ -17,7 +17,7 @@
                 <input type="date" class="form-control" id="to_date" name="to_date">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label for="company_id" class="form-label">
                     <i class="fas fa-building me-1"></i> Insurance Company
@@ -27,6 +27,18 @@
                     @foreach($companies as $company)
                         <option value="{{ $company->id }}">{{ $company->name }}</option>
                     @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="report_period" class="form-label">
+                    <i class="fas fa-chart-line me-1"></i> Report Period
+                </label>
+                <select class="form-select" id="report_period" name="report_period">
+                    <option value="daily">Daily</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
                 </select>
             </div>
         </div>
