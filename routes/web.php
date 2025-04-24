@@ -20,12 +20,17 @@ use App\Console\Commands\CustomTask;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AgentCodeController;
 use App\Http\Controllers\AgentSettlementController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
-
-
+use Illuminate\Support\Facades\Log;
 
 Route::get('/cron', function () {
+    // Log the current time
+    Log::info('Cron route hit at: ' . Carbon::now()->toDateTimeString());
+
+    // Call Laravel scheduler
     Artisan::call('schedule:run');
+
     return response()->json(['message' => 'Cron job executed successfully.']);
 })->name('cron');
 
