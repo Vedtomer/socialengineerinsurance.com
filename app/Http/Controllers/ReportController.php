@@ -33,7 +33,7 @@ class ReportController extends Controller
         // Get count data for dashboard
         $policyCounts = [
             'total' => Policy::count(),
-            
+
         ];
 
         $userCounts = [
@@ -41,8 +41,8 @@ class ReportController extends Controller
             'customers' => User::role('customer')->count()
         ];
 
-       
-        
+
+
         $productCounts = InsuranceProduct::count();
         $companyCounts = InsuranceCompany::count();
 
@@ -79,10 +79,10 @@ class ReportController extends Controller
                 'payment_by' => 'nullable|string',
                 'report_period' => 'nullable|in:daily,monthly,yearly',
             ]);
-    
+
             // Start query
             $query = Policy::query();
-    
+
             // Apply filters
             if ($request->filled('from_date')) {
                 $query->whereDate('policy_start_date', '>=', $request->from_date);
@@ -102,23 +102,23 @@ class ReportController extends Controller
             if ($request->filled('payment_by')) {
                 $query->where('payment_by', $request->payment_by);
             }
-    
+
             // Start Excel export
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
-            
+
             // Check report period selection
             $reportPeriod = $request->input('report_period', 'daily');
-            
+
             if ($reportPeriod === 'daily') {
                 // Original detailed report - fetch all policies
                 $policies = $query->with(['agent', 'company', 'insuranceProduct'])->get();
-                
+
                 // Handle no records
                 if ($policies->isEmpty()) {
                     return redirect()->back()->with('error', 'No records found for the selected filters.');
                 }
-                
+
                 // Headers for daily report (original format)
                 $headers = [
                     'A1' => 'Policy No',
@@ -139,7 +139,7 @@ class ReportController extends Controller
                 foreach ($headers as $cell => $label) {
                     $sheet->setCellValue($cell, $label);
                 }
-    
+
                 // Fill data
                 $row = 2;
                 foreach ($policies as $policy) {
@@ -159,134 +159,257 @@ class ReportController extends Controller
                     $sheet->setCellValue('N' . $row, $policy->payout);
                     $row++;
                 }
-                
+
                 // Auto-size columns
                 foreach (range('A', 'N') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
-                
             } elseif ($reportPeriod === 'monthly') {
-                // Monthly report - group by month
+                // Monthly report - group by month and agent
                 $policies = $query->selectRaw('
-                        COUNT(*) as policy_count,
-                        DATE_FORMAT(policy_start_date, "%Y-%m") as month,
-                        SUM(premium) as total_premium,
-                        SUM(gst) as total_gst,
-                        SUM(agent_commission) as total_commission,
-                        SUM(net_amount) as total_net_amount,
-                        SUM(discount) as total_discount,
-                        SUM(payout) as total_payout
-                    ')
-                    ->groupBy('month')
+                    COUNT(*) as policy_count,
+                    DATE_FORMAT(policy_start_date, "%Y-%m") as month,
+                    agent_id,
+                    SUM(premium) as total_premium,
+                    SUM(gst) as total_gst,
+                    SUM(agent_commission) as total_commission,
+                    SUM(net_amount) as total_net_amount,
+                    SUM(discount) as total_discount,
+                    SUM(payout) as total_payout
+                ')
+                    ->with(['agent']) // Eager load agent relationship
+                    ->groupBy(['month', 'agent_id'])
                     ->orderBy('month')
+                    ->orderBy('agent_id')
                     ->get();
-                    
+
                 // Handle no records
                 if ($policies->isEmpty()) {
                     return redirect()->back()->with('error', 'No records found for the selected filters.');
                 }
-                
+
                 // Headers for monthly report
                 $headers = [
                     'A1' => 'Month',
-                    'B1' => 'Policy Count',
-                    'C1' => 'Total Premium',
-                    'D1' => 'Total GST',
-                    'E1' => 'Total Commission',
-                    'F1' => 'Total Net Amount',
-                    'G1' => 'Total Discount',
-                    'H1' => 'Total Payout',
+                    'B1' => 'Agent',
+                    'C1' => 'Policy Count',
+                    'D1' => 'Total Premium',
+                    'E1' => 'Total GST',
+                    'F1' => 'Total Commission',
+                    'G1' => 'Total Net Amount',
+                    'H1' => 'Total Discount',
+                    'I1' => 'Total Payout',
                 ];
                 foreach ($headers as $cell => $label) {
                     $sheet->setCellValue($cell, $label);
                 }
-                
+
                 // Fill data
                 $row = 2;
                 foreach ($policies as $policy) {
                     $sheet->setCellValue('A' . $row, Carbon::createFromFormat('Y-m', $policy->month)->format('F Y'));
-                    $sheet->setCellValue('B' . $row, $policy->policy_count);
-                    $sheet->setCellValue('C' . $row, $policy->total_premium);
-                    $sheet->setCellValue('D' . $row, $policy->total_gst);
-                    $sheet->setCellValue('E' . $row, $policy->total_commission);
-                    $sheet->setCellValue('F' . $row, $policy->total_net_amount);
-                    $sheet->setCellValue('G' . $row, $policy->total_discount);
-                    $sheet->setCellValue('H' . $row, $policy->total_payout);
+                    $sheet->setCellValue('B' . $row, optional($policy->agent)->name ?? 'Unknown');
+                    $sheet->setCellValue('C' . $row, $policy->policy_count);
+                    $sheet->setCellValue('D' . $row, $policy->total_premium);
+                    $sheet->setCellValue('E' . $row, $policy->total_gst);
+                    $sheet->setCellValue('F' . $row, $policy->total_commission);
+                    $sheet->setCellValue('G' . $row, $policy->total_net_amount);
+                    $sheet->setCellValue('H' . $row, $policy->total_discount);
+                    $sheet->setCellValue('I' . $row, $policy->total_payout);
                     $row++;
                 }
-                
+
+                // Add monthly totals at the bottom
+                $summaryData = $policies->groupBy('month')->map(function ($group) {
+                    return [
+                        'month' => $group->first()->month,
+                        'policy_count' => $group->sum('policy_count'),
+                        'total_premium' => $group->sum('total_premium'),
+                        'total_gst' => $group->sum('total_gst'),
+                        'total_commission' => $group->sum('total_commission'),
+                        'total_net_amount' => $group->sum('total_net_amount'),
+                        'total_discount' => $group->sum('total_discount'),
+                        'total_payout' => $group->sum('total_payout'),
+                    ];
+                })->values();
+
+                // Add a blank row
+                $row++;
+
+                // Add monthly summary header
+                $sheet->setCellValue('A' . $row, 'MONTHLY TOTALS');
+                $sheet->mergeCells('A' . $row . ':I' . $row);
+                $sheet->getStyle('A' . $row)->getFont()->setBold(true);
+                $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $row++;
+
+                // Add summary headers
+                $summaryHeaders = [
+                    'A' . $row => 'Month',
+                    'B' . $row => 'Total Policies',
+                    'C' . $row => 'Total Premium',
+                    'D' . $row => 'Total GST',
+                    'E' . $row => 'Total Commission',
+                    'F' . $row => 'Total Net Amount',
+                    'G' . $row => 'Total Discount',
+                    'H' . $row => 'Total Payout',
+                ];
+                foreach ($summaryHeaders as $cell => $label) {
+                    $sheet->setCellValue($cell, $label);
+                    $sheet->getStyle($cell)->getFont()->setBold(true);
+                }
+                $row++;
+
+                // Add summary data
+                foreach ($summaryData as $summary) {
+                    $sheet->setCellValue('A' . $row, Carbon::createFromFormat('Y-m', $summary['month'])->format('F Y'));
+                    $sheet->setCellValue('B' . $row, $summary['policy_count']);
+                    $sheet->setCellValue('C' . $row, $summary['total_premium']);
+                    $sheet->setCellValue('D' . $row, $summary['total_gst']);
+                    $sheet->setCellValue('E' . $row, $summary['total_commission']);
+                    $sheet->setCellValue('F' . $row, $summary['total_net_amount']);
+                    $sheet->setCellValue('G' . $row, $summary['total_discount']);
+                    $sheet->setCellValue('H' . $row, $summary['total_payout']);
+                    $row++;
+                }
+
                 // Auto-size columns
-                foreach (range('A', 'H') as $column) {
+                foreach (range('A', 'I') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
-                
             } else { // yearly
-                // Yearly report - group by year
+                // Yearly report - group by year and agent
                 $policies = $query->selectRaw('
-                        COUNT(*) as policy_count,
-                        YEAR(policy_start_date) as year,
-                        SUM(premium) as total_premium,
-                        SUM(gst) as total_gst,
-                        SUM(agent_commission) as total_commission,
-                        SUM(net_amount) as total_net_amount,
-                        SUM(discount) as total_discount,
-                        SUM(payout) as total_payout
-                    ')
-                    ->groupBy('year')
+                    COUNT(*) as policy_count,
+                    YEAR(policy_start_date) as year,
+                    agent_id,
+                    SUM(premium) as total_premium,
+                    SUM(gst) as total_gst,
+                    SUM(agent_commission) as total_commission,
+                    SUM(net_amount) as total_net_amount,
+                    SUM(discount) as total_discount,
+                    SUM(payout) as total_payout
+                ')
+                    ->with(['agent']) // Eager load agent relationship
+                    ->groupBy(['year', 'agent_id'])
                     ->orderBy('year')
+                    ->orderBy('agent_id')
                     ->get();
-                    
+
                 // Handle no records
                 if ($policies->isEmpty()) {
                     return redirect()->back()->with('error', 'No records found for the selected filters.');
                 }
-                
+
                 // Headers for yearly report
                 $headers = [
                     'A1' => 'Year',
-                    'B1' => 'Policy Count',
-                    'C1' => 'Total Premium',
-                    'D1' => 'Total GST',
-                    'E1' => 'Total Commission',
-                    'F1' => 'Total Net Amount',
-                    'G1' => 'Total Discount',
-                    'H1' => 'Total Payout',
+                    'B1' => 'Agent',
+                    'C1' => 'Policy Count',
+                    'D1' => 'Total Premium',
+                    'E1' => 'Total GST',
+                    'F1' => 'Total Commission',
+                    'G1' => 'Total Net Amount',
+                    'H1' => 'Total Discount',
+                    'I1' => 'Total Payout',
                 ];
                 foreach ($headers as $cell => $label) {
                     $sheet->setCellValue($cell, $label);
                 }
-                
+
                 // Fill data
                 $row = 2;
                 foreach ($policies as $policy) {
                     $sheet->setCellValue('A' . $row, $policy->year);
-                    $sheet->setCellValue('B' . $row, $policy->policy_count);
-                    $sheet->setCellValue('C' . $row, $policy->total_premium);
-                    $sheet->setCellValue('D' . $row, $policy->total_gst);
-                    $sheet->setCellValue('E' . $row, $policy->total_commission);
-                    $sheet->setCellValue('F' . $row, $policy->total_net_amount);
-                    $sheet->setCellValue('G' . $row, $policy->total_discount);
-                    $sheet->setCellValue('H' . $row, $policy->total_payout);
+                    $sheet->setCellValue('B' . $row, optional($policy->agent)->name ?? 'Unknown');
+                    $sheet->setCellValue('C' . $row, $policy->policy_count);
+                    $sheet->setCellValue('D' . $row, $policy->total_premium);
+                    $sheet->setCellValue('E' . $row, $policy->total_gst);
+                    $sheet->setCellValue('F' . $row, $policy->total_commission);
+                    $sheet->setCellValue('G' . $row, $policy->total_net_amount);
+                    $sheet->setCellValue('H' . $row, $policy->total_discount);
+                    $sheet->setCellValue('I' . $row, $policy->total_payout);
                     $row++;
                 }
-                
+
+                // Add yearly totals at the bottom
+                $summaryData = $policies->groupBy('year')->map(function ($group) {
+                    return [
+                        'year' => $group->first()->year,
+                        'policy_count' => $group->sum('policy_count'),
+                        'total_premium' => $group->sum('total_premium'),
+                        'total_gst' => $group->sum('total_gst'),
+                        'total_commission' => $group->sum('total_commission'),
+                        'total_net_amount' => $group->sum('total_net_amount'),
+                        'total_discount' => $group->sum('total_discount'),
+                        'total_payout' => $group->sum('total_payout'),
+                    ];
+                })->values();
+
+                // Add a blank row
+                $row++;
+
+                // Add yearly summary header
+                $sheet->setCellValue('A' . $row, 'YEARLY TOTALS');
+                $sheet->mergeCells('A' . $row . ':I' . $row);
+                $sheet->getStyle('A' . $row)->getFont()->setBold(true);
+                $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $row++;
+
+                // Add summary headers
+                $summaryHeaders = [
+                    'A' . $row => 'Year',
+                    'B' . $row => 'Total Policies',
+                    'C' . $row => 'Total Premium',
+                    'D' . $row => 'Total GST',
+                    'E' . $row => 'Total Commission',
+                    'F' . $row => 'Total Net Amount',
+                    'G' . $row => 'Total Discount',
+                    'H' . $row => 'Total Payout',
+                ];
+                foreach ($summaryHeaders as $cell => $label) {
+                    $sheet->setCellValue($cell, $label);
+                    $sheet->getStyle($cell)->getFont()->setBold(true);
+                }
+                $row++;
+
+                // Add summary data
+                foreach ($summaryData as $summary) {
+                    $sheet->setCellValue('A' . $row, $summary['year']);
+                    $sheet->setCellValue('B' . $row, $summary['policy_count']);
+                    $sheet->setCellValue('C' . $row, $summary['total_premium']);
+                    $sheet->setCellValue('D' . $row, $summary['total_gst']);
+                    $sheet->setCellValue('E' . $row, $summary['total_commission']);
+                    $sheet->setCellValue('F' . $row, $summary['total_net_amount']);
+                    $sheet->setCellValue('G' . $row, $summary['total_discount']);
+                    $sheet->setCellValue('H' . $row, $summary['total_payout']);
+                    $row++;
+                }
+
                 // Auto-size columns
-                foreach (range('A', 'H') as $column) {
+                foreach (range('A', 'I') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
             }
-    
+
+            // Apply styles to header row
+            $headerStyle = $sheet->getStyle('A1:' . ($reportPeriod === 'daily' ? 'N1' : 'I1'));
+            $headerStyle->getFont()->setBold(true);
+            $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setRGB('DDEBF7');
+            $headerStyle->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
             // Save the file
             $filename = 'policy_report_' . $reportPeriod . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
             $filePath = storage_path('app/public/reports/' . $filename);
-    
+
             if (!file_exists(dirname($filePath))) {
                 mkdir(dirname($filePath), 0755, true);
             }
-    
+
             $writer = new Xlsx($spreadsheet);
             $writer->save($filePath);
-    
+
             return response()->download($filePath, $filename)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
             \Log::error('Policy report export failed: ' . $e->getMessage());
@@ -547,4 +670,3 @@ class ReportController extends Controller
         }
     }
 }
-
