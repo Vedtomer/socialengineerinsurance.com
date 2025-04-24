@@ -67,355 +67,470 @@ class ReportController extends Controller
      * Generate and download policy report
      */
     public function downloadPolicyReport(Request $request)
-    {
-        try {
-            // Validate the request
-            $request->validate([
-                'from_date' => 'nullable|date',
-                'to_date' => 'nullable|date|after_or_equal:from_date',
-                'company_id' => 'nullable|exists:insurance_companies,id',
-                'agent_id' => 'nullable|exists:users,id',
-                'policy_type' => 'nullable|exists:insurance_products,id',
-                'payment_by' => 'nullable|string',
-                'report_period' => 'nullable|in:daily,monthly,yearly',
-            ]);
+{
+    try {
+        // Validate the request
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date|after_or_equal:from_date',
+            'company_id' => 'nullable|exists:insurance_companies,id',
+            'agent_id' => 'nullable|exists:users,id',
+            'policy_type' => 'nullable|exists:insurance_products,id',
+            'payment_by' => 'nullable|string',
+            'report_period' => 'nullable|in:daily,monthly,yearly',
+        ]);
 
-            // Start query
-            $query = Policy::query();
+        // Start query
+        $query = Policy::query();
 
-            // Apply filters
-            if ($request->filled('from_date')) {
-                $query->whereDate('policy_start_date', '>=', $request->from_date);
-            }
-            if ($request->filled('to_date')) {
-                $query->whereDate('policy_start_date', '<=', $request->to_date);
-            }
-            if ($request->filled('company_id')) {
-                $query->where('company_id', $request->company_id);
-            }
-            if ($request->filled('agent_id')) {
-                $query->where('agent_id', $request->agent_id);
-            }
-            if ($request->filled('policy_type')) {
-                $query->where('policy_type', $request->policy_type);
-            }
-            if ($request->filled('payment_by')) {
-                $query->where('payment_by', $request->payment_by);
-            }
-
-            // Start Excel export
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-
-            // Check report period selection
-            $reportPeriod = $request->input('report_period', 'daily');
-
-            if ($reportPeriod === 'daily') {
-                // Original detailed report - fetch all policies
-                $policies = $query->with(['agent', 'company', 'insuranceProduct'])->get();
-
-                // Handle no records
-                if ($policies->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-
-                // Headers for daily report (original format)
-                $headers = [
-                    'A1' => 'Policy No',
-                    'B1' => 'Policy Start Date',
-                    'C1' => 'Policy End Date',
-                    'D1' => 'Customer Name',
-                    'E1' => 'Insurance Company',
-                    'F1' => 'Agent',
-                    'G1' => 'Policy Type',
-                    'H1' => 'Premium',
-                    'I1' => 'GST',
-                    'J1' => 'Agent Commission',
-                    'K1' => 'Net Amount',
-                    'L1' => 'Payment Type',
-                    'M1' => 'Discount',
-                    'N1' => 'Payout',
-                ];
-                foreach ($headers as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                }
-
-                // Fill data
-                $row = 2;
-                foreach ($policies as $policy) {
-                    $sheet->setCellValue('A' . $row, $policy->policy_no);
-                    $sheet->setCellValue('B' . $row, $policy->policy_start_date);
-                    $sheet->setCellValue('C' . $row, $policy->policy_end_date);
-                    $sheet->setCellValue('D' . $row, $policy->customername);
-                    $sheet->setCellValue('E' . $row, optional($policy->company)->name);
-                    $sheet->setCellValue('F' . $row, optional($policy->agent)->name);
-                    $sheet->setCellValue('G' . $row, optional($policy->insuranceProduct)->name);
-                    $sheet->setCellValue('H' . $row, $policy->premium);
-                    $sheet->setCellValue('I' . $row, $policy->gst);
-                    $sheet->setCellValue('J' . $row, $policy->agent_commission);
-                    $sheet->setCellValue('K' . $row, $policy->net_amount);
-                    $sheet->setCellValue('L' . $row, Policy::getPaymentTypes()[$policy->payment_by] ?? $policy->payment_by);
-                    $sheet->setCellValue('M' . $row, $policy->discount);
-                    $sheet->setCellValue('N' . $row, $policy->payout);
-                    $row++;
-                }
-
-                // Auto-size columns
-                foreach (range('A', 'N') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-            } elseif ($reportPeriod === 'monthly') {
-                // Monthly report - group by month and agent
-                $policies = $query->selectRaw('
-                    COUNT(*) as policy_count,
-                    DATE_FORMAT(policy_start_date, "%Y-%m") as month,
-                    agent_id,
-                    SUM(premium) as total_premium,
-                    SUM(gst) as total_gst,
-                    SUM(agent_commission) as total_commission,
-                    SUM(net_amount) as total_net_amount,
-                    SUM(discount) as total_discount,
-                    SUM(payout) as total_payout
-                ')
-                    ->with(['agent']) // Eager load agent relationship
-                    ->groupBy(['month', 'agent_id'])
-                    ->orderBy('month')
-                    ->orderBy('agent_id')
-                    ->get();
-
-                // Handle no records
-                if ($policies->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-
-                // Headers for monthly report
-                $headers = [
-                    'A1' => 'Month',
-                    'B1' => 'Agent',
-                    'C1' => 'Policy Count',
-                    'D1' => 'Total Premium',
-                    'E1' => 'Total GST',
-                    'F1' => 'Total Commission',
-                    'G1' => 'Total Net Amount',
-                    'H1' => 'Total Discount',
-                    'I1' => 'Total Payout',
-                ];
-                foreach ($headers as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                }
-
-                // Fill data
-                $row = 2;
-                foreach ($policies as $policy) {
-                    $sheet->setCellValue('A' . $row, Carbon::createFromFormat('Y-m', $policy->month)->format('F Y'));
-                    $sheet->setCellValue('B' . $row, optional($policy->agent)->name ?? 'Unknown');
-                    $sheet->setCellValue('C' . $row, $policy->policy_count);
-                    $sheet->setCellValue('D' . $row, $policy->total_premium);
-                    $sheet->setCellValue('E' . $row, $policy->total_gst);
-                    $sheet->setCellValue('F' . $row, $policy->total_commission);
-                    $sheet->setCellValue('G' . $row, $policy->total_net_amount);
-                    $sheet->setCellValue('H' . $row, $policy->total_discount);
-                    $sheet->setCellValue('I' . $row, $policy->total_payout);
-                    $row++;
-                }
-
-                // Add monthly totals at the bottom
-                $summaryData = $policies->groupBy('month')->map(function ($group) {
-                    return [
-                        'month' => $group->first()->month,
-                        'policy_count' => $group->sum('policy_count'),
-                        'total_premium' => $group->sum('total_premium'),
-                        'total_gst' => $group->sum('total_gst'),
-                        'total_commission' => $group->sum('total_commission'),
-                        'total_net_amount' => $group->sum('total_net_amount'),
-                        'total_discount' => $group->sum('total_discount'),
-                        'total_payout' => $group->sum('total_payout'),
-                    ];
-                })->values();
-
-                // Add a blank row
-                $row++;
-
-                // Add monthly summary header
-                $sheet->setCellValue('A' . $row, 'MONTHLY TOTALS');
-                $sheet->mergeCells('A' . $row . ':I' . $row);
-                $sheet->getStyle('A' . $row)->getFont()->setBold(true);
-                $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                $row++;
-
-                // Add summary headers
-                $summaryHeaders = [
-                    'A' . $row => 'Month',
-                    'B' . $row => 'Total Policies',
-                    'C' . $row => 'Total Premium',
-                    'D' . $row => 'Total GST',
-                    'E' . $row => 'Total Commission',
-                    'F' . $row => 'Total Net Amount',
-                    'G' . $row => 'Total Discount',
-                    'H' . $row => 'Total Payout',
-                ];
-                foreach ($summaryHeaders as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                    $sheet->getStyle($cell)->getFont()->setBold(true);
-                }
-                $row++;
-
-                // Add summary data
-                foreach ($summaryData as $summary) {
-                    $sheet->setCellValue('A' . $row, Carbon::createFromFormat('Y-m', $summary['month'])->format('F Y'));
-                    $sheet->setCellValue('B' . $row, $summary['policy_count']);
-                    $sheet->setCellValue('C' . $row, $summary['total_premium']);
-                    $sheet->setCellValue('D' . $row, $summary['total_gst']);
-                    $sheet->setCellValue('E' . $row, $summary['total_commission']);
-                    $sheet->setCellValue('F' . $row, $summary['total_net_amount']);
-                    $sheet->setCellValue('G' . $row, $summary['total_discount']);
-                    $sheet->setCellValue('H' . $row, $summary['total_payout']);
-                    $row++;
-                }
-
-                // Auto-size columns
-                foreach (range('A', 'I') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-            } else { // yearly
-                // Yearly report - group by year and agent
-                $policies = $query->selectRaw('
-                    COUNT(*) as policy_count,
-                    YEAR(policy_start_date) as year,
-                    agent_id,
-                    SUM(premium) as total_premium,
-                    SUM(gst) as total_gst,
-                    SUM(agent_commission) as total_commission,
-                    SUM(net_amount) as total_net_amount,
-                    SUM(discount) as total_discount,
-                    SUM(payout) as total_payout
-                ')
-                    ->with(['agent']) // Eager load agent relationship
-                    ->groupBy(['year', 'agent_id'])
-                    ->orderBy('year')
-                    ->orderBy('agent_id')
-                    ->get();
-
-                // Handle no records
-                if ($policies->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-
-                // Headers for yearly report
-                $headers = [
-                    'A1' => 'Year',
-                    'B1' => 'Agent',
-                    'C1' => 'Policy Count',
-                    'D1' => 'Total Premium',
-                    'E1' => 'Total GST',
-                    'F1' => 'Total Commission',
-                    'G1' => 'Total Net Amount',
-                    'H1' => 'Total Discount',
-                    'I1' => 'Total Payout',
-                ];
-                foreach ($headers as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                }
-
-                // Fill data
-                $row = 2;
-                foreach ($policies as $policy) {
-                    $sheet->setCellValue('A' . $row, $policy->year);
-                    $sheet->setCellValue('B' . $row, optional($policy->agent)->name ?? 'Unknown');
-                    $sheet->setCellValue('C' . $row, $policy->policy_count);
-                    $sheet->setCellValue('D' . $row, $policy->total_premium);
-                    $sheet->setCellValue('E' . $row, $policy->total_gst);
-                    $sheet->setCellValue('F' . $row, $policy->total_commission);
-                    $sheet->setCellValue('G' . $row, $policy->total_net_amount);
-                    $sheet->setCellValue('H' . $row, $policy->total_discount);
-                    $sheet->setCellValue('I' . $row, $policy->total_payout);
-                    $row++;
-                }
-
-                // Add yearly totals at the bottom
-                $summaryData = $policies->groupBy('year')->map(function ($group) {
-                    return [
-                        'year' => $group->first()->year,
-                        'policy_count' => $group->sum('policy_count'),
-                        'total_premium' => $group->sum('total_premium'),
-                        'total_gst' => $group->sum('total_gst'),
-                        'total_commission' => $group->sum('total_commission'),
-                        'total_net_amount' => $group->sum('total_net_amount'),
-                        'total_discount' => $group->sum('total_discount'),
-                        'total_payout' => $group->sum('total_payout'),
-                    ];
-                })->values();
-
-                // Add a blank row
-                $row++;
-
-                // Add yearly summary header
-                $sheet->setCellValue('A' . $row, 'YEARLY TOTALS');
-                $sheet->mergeCells('A' . $row . ':I' . $row);
-                $sheet->getStyle('A' . $row)->getFont()->setBold(true);
-                $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                $row++;
-
-                // Add summary headers
-                $summaryHeaders = [
-                    'A' . $row => 'Year',
-                    'B' . $row => 'Total Policies',
-                    'C' . $row => 'Total Premium',
-                    'D' . $row => 'Total GST',
-                    'E' . $row => 'Total Commission',
-                    'F' . $row => 'Total Net Amount',
-                    'G' . $row => 'Total Discount',
-                    'H' . $row => 'Total Payout',
-                ];
-                foreach ($summaryHeaders as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                    $sheet->getStyle($cell)->getFont()->setBold(true);
-                }
-                $row++;
-
-                // Add summary data
-                foreach ($summaryData as $summary) {
-                    $sheet->setCellValue('A' . $row, $summary['year']);
-                    $sheet->setCellValue('B' . $row, $summary['policy_count']);
-                    $sheet->setCellValue('C' . $row, $summary['total_premium']);
-                    $sheet->setCellValue('D' . $row, $summary['total_gst']);
-                    $sheet->setCellValue('E' . $row, $summary['total_commission']);
-                    $sheet->setCellValue('F' . $row, $summary['total_net_amount']);
-                    $sheet->setCellValue('G' . $row, $summary['total_discount']);
-                    $sheet->setCellValue('H' . $row, $summary['total_payout']);
-                    $row++;
-                }
-
-                // Auto-size columns
-                foreach (range('A', 'I') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-            }
-
-            // Apply styles to header row
-            $headerStyle = $sheet->getStyle('A1:' . ($reportPeriod === 'daily' ? 'N1' : 'I1'));
-            $headerStyle->getFont()->setBold(true);
-            $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                ->getStartColor()->setRGB('DDEBF7');
-            $headerStyle->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            // Save the file
-            $filename = 'policy_report_' . $reportPeriod . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
-            $filePath = storage_path('app/public/reports/' . $filename);
-
-            if (!file_exists(dirname($filePath))) {
-                mkdir(dirname($filePath), 0755, true);
-            }
-
-            $writer = new Xlsx($spreadsheet);
-            $writer->save($filePath);
-
-            return response()->download($filePath, $filename)->deleteFileAfterSend(true);
-        } catch (\Exception $e) {
-            \Log::error('Policy report export failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
+        // Apply filters
+        if ($request->filled('from_date')) {
+            $query->whereDate('policy_start_date', '>=', $request->from_date);
         }
+        if ($request->filled('to_date')) {
+            $query->whereDate('policy_start_date', '<=', $request->to_date);
+        }
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $request->company_id);
+        }
+        if ($request->filled('agent_id')) {
+            $query->where('agent_id', $request->agent_id);
+        }
+        if ($request->filled('policy_type')) {
+            $query->where('policy_type', $request->policy_type);
+        }
+        if ($request->filled('payment_by')) {
+            $query->where('payment_by', $request->payment_by);
+        }
+
+        // Start Excel export
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        // Check report period selection
+        $reportPeriod = $request->input('report_period', 'daily');
+        
+        if ($reportPeriod === 'daily') {
+            // Original detailed report - fetch all policies
+            $policies = $query->with(['agent', 'company', 'insuranceProduct'])->get();
+            
+            // Handle no records
+            if ($policies->isEmpty()) {
+                return redirect()->back()->with('error', 'No records found for the selected filters.');
+            }
+            
+            // Headers for daily report (original format)
+            $headers = [
+                'A1' => 'Policy No',
+                'B1' => 'Policy Start Date',
+                'C1' => 'Policy End Date',
+                'D1' => 'Customer Name',
+                'E1' => 'Insurance Company',
+                'F1' => 'Agent',
+                'G1' => 'Policy Type',
+                'H1' => 'Premium',
+                'I1' => 'GST',
+                'J1' => 'Agent Commission',
+                'K1' => 'Net Amount',
+                'L1' => 'Payment Type',
+                'M1' => 'Discount',
+                'N1' => 'Payout',
+            ];
+            foreach ($headers as $cell => $label) {
+                $sheet->setCellValue($cell, $label);
+            }
+
+            // Fill data
+            $row = 2;
+            foreach ($policies as $policy) {
+                $sheet->setCellValue('A' . $row, $policy->policy_no);
+                $sheet->setCellValue('B' . $row, $policy->policy_start_date);
+                $sheet->setCellValue('C' . $row, $policy->policy_end_date);
+                $sheet->setCellValue('D' . $row, $policy->customername);
+                $sheet->setCellValue('E' . $row, optional($policy->company)->name);
+                $sheet->setCellValue('F' . $row, optional($policy->agent)->name);
+                $sheet->setCellValue('G' . $row, optional($policy->insuranceProduct)->name);
+                $sheet->setCellValue('H' . $row, $policy->premium);
+                $sheet->setCellValue('I' . $row, $policy->gst);
+                $sheet->setCellValue('J' . $row, $policy->agent_commission);
+                $sheet->setCellValue('K' . $row, $policy->net_amount);
+                $sheet->setCellValue('L' . $row, Policy::getPaymentTypes()[$policy->payment_by] ?? $policy->payment_by);
+                $sheet->setCellValue('M' . $row, $policy->discount);
+                $sheet->setCellValue('N' . $row, $policy->payout);
+                $row++;
+            }
+            
+            // Auto-size columns
+            foreach (range('A', 'N') as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
+            }
+            
+        } elseif ($reportPeriod === 'monthly') {
+            // Get date range for headers
+            $fromDate = $request->filled('from_date') 
+                ? Carbon::parse($request->from_date) 
+                : Carbon::now()->subMonths(5);
+            $toDate = $request->filled('to_date') 
+                ? Carbon::parse($request->to_date) 
+                : Carbon::now();
+            
+            // Create array of months for column headers
+            $months = [];
+            $currentDate = Carbon::parse($fromDate)->startOfMonth();
+            $endDate = Carbon::parse($toDate)->endOfMonth();
+            
+            while ($currentDate->lte($endDate)) {
+                $months[] = [
+                    'year_month' => $currentDate->format('Y-m'),
+                    'display' => $currentDate->format('Y M')
+                ];
+                $currentDate->addMonth();
+            }
+            
+            // Get all agents with policies in the date range
+            $agents = Policy::query()
+                ->whereBetween('policy_start_date', [$fromDate, $toDate])
+                ->select('agent_id')
+                ->with('agent:id,name')
+                ->groupBy('agent_id')
+                ->get()
+                ->pluck('agent');
+                
+            // If no agents found
+            if ($agents->isEmpty()) {
+                return redirect()->back()->with('error', 'No records found for the selected filters.');
+            }
+            
+            // Set up headers - Agent in first column, then each month
+            $sheet->setCellValue('A1', 'Agent');
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+            
+            // Set month headers
+            $col = 'B';
+            foreach ($months as $index => $month) {
+                $sheet->setCellValue($col . '1', $month['display']);
+                $sheet->getStyle($col . '1')->getFont()->setBold(true);
+                $col++;
+            }
+            
+            // Add a total column
+            $sheet->setCellValue($col . '1', 'Total');
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $totalCol = $col;
+            
+            // Add last policy date column
+            $col++;
+            $sheet->setCellValue($col . '1', 'Days Since Last Policy');
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $lastPolicyCol = $col;
+            
+            // Fill data for each agent
+            $row = 2;
+            foreach ($agents as $agent) {
+                if (!$agent) continue; // Skip if agent is null
+                
+                $sheet->setCellValue('A' . $row, $agent->name);
+                
+                // Calculate totals and add monthly data
+                $totalPolicies = 0;
+                $col = 'B';
+                
+                // Most recent policy date
+                $mostRecentPolicy = null;
+                
+                foreach ($months as $month) {
+                    // Get count of policies for this agent in this month
+                    $monthStart = Carbon::createFromFormat('Y-m', $month['year_month'])->startOfMonth();
+                    $monthEnd = Carbon::createFromFormat('Y-m', $month['year_month'])->endOfMonth();
+                    
+                    $policyCount = Policy::query()
+                        ->where('agent_id', $agent->id)
+                        ->whereBetween('policy_start_date', [$monthStart, $monthEnd])
+                        ->count();
+                    
+                    // Get most recent policy date
+                    $latestPolicy = Policy::query()
+                        ->where('agent_id', $agent->id)
+                        ->whereBetween('policy_start_date', [$monthStart, $monthEnd])
+                        ->latest('policy_start_date')
+                        ->first();
+                        
+                    if ($latestPolicy && ($mostRecentPolicy === null || 
+                        Carbon::parse($latestPolicy->policy_start_date)->gt(Carbon::parse($mostRecentPolicy)))) {
+                        $mostRecentPolicy = $latestPolicy->policy_start_date;
+                    }
+                    
+                    // Set policy count in cell
+                    $sheet->setCellValue($col . $row, $policyCount);
+                    
+                    // Apply styling - blue cell with white text for non-zero counts
+                    if ($policyCount > 0) {
+                        $sheet->getStyle($col . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('4169E1'); // Royal Blue
+                        $sheet->getStyle($col . $row)->getFont()->getColor()
+                            ->setRGB('FFFFFF'); // White text
+                        $sheet->getStyle($col . $row)->getAlignment()
+                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    }
+                    
+                    $totalPolicies += $policyCount;
+                    $col++;
+                }
+                
+                // Set total policies
+                $sheet->setCellValue($totalCol . $row, $totalPolicies);
+                $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
+                
+                // Calculate days since last policy
+                if ($mostRecentPolicy) {
+                    $daysSinceLastPolicy = Carbon::parse($mostRecentPolicy)->diffInDays(Carbon::now());
+                    $sheet->setCellValue($lastPolicyCol . $row, $daysSinceLastPolicy);
+                    
+                    // Color code based on recency
+                    if ($daysSinceLastPolicy <= 7) {
+                        // Green for recent activity (last 7 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('4CAF50');
+                    } else if ($daysSinceLastPolicy <= 30) {
+                        // Yellow for moderate activity (last 30 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('FFC107');
+                    } else {
+                        // Red for inactive (more than 30 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('F44336');
+                    }
+                    
+                    $sheet->getStyle($lastPolicyCol . $row)->getFont()->getColor()
+                        ->setRGB('FFFFFF'); // White text
+                    $sheet->getStyle($lastPolicyCol . $row)->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                } else {
+                    $sheet->setCellValue($lastPolicyCol . $row, 'N/A');
+                }
+                
+                $row++;
+            }
+            
+            // Auto-size columns
+            $lastCol = $lastPolicyCol;
+            foreach (range('A', $lastCol) as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
+            }
+            
+            // Add title and date range
+            $sheet->insertNewRowBefore(1, 2);
+            $title = 'Agent Policy Performance - Monthly Report';
+            $dateRange = 'Period: ' . $fromDate->format('M Y') . ' to ' . $toDate->format('M Y');
+            
+            $sheet->setCellValue('A1', $title);
+            $sheet->setCellValue('A2', $dateRange);
+            
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+            $sheet->mergeCells('A1:' . $lastCol . '1');
+            $sheet->getStyle('A1')->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                
+            $sheet->mergeCells('A2:' . $lastCol . '2');
+            $sheet->getStyle('A2')->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            
+        } else { // yearly
+            // Get date range for headers
+            $fromDate = $request->filled('from_date') 
+                ? Carbon::parse($request->from_date) 
+                : Carbon::now()->subYears(2)->startOfYear();
+            $toDate = $request->filled('to_date') 
+                ? Carbon::parse($request->to_date) 
+                : Carbon::now();
+            
+            // Create array of years for column headers
+            $years = [];
+            $currentDate = Carbon::parse($fromDate)->startOfYear();
+            $endDate = Carbon::parse($toDate)->endOfYear();
+            
+            while ($currentDate->lte($endDate)) {
+                $years[] = [
+                    'year' => $currentDate->format('Y'),
+                    'display' => $currentDate->format('Y')
+                ];
+                $currentDate->addYear();
+            }
+            
+            // Get all agents with policies in the date range
+            $agents = Policy::query()
+                ->whereBetween('policy_start_date', [$fromDate, $toDate])
+                ->select('agent_id')
+                ->with('agent:id,name')
+                ->groupBy('agent_id')
+                ->get()
+                ->pluck('agent');
+                
+            // If no agents found
+            if ($agents->isEmpty()) {
+                return redirect()->back()->with('error', 'No records found for the selected filters.');
+            }
+            
+            // Set up headers - Agent in first column, then each year
+            $sheet->setCellValue('A1', 'Agent');
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+            
+            // Set year headers
+            $col = 'B';
+            foreach ($years as $index => $year) {
+                $sheet->setCellValue($col . '1', $year['display']);
+                $sheet->getStyle($col . '1')->getFont()->setBold(true);
+                $col++;
+            }
+            
+            // Add a total column
+            $sheet->setCellValue($col . '1', 'Total');
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $totalCol = $col;
+            
+            // Add last policy date column
+            $col++;
+            $sheet->setCellValue($col . '1', 'Days Since Last Policy');
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $lastPolicyCol = $col;
+            
+            // Fill data for each agent
+            $row = 2;
+            foreach ($agents as $agent) {
+                if (!$agent) continue; // Skip if agent is null
+                
+                $sheet->setCellValue('A' . $row, $agent->name);
+                
+                // Calculate totals and add yearly data
+                $totalPolicies = 0;
+                $col = 'B';
+                
+                // Most recent policy date
+                $mostRecentPolicy = null;
+                
+                foreach ($years as $year) {
+                    // Get count of policies for this agent in this year
+                    $yearStart = Carbon::createFromFormat('Y', $year['year'])->startOfYear();
+                    $yearEnd = Carbon::createFromFormat('Y', $year['year'])->endOfYear();
+                    
+                    $policyCount = Policy::query()
+                        ->where('agent_id', $agent->id)
+                        ->whereBetween('policy_start_date', [$yearStart, $yearEnd])
+                        ->count();
+                    
+                    // Get most recent policy date
+                    $latestPolicy = Policy::query()
+                        ->where('agent_id', $agent->id)
+                        ->whereBetween('policy_start_date', [$yearStart, $yearEnd])
+                        ->latest('policy_start_date')
+                        ->first();
+                        
+                    if ($latestPolicy && ($mostRecentPolicy === null || 
+                        Carbon::parse($latestPolicy->policy_start_date)->gt(Carbon::parse($mostRecentPolicy)))) {
+                        $mostRecentPolicy = $latestPolicy->policy_start_date;
+                    }
+                    
+                    // Set policy count in cell
+                    $sheet->setCellValue($col . $row, $policyCount);
+                    
+                    // Apply styling - blue cell with white text for non-zero counts
+                    if ($policyCount > 0) {
+                        $sheet->getStyle($col . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('4169E1'); // Royal Blue
+                        $sheet->getStyle($col . $row)->getFont()->getColor()
+                            ->setRGB('FFFFFF'); // White text
+                        $sheet->getStyle($col . $row)->getAlignment()
+                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    }
+                    
+                    $totalPolicies += $policyCount;
+                    $col++;
+                }
+                
+                // Set total policies
+                $sheet->setCellValue($totalCol . $row, $totalPolicies);
+                $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
+                
+                // Calculate days since last policy
+                if ($mostRecentPolicy) {
+                    $daysSinceLastPolicy = Carbon::parse($mostRecentPolicy)->diffInDays(Carbon::now());
+                    $sheet->setCellValue($lastPolicyCol . $row, $daysSinceLastPolicy);
+                    
+                    // Color code based on recency
+                    if ($daysSinceLastPolicy <= 7) {
+                        // Green for recent activity (last 7 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('4CAF50');
+                    } else if ($daysSinceLastPolicy <= 30) {
+                        // Yellow for moderate activity (last 30 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('FFC107');
+                    } else {
+                        // Red for inactive (more than 30 days)
+                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setRGB('F44336');
+                    }
+                    
+                    $sheet->getStyle($lastPolicyCol . $row)->getFont()->getColor()
+                        ->setRGB('FFFFFF'); // White text
+                    $sheet->getStyle($lastPolicyCol . $row)->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                } else {
+                    $sheet->setCellValue($lastPolicyCol . $row, 'N/A');
+                }
+                
+                $row++;
+            }
+            
+            // Auto-size columns
+            $lastCol = $lastPolicyCol;
+            foreach (range('A', $lastCol) as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
+            }
+            
+            // Add title and date range
+            $sheet->insertNewRowBefore(1, 2);
+            $title = 'Agent Policy Performance - Yearly Report';
+            $dateRange = 'Period: ' . $fromDate->format('Y') . ' to ' . $toDate->format('Y');
+            
+            $sheet->setCellValue('A1', $title);
+            $sheet->setCellValue('A2', $dateRange);
+            
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+            $sheet->mergeCells('A1:' . $lastCol . '1');
+            $sheet->getStyle('A1')->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                
+            $sheet->mergeCells('A2:' . $lastCol . '2');
+            $sheet->getStyle('A2')->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        }
+
+        // Save the file
+        $filename = 'policy_report_' . $reportPeriod . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $filePath = storage_path('app/public/reports/' . $filename);
+
+        if (!file_exists(dirname($filePath))) {
+            mkdir(dirname($filePath), 0755, true);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($filePath);
+
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+    } catch (\Exception $e) {
+        \Log::error('Policy report export failed: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
     }
+}
 
     /**
      * Generate and download user report (for both agents and customers)
