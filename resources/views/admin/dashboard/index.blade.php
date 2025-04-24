@@ -675,7 +675,6 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="fw-bold">Agent</th>
-                                    <th class="text-center fw-bold">Avg</th>
                                     <!-- Dynamic Month Headers -->
                                     @if (!empty($data['policyRates']))
                                         @php
@@ -727,26 +726,29 @@
                                                                 <i class="fas fa-file-signature me-1"></i>
                                                                 {{ array_sum($agentData['data']) }}
                                                             </span>
-    
+
                                                             @php
+                                                                $avgPolicies =
+                                                                    array_sum($agentData['data']) /
+                                                                    count($agentData['data']);
                                                                 $trend = 'flat';
                                                                 if (count($agentData['data']) >= 3) {
                                                                     $recent = array_slice($agentData['data'], -3);
                                                                     $older = array_slice($agentData['data'], -6, 3);
-    
+
                                                                     $recentAvg = array_sum($recent) / count($recent);
                                                                     $olderAvg = array_sum($older) / count($older);
-    
+
                                                                     if ($recentAvg > $olderAvg * 1.2) {
                                                                         $trend = 'up';
                                                                     } elseif ($recentAvg < $olderAvg * 0.8) {
                                                                         $trend = 'down';
                                                                     }
                                                                 }
-    
+
                                                                 $trendIcon = '';
                                                                 $trendColor = '';
-    
+
                                                                 if ($trend === 'up') {
                                                                     $trendIcon = 'fa-chart-line';
                                                                     $trendColor = 'text-success';
@@ -758,7 +760,7 @@
                                                                     $trendColor = 'text-warning';
                                                                 }
                                                             @endphp
-    
+
                                                             <span class="ms-2 {{ $trendColor }}"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="Performance Trend">
@@ -768,15 +770,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-    
-                                            <!-- Display Average Policy Count -->
-                                            <td class="text-center">
-                                                <span class="badge bg-info rounded-pill fw-bold" data-bs-toggle="tooltip" 
-                                                      data-bs-placement="top" title="Monthly Average">
-                                                    {{ $agentData['avg'] }}
-                                                </span>
-                                            </td>
-    
+
                                             <!-- Monthly Data for Each Agent -->
                                             @foreach ($agentData['data'] as $index => $policyCount)
                                                 <td class="text-center">
@@ -790,13 +784,13 @@
                                                     @endif
                                                 </td>
                                             @endforeach
-    
+
                                             <!-- Days Since Last Policy -->
                                             @php
                                                 $days = $agentData['days_since_last_policy'];
                                                 $bgColor = '#2F855A'; // Default: Green
                                                 $textColor = 'black';
-    
+
                                                 if ($days > 180) {
                                                     $bgColor = '#780000'; // Deep Dark Red
                                                     $textColor = 'white';
@@ -841,7 +835,7 @@
                                                     $textColor = 'black';
                                                 }
                                             @endphp
-    
+
                                             <td class="text-center">
                                                 <div class="days-badge"
                                                     style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
