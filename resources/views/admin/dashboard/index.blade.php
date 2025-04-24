@@ -689,166 +689,183 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data['policyRates'] as $agentId => $agentData)
-                                    @if (!empty($agentData['data']))
-                                        <tr
-                                            class="agent-row {{ $agentData['days_since_last_policy'] > 60 ? 'inactive-agent' : '' }}">
-                                            <!-- Agent Name and Total -->
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-2">
+                                @php
+                                    // Create a new array with agent ID as key and total count as value
+                                    $sortedAgents = [];
+                                    foreach ($data['policyRates'] as $agentId => $agentData) {
+                                        if (!empty($agentData['data'])) {
+                                            $sortedAgents[$agentId] = array_sum($agentData['data']);
+                                        }
+                                    }
+                                    
+                                    // Sort by total policy count (highest to lowest)
+                                    arsort($sortedAgents);
+                                @endphp
+                            
+                                @foreach ($sortedAgents as $agentId => $totalCount)
+                                    @php
+                                        $agentData = $data['policyRates'][$agentId];
+                                    @endphp
+                                    <tr class="agent-row {{ $agentData['days_since_last_policy'] > 60 ? 'inactive-agent' : '' }}">
+                                        <!-- Agent Name and Total -->
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar me-2">
+                                                    @php
+                                                        // Generate background color based on agent name
+                                                        $colors = [
+                                                            'primary',
+                                                            'success',
+                                                            'warning',
+                                                            'danger',
+                                                            'info',
+                                                            'secondary',
+                                                        ];
+                                                        $colorIndex = crc32($agentData['agent_name']) % count($colors);
+                                                        $bgColor = $colors[$colorIndex];
+                                                    @endphp
+                                                    <span class="avatar-text rounded-circle bg-{{ $bgColor }}">
+                                                        {{ substr($agentData['agent_name'], 0, 1) }}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span class="fw-bold agent-name" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="{{ $agentData['agent_name'] }}">
+                                                        {{ \Illuminate\Support\Str::limit($agentData['agent_name'], 16) }}
+                                                    </span>
+                                                    <div class="mt-1">
+                                                        <span class="badge bg-{{ $bgColor }} rounded-pill">
+                                                            <i class="fas fa-file-signature me-1"></i>
+                                                            {{ array_sum($agentData['data']) }}
+                                                        </span>
+                            
                                                         @php
-                                                            // Generate background color based on agent name
-                                                            $colors = [
-                                                                'primary',
-                                                                'success',
-                                                                'warning',
-                                                                'danger',
-                                                                'info',
-                                                                'secondary',
-                                                            ];
-                                                            $colorIndex =
-                                                                crc32($agentData['agent_name']) % count($colors);
-                                                            $bgColor = $colors[$colorIndex];
+                                                            $avgPolicies = count($agentData['data']) > 0 ? 
+                                                                array_sum($agentData['data']) / count($agentData['data']) : 0;
+                                                            $trend = 'flat';
+                                                            if (count($agentData['data']) >= 3) {
+                                                                $recent = array_slice($agentData['data'], -3);
+                                                                $older = array_slice($agentData['data'], -6, 3);
+                            
+                                                                $recentAvg = array_sum($recent) / count($recent);
+                                                                $olderAvg = array_sum($older) / count($older);
+                            
+                                                                if ($recentAvg > $olderAvg * 1.2) {
+                                                                    $trend = 'up';
+                                                                } elseif ($recentAvg < $olderAvg * 0.8) {
+                                                                    $trend = 'down';
+                                                                }
+                                                            }
+                            
+                                                            $trendIcon = '';
+                                                            $trendColor = '';
+                            
+                                                            if ($trend === 'up') {
+                                                                $trendIcon = 'fa-chart-line';
+                                                                $trendColor = 'text-success';
+                                                            } elseif ($trend === 'down') {
+                                                                $trendIcon = 'fa-chart-line-down';
+                                                                $trendColor = 'text-danger';
+                                                            } else {
+                                                                $trendIcon = 'fa-arrows-alt-h';
+                                                                $trendColor = 'text-warning';
+                                                            }
                                                         @endphp
-                                                        <span class="avatar-text rounded-circle bg-{{ $bgColor }}">
-                                                            {{ substr($agentData['agent_name'], 0, 1) }}
+                            
+                                                        <span class="ms-2 {{ $trendColor }}"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Performance Trend">
+                                                            <i class="fas {{ $trendIcon }}"></i>
                                                         </span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="fw-bold agent-name" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top"
-                                                            title="{{ $agentData['agent_name'] }}">
-                                                            {{ \Illuminate\Support\Str::limit($agentData['agent_name'], 16) }}
+                                                        
+                                                        <!-- Display Average -->
+                                                        <span class="ms-2 badge bg-info rounded-pill">
+                                                            <i class="fas fa-chart-bar me-1"></i>
+                                                            {{ number_format($avgPolicies, 1) }}
                                                         </span>
-                                                        <div class="mt-1">
-                                                            <span class="badge bg-{{ $bgColor }} rounded-pill">
-                                                                <i class="fas fa-file-signature me-1"></i>
-                                                                {{ array_sum($agentData['data']) }}
-                                                            </span>
-
-                                                            @php
-                                                                $avgPolicies =
-                                                                    array_sum($agentData['data']) /
-                                                                    count($agentData['data']);
-                                                                $trend = 'flat';
-                                                                if (count($agentData['data']) >= 3) {
-                                                                    $recent = array_slice($agentData['data'], -3);
-                                                                    $older = array_slice($agentData['data'], -6, 3);
-
-                                                                    $recentAvg = array_sum($recent) / count($recent);
-                                                                    $olderAvg = array_sum($older) / count($older);
-
-                                                                    if ($recentAvg > $olderAvg * 1.2) {
-                                                                        $trend = 'up';
-                                                                    } elseif ($recentAvg < $olderAvg * 0.8) {
-                                                                        $trend = 'down';
-                                                                    }
-                                                                }
-
-                                                                $trendIcon = '';
-                                                                $trendColor = '';
-
-                                                                if ($trend === 'up') {
-                                                                    $trendIcon = 'fa-chart-line';
-                                                                    $trendColor = 'text-success';
-                                                                } elseif ($trend === 'down') {
-                                                                    $trendIcon = 'fa-chart-line-down';
-                                                                    $trendColor = 'text-danger';
-                                                                } else {
-                                                                    $trendIcon = 'fa-arrows-alt-h';
-                                                                    $trendColor = 'text-warning';
-                                                                }
-                                                            @endphp
-
-                                                            <span class="ms-2 {{ $trendColor }}"
-                                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="Performance Trend">
-                                                                <i class="fas {{ $trendIcon }}"></i>
-                                                            </span>
-                                                        </div>
                                                     </div>
                                                 </div>
-                                            </td>
-
-                                            <!-- Monthly Data for Each Agent -->
-                                            @foreach ($agentData['data'] as $index => $policyCount)
-                                                <td class="text-center">
-                                                    @if ($policyCount > 0)
-                                                        <span
-                                                            class="badge {{ $policyCount > 5 ? 'bg-primary' : 'bg-light-primary text-primary' }} policy-badge">
-                                                            {{ $policyCount }}
-                                                        </span>
-                                                    @else
-                                                        <span class="text-muted">-</span>
-                                                    @endif
-                                                </td>
-                                            @endforeach
-
-                                            <!-- Days Since Last Policy -->
-                                            @php
-                                                $days = $agentData['days_since_last_policy'];
-                                                $bgColor = '#2F855A'; // Default: Green
-                                                $textColor = 'black';
-
-                                                if ($days > 180) {
-                                                    $bgColor = '#780000'; // Deep Dark Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 150) {
-                                                    $bgColor = '#8B0000'; // Dark Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 120) {
-                                                    $bgColor = '#AA0000'; // Rich Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 90) {
-                                                    $bgColor = '#CC0000'; // Medium Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 60) {
-                                                    $bgColor = '#E53E3E'; // Bright Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 45) {
-                                                    $bgColor = '#ED6464'; // Light Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 30) {
-                                                    $bgColor = '#F56565'; // Coral Red
-                                                    $textColor = 'white';
-                                                } elseif ($days > 21) {
-                                                    $bgColor = '#FC8181'; // Salmon
-                                                    $textColor = 'white';
-                                                } elseif ($days > 14) {
-                                                    $bgColor = '#FEB2B2'; // Light Coral
-                                                    $textColor = 'black';
-                                                } elseif ($days > 10) {
-                                                    $bgColor = '#FF9933'; // Dark Orange
-                                                    $textColor = 'black';
-                                                } elseif ($days > 7) {
-                                                    $bgColor = '#FFB347'; // Medium Orange
-                                                    $textColor = 'black';
-                                                } elseif ($days > 5) {
-                                                    $bgColor = '#FFD700'; // Gold
-                                                    $textColor = 'black';
-                                                } elseif ($days > 3) {
-                                                    $bgColor = '#9ACD32'; // Yellow Green
-                                                    $textColor = 'black';
-                                                } elseif ($days > 2) {
-                                                    $bgColor = '#48BB78'; // Medium Green
-                                                    $textColor = 'black';
-                                                }
-                                            @endphp
-
+                                            </div>
+                                        </td>
+                            
+                                        <!-- Monthly Data for Each Agent -->
+                                        @foreach ($agentData['data'] as $index => $policyCount)
                                             <td class="text-center">
-                                                <div class="days-badge"
-                                                    style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
-                                                    {{ $days }}
-                                                    @if ($days < 3)
-                                                        <i class="fas fa-check-circle ms-1"></i>
-                                                    @elseif($days > 60)
-                                                        <i class="fas fa-exclamation-circle ms-1"></i>
-                                                    @endif
-                                                </div>
+                                                @if ($policyCount > 0)
+                                                    <span
+                                                        class="badge {{ $policyCount > 5 ? 'bg-primary' : 'bg-light-primary text-primary' }} policy-badge">
+                                                        {{ $policyCount }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
                                             </td>
-                                        </tr>
-                                    @endif
+                                        @endforeach
+                            
+                                        <!-- Days Since Last Policy -->
+                                        @php
+                                            $days = $agentData['days_since_last_policy'];
+                                            $bgColor = '#2F855A'; // Default: Green
+                                            $textColor = 'black';
+                            
+                                            if ($days > 180) {
+                                                $bgColor = '#780000'; // Deep Dark Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 150) {
+                                                $bgColor = '#8B0000'; // Dark Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 120) {
+                                                $bgColor = '#AA0000'; // Rich Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 90) {
+                                                $bgColor = '#CC0000'; // Medium Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 60) {
+                                                $bgColor = '#E53E3E'; // Bright Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 45) {
+                                                $bgColor = '#ED6464'; // Light Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 30) {
+                                                $bgColor = '#F56565'; // Coral Red
+                                                $textColor = 'white';
+                                            } elseif ($days > 21) {
+                                                $bgColor = '#FC8181'; // Salmon
+                                                $textColor = 'white';
+                                            } elseif ($days > 14) {
+                                                $bgColor = '#FEB2B2'; // Light Coral
+                                                $textColor = 'black';
+                                            } elseif ($days > 10) {
+                                                $bgColor = '#FF9933'; // Dark Orange
+                                                $textColor = 'black';
+                                            } elseif ($days > 7) {
+                                                $bgColor = '#FFB347'; // Medium Orange
+                                                $textColor = 'black';
+                                            } elseif ($days > 5) {
+                                                $bgColor = '#FFD700'; // Gold
+                                                $textColor = 'black';
+                                            } elseif ($days > 3) {
+                                                $bgColor = '#9ACD32'; // Yellow Green
+                                                $textColor = 'black';
+                                            } elseif ($days > 2) {
+                                                $bgColor = '#48BB78'; // Medium Green
+                                                $textColor = 'black';
+                                            }
+                                        @endphp
+                            
+                                        <td class="text-center">
+                                            <div class="days-badge"
+                                                style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
+                                                {{ $days }}
+                                                @if ($days < 3)
+                                                    <i class="fas fa-check-circle ms-1"></i>
+                                                @elseif($days > 60)
+                                                    <i class="fas fa-exclamation-circle ms-1"></i>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
