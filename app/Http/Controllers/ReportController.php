@@ -168,177 +168,105 @@ class ReportController extends Controller
         } elseif ($reportPeriod === 'monthly') {
             // Get date range for headers
             $fromDate = $request->filled('from_date') 
-                ? Carbon::parse($request->from_date) 
-                : Carbon::now()->subMonths(5);
-            $toDate = $request->filled('to_date') 
-                ? Carbon::parse($request->to_date) 
-                : Carbon::now();
-            
-            // Create array of months for column headers
-            $months = [];
-            $currentDate = Carbon::parse($fromDate)->startOfMonth();
-            $endDate = Carbon::parse($toDate)->endOfMonth();
-            
-            while ($currentDate->lte($endDate)) {
-                $months[] = [
-                    'year_month' => $currentDate->format('Y-m'),
-                    'display' => $currentDate->format('Y M')
-                ];
-                $currentDate->addMonth();
-            }
-            
-            // Get all agents with policies in the date range
-            $agents = Policy::query()
-                ->whereBetween('policy_start_date', [$fromDate, $toDate])
-                ->select('agent_id')
-                ->with('agent:id,name')
-                ->groupBy('agent_id')
-                ->get()
-                ->pluck('agent');
-                
-            // If no agents found
-            if ($agents->isEmpty()) {
-                return redirect()->back()->with('error', 'No records found for the selected filters.');
-            }
-            
-            // Set up headers - Agent in first column, then each month
-            $sheet->setCellValue('A1', 'Agent');
-            $sheet->getStyle('A1')->getFont()->setBold(true);
-            
-            // Set month headers
+            ? Carbon::parse($request->from_date) 
+            : Carbon::now()->subMonths(5);
+        $toDate = $request->filled('to_date') 
+            ? Carbon::parse($request->to_date) 
+            : Carbon::now();
+        
+        // Create array of months for column headers
+        $months = [];
+        $currentDate = Carbon::parse($fromDate)->startOfMonth();
+        $endDate = Carbon::parse($toDate)->endOfMonth();
+        
+        while ($currentDate->lte($endDate)) {
+            $months[] = [
+                'year_month' => $currentDate->format('Y-m'),
+                'display' => $currentDate->format('Y M')
+            ];
+            $currentDate->addMonth();
+        }
+        
+        // Get all agents with policies in the date range
+        $agents = Policy::query()
+            ->whereBetween('policy_start_date', [$fromDate, $toDate])
+            ->select('agent_id')
+            ->with('agent:id,name')
+            ->groupBy('agent_id')
+            ->get()
+            ->pluck('agent');
+        
+        // If no agents found
+        if ($agents->isEmpty()) {
+            return redirect()->back()->with('error', 'No records found for the selected filters.');
+        }
+        
+        // Set up headers - Agent in first column, then each month
+        $sheet->setCellValue('A1', 'Agent');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        
+        // Set month headers
+        $col = 'B';
+        foreach ($months as $index => $month) {
+            $sheet->setCellValue($col . '1', $month['display']);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $col++;
+        }
+        
+        // Add a total column
+        $sheet->setCellValue($col . '1', 'Total');
+        $sheet->getStyle($col . '1')->getFont()->setBold(true);
+        $totalCol = $col;
+        
+        $row = 2;
+        foreach ($agents as $agent) {
+            if (!$agent) continue;
+        
+            $sheet->setCellValue('A' . $row, $agent->name);
+        
+            $totalPolicies = 0;
             $col = 'B';
-            foreach ($months as $index => $month) {
-                $sheet->setCellValue($col . '1', $month['display']);
-                $sheet->getStyle($col . '1')->getFont()->setBold(true);
+        
+            foreach ($months as $month) {
+                $monthStart = Carbon::createFromFormat('Y-m', $month['year_month'])->startOfMonth();
+                $monthEnd = Carbon::createFromFormat('Y-m', $month['year_month'])->endOfMonth();
+        
+                $policyCount = Policy::query()
+                    ->where('agent_id', $agent->id)
+                    ->whereBetween('policy_start_date', [$monthStart, $monthEnd])
+                    ->count();
+        
+                $sheet->setCellValue($col . $row, $policyCount);
+                $totalPolicies += $policyCount;
                 $col++;
             }
-            
-            // Add a total column
-            $sheet->setCellValue($col . '1', 'Total');
-            $sheet->getStyle($col . '1')->getFont()->setBold(true);
-            $totalCol = $col;
-            
-            // Add last policy date column
-            $col++;
-            $sheet->setCellValue($col . '1', 'Days Since Last Policy');
-            $sheet->getStyle($col . '1')->getFont()->setBold(true);
-            $lastPolicyCol = $col;
-            
-            // Fill data for each agent
-            $row = 2;
-            foreach ($agents as $agent) {
-                if (!$agent) continue; // Skip if agent is null
-                
-                $sheet->setCellValue('A' . $row, $agent->name);
-                
-                // Calculate totals and add monthly data
-                $totalPolicies = 0;
-                $col = 'B';
-                
-                // Most recent policy date
-                $mostRecentPolicy = null;
-                
-                foreach ($months as $month) {
-                    // Get count of policies for this agent in this month
-                    $monthStart = Carbon::createFromFormat('Y-m', $month['year_month'])->startOfMonth();
-                    $monthEnd = Carbon::createFromFormat('Y-m', $month['year_month'])->endOfMonth();
-                    
-                    $policyCount = Policy::query()
-                        ->where('agent_id', $agent->id)
-                        ->whereBetween('policy_start_date', [$monthStart, $monthEnd])
-                        ->count();
-                    
-                    // Get most recent policy date
-                    $latestPolicy = Policy::query()
-                        ->where('agent_id', $agent->id)
-                        ->whereBetween('policy_start_date', [$monthStart, $monthEnd])
-                        ->latest('policy_start_date')
-                        ->first();
-                        
-                    if ($latestPolicy && ($mostRecentPolicy === null || 
-                        Carbon::parse($latestPolicy->policy_start_date)->gt(Carbon::parse($mostRecentPolicy)))) {
-                        $mostRecentPolicy = $latestPolicy->policy_start_date;
-                    }
-                    
-                    // Set policy count in cell
-                    $sheet->setCellValue($col . $row, $policyCount);
-                    
-                    // Apply styling - blue cell with white text for non-zero counts
-                    if ($policyCount > 0) {
-                        $sheet->getStyle($col . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('4169E1'); // Royal Blue
-                        $sheet->getStyle($col . $row)->getFont()->getColor()
-                            ->setRGB('FFFFFF'); // White text
-                        $sheet->getStyle($col . $row)->getAlignment()
-                            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                    }
-                    
-                    $totalPolicies += $policyCount;
-                    $col++;
-                }
-                
-                // Set total policies
-                $sheet->setCellValue($totalCol . $row, $totalPolicies);
-                $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
-                
-                // Calculate days since last policy
-                if ($mostRecentPolicy) {
-                    $daysSinceLastPolicy = Carbon::parse($mostRecentPolicy)->diffInDays(Carbon::now());
-                    $sheet->setCellValue($lastPolicyCol . $row, $daysSinceLastPolicy);
-                    
-                    // Color code based on recency
-                    if ($daysSinceLastPolicy <= 7) {
-                        // Green for recent activity (last 7 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('4CAF50');
-                    } else if ($daysSinceLastPolicy <= 30) {
-                        // Yellow for moderate activity (last 30 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('FFC107');
-                    } else {
-                        // Red for inactive (more than 30 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('F44336');
-                    }
-                    
-                    $sheet->getStyle($lastPolicyCol . $row)->getFont()->getColor()
-                        ->setRGB('FFFFFF'); // White text
-                    $sheet->getStyle($lastPolicyCol . $row)->getAlignment()
-                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                } else {
-                    $sheet->setCellValue($lastPolicyCol . $row, 'N/A');
-                }
-                
-                $row++;
-            }
-            
-            // Auto-size columns
-            $lastCol = $lastPolicyCol;
-            foreach (range('A', $lastCol) as $column) {
-                $sheet->getColumnDimension($column)->setAutoSize(true);
-            }
-            
-            // Add title and date range
-            $sheet->insertNewRowBefore(1, 2);
-            $title = 'Agent Policy Performance - Monthly Report';
-            $dateRange = 'Period: ' . $fromDate->format('M Y') . ' to ' . $toDate->format('M Y');
-            
-            $sheet->setCellValue('A1', $title);
-            $sheet->setCellValue('A2', $dateRange);
-            
-            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-            $sheet->mergeCells('A1:' . $lastCol . '1');
-            $sheet->getStyle('A1')->getAlignment()
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                
-            $sheet->mergeCells('A2:' . $lastCol . '2');
-            $sheet->getStyle('A2')->getAlignment()
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            
+        
+            $sheet->setCellValue($totalCol . $row, $totalPolicies);
+            $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
+        
+            $row++;
+        }
+        
+        // Auto-size columns
+        foreach (range('A', $totalCol) as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+        
+        // Add title and date range
+        $sheet->insertNewRowBefore(1, 2);
+        $title = 'Agent Policy Performance - Monthly Report';
+        $dateRange = 'Period: ' . $fromDate->format('M Y') . ' to ' . $toDate->format('M Y');
+        
+        $sheet->setCellValue('A1', $title);
+        $sheet->setCellValue('A2', $dateRange);
+        
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->mergeCells('A1:' . $totalCol . '1');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        
+        $sheet->mergeCells('A2:' . $totalCol . '2');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        
         } else { // yearly
             // Get date range for headers
             $fromDate = $request->filled('from_date') 
@@ -394,7 +322,7 @@ class ReportController extends Controller
             
             // Add last policy date column
             $col++;
-            $sheet->setCellValue($col . '1', 'Days Since Last Policy');
+           
             $sheet->getStyle($col . '1')->getFont()->setBold(true);
             $lastPolicyCol = $col;
             
@@ -439,14 +367,10 @@ class ReportController extends Controller
                     
                     // Apply styling - blue cell with white text for non-zero counts
                     if ($policyCount > 0) {
-                        $sheet->getStyle($col . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('4169E1'); // Royal Blue
-                        $sheet->getStyle($col . $row)->getFont()->getColor()
-                            ->setRGB('FFFFFF'); // White text
                         $sheet->getStyle($col . $row)->getAlignment()
                             ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                     }
+                    
                     
                     $totalPolicies += $policyCount;
                     $col++;
@@ -456,42 +380,14 @@ class ReportController extends Controller
                 $sheet->setCellValue($totalCol . $row, $totalPolicies);
                 $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
                 
-                // Calculate days since last policy
-                if ($mostRecentPolicy) {
-                    $daysSinceLastPolicy = Carbon::parse($mostRecentPolicy)->diffInDays(Carbon::now());
-                    $sheet->setCellValue($lastPolicyCol . $row, $daysSinceLastPolicy);
-                    
-                    // Color code based on recency
-                    if ($daysSinceLastPolicy <= 7) {
-                        // Green for recent activity (last 7 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('4CAF50');
-                    } else if ($daysSinceLastPolicy <= 30) {
-                        // Yellow for moderate activity (last 30 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('FFC107');
-                    } else {
-                        // Red for inactive (more than 30 days)
-                        $sheet->getStyle($lastPolicyCol . $row)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                            ->getStartColor()->setRGB('F44336');
-                    }
-                    
-                    $sheet->getStyle($lastPolicyCol . $row)->getFont()->getColor()
-                        ->setRGB('FFFFFF'); // White text
-                    $sheet->getStyle($lastPolicyCol . $row)->getAlignment()
-                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                } else {
-                    $sheet->setCellValue($lastPolicyCol . $row, 'N/A');
-                }
+                
                 
                 $row++;
             }
             
             // Auto-size columns
-            $lastCol = $lastPolicyCol;
+            $lastCol = $totalCol;
+
             foreach (range('A', $lastCol) as $column) {
                 $sheet->getColumnDimension($column)->setAutoSize(true);
             }
@@ -505,11 +401,11 @@ class ReportController extends Controller
             $sheet->setCellValue('A2', $dateRange);
             
             $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-            $sheet->mergeCells('A1:' . $lastCol . '1');
+            $sheet->mergeCells('A1:' . $totalCol . '1');
             $sheet->getStyle('A1')->getAlignment()
                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 
-            $sheet->mergeCells('A2:' . $lastCol . '2');
+            $sheet->mergeCells('A2:' . $totalCol . '2');
             $sheet->getStyle('A2')->getAlignment()
                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
