@@ -144,26 +144,39 @@
                                                     <td>
                                                         <div class="d-flex flex-column">
                                                             @php
-                                                                $paymentTypeColors = [
-                                                                    'agent_full_payment' => 'success',
-                                                                    'commission_deducted' => 'warning',
-                                                                    'pay_later_with_adjustment' => 'info',
-                                                                    'pay_later' => 'secondary',
-                                                                ];
-
-                                                                $paymentTypeIcons = [
-                                                                    'agent_full_payment' => 'fa-solid fa-money-bill-wave',
-                                                                    'commission_deducted' => 'fa-solid fa-hand-holding-dollar',
-                                                                    'pay_later_with_adjustment' => 'fa-solid fa-calendar-days',
-                                                                    'pay_later' => 'fa-solid fa-clock',
-                                                                ];
-                                                            @endphp
-                                                            
-                                                            <!-- Payment Type -->
-                                                            <span class="badge bg-{{ $paymentTypeColors[$commission->payment_type] ?? 'secondary' }} mb-1">
-                                                                <i class="{{ $paymentTypeIcons[$commission->payment_type] ?? 'fa-solid fa-money-bill' }} me-1"></i>
-                                                                {{ ucwords(str_replace('_', ' ', $commission->payment_type)) }}
-                                                            </span>
+                                                            $paymentTypeColors = [
+                                                                'agent_full_payment' => 'success',
+                                                                'commission_deducted' => '#01196e', // HEX, needs special handling
+                                                                'pay_later_with_adjustment' => 'warning',
+                                                                'pay_later' => 'secondary',
+                                                            ];
+                                                        
+                                                            $paymentTypeIcons = [
+                                                                'agent_full_payment' => 'fa-solid fa-money-bill-wave',
+                                                                'commission_deducted' => 'fa-solid fa-hand-holding-dollar',
+                                                                'pay_later_with_adjustment' => 'fa-solid fa-calendar-days',
+                                                                'pay_later' => 'fa-solid fa-clock',
+                                                            ];
+                                                        
+                                                            $currentPaymentType = $commission->payment_type;
+                                                            $color = $paymentTypeColors[$currentPaymentType] ?? 'secondary';
+                                                            $icon = $paymentTypeIcons[$currentPaymentType] ?? 'fa-solid fa-money-bill';
+                                                        @endphp
+                                                        
+                                                        <!-- Payment Type -->
+                                                        <span 
+                                                            class="badge mb-1 
+                                                                @if($currentPaymentType != 'commission_deducted') 
+                                                                    bg-{{ $color }} 
+                                                                @endif" 
+                                                            @if($currentPaymentType == 'commission_deducted') 
+                                                                style="background-color: {{ $color }};" 
+                                                            @endif
+                                                        >
+                                                            <i class="{{ $icon }} me-1"></i>
+                                                            {{ ucwords(str_replace('_', ' ', $currentPaymentType)) }}
+                                                        </span>
+                                                        
                                                             
                                                             <!-- Commission Settlement Status - only show if settled -->
                                                             @if($agent->commission_settlement)

@@ -378,19 +378,19 @@ class ReportController extends Controller
         $sheet->getStyle($totalCol . '1')->getFont()->setBold(true);
         $col++;
 
-        $lastMonthsDiffCol = $col;
-        $sheet->setCellValue($lastMonthsDiffCol . '1', 'Last 2 Months Diff');
-        $sheet->getStyle($lastMonthsDiffCol . '1')->getFont()->setBold(true);
-        $col++;
+        // $lastMonthsDiffCol = $col;
+        // $sheet->setCellValue($lastMonthsDiffCol . '1', 'Last 2 Months Diff');
+        // $sheet->getStyle($lastMonthsDiffCol . '1')->getFont()->setBold(true);
+        // $col++;
 
-        $daysSinceCol = $col;
-        $sheet->setCellValue($daysSinceCol . '1', 'Days Since Last Policy');
-        $sheet->getStyle($daysSinceCol . '1')->getFont()->setBold(true);
-        $col++;
+        // $daysSinceCol = $col;
+        // $sheet->setCellValue($daysSinceCol . '1', 'Days Since Last Policy');
+        // $sheet->getStyle($daysSinceCol . '1')->getFont()->setBold(true);
+        // $col++;
 
-        $trendCol = $col;
-        $sheet->setCellValue($trendCol . '1', 'Trend');
-        $sheet->getStyle($trendCol . '1')->getFont()->setBold(true);
+        // $trendCol = $col;
+        // $sheet->setCellValue($trendCol . '1', 'Trend');
+        // $sheet->getStyle($trendCol . '1')->getFont()->setBold(true);
 
         // Fill data for each agent
         $row = 2;
@@ -433,26 +433,26 @@ class ReportController extends Controller
             // Calculate and set last 2 months difference
             // For yearly report, this represents the last 2 months of the most recent year
             $lastTwoMonthsDiff = $this->calculateLastTwoMonthsOfYearDiff($agent->id, $toDate->year);
-            $sheet->setCellValue($lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
-            $this->formatDiffCell($sheet, $lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+            // $sheet->setCellValue($lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+            // $this->formatDiffCell($sheet, $lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
 
             // Set days since last policy
             $daysSinceLastPolicy = isset($lastPolicyDates[$agent->id]) ? $lastPolicyDates[$agent->id] : 'N/A';
-            $sheet->setCellValue($daysSinceCol . $row, $daysSinceLastPolicy);
-            $this->formatDaysSinceCell($sheet, $daysSinceCol . $row, $daysSinceLastPolicy);
+            // $sheet->setCellValue($daysSinceCol . $row, $daysSinceLastPolicy);
+            // $this->formatDaysSinceCell($sheet, $daysSinceCol . $row, $daysSinceLastPolicy);
 
             // Set trend indicator
             $trend = $this->determineTrend($lastTwoMonthsDiff);
-            $sheet->setCellValue($trendCol . $row, $trend);
-            $this->formatTrendCell($sheet, $trendCol . $row, $trend);
+            // $sheet->setCellValue($trendCol . $row, $trend);
+            // $this->formatTrendCell($sheet, $trendCol . $row, $trend);
 
             $row++;
         }
 
         // Auto-size columns
-        foreach (range('A', $trendCol) as $column) {
-            $sheet->getColumnDimension($column)->setAutoSize(true);
-        }
+        // foreach (range('A', $trendCol) as $column) {
+        //     $sheet->getColumnDimension($column)->setAutoSize(true);
+        // }
 
         // Add title and date range
         $sheet->insertNewRowBefore(1, 2);
@@ -463,10 +463,10 @@ class ReportController extends Controller
         $sheet->setCellValue('A2', $dateRange);
 
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-        $sheet->mergeCells('A1:' . $trendCol . '1');
+       // $sheet->mergeCells('A1:' . $trendCol . '1');
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        $sheet->mergeCells('A2:' . $trendCol . '2');
+       // $sheet->mergeCells('A2:' . $trendCol . '2');
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     }
 
