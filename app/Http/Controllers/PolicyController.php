@@ -90,8 +90,10 @@ class PolicyController extends Controller
 
     public function PolicyList(Request $request)
     {
-        list($agent_id, $start_date, $end_date) = prepareDashboardData($request);
+        // Get filter parameters
+        list($agent_id, $start_date, $end_date) = $this->prepareDashboardData($request);
 
+        // Build query with joins and calculated fields
         $query = Policy::with('agent', 'company', 'insuranceProduct')
             ->where('deleted_at', null)
             ->whereBetween('policy_start_date', [$start_date, $end_date])
@@ -104,11 +106,15 @@ class PolicyController extends Controller
             )
             ->orderBy('id', 'desc');
 
+        // Apply agent filter if specified
         if (!empty($agent_id)) {
             $query->where('agent_id', $agent_id);
         }
 
+        // Execute query
         $data = $query->get();
+
+        // Get all agents for filter dropdown
         $agentData = User::role('agent')->get();
 
         // Get total payments from Account model for the selected date range
@@ -134,7 +140,6 @@ class PolicyController extends Controller
             'Net_Commission_Payable_Agent' => ($data->sum('agent_commission') - $data->sum('commission_deducted') -
                 $data->sum('commission_will_adjustment')),
             'total_payout' => $data->sum('payout'),
-
             // Due amount calculations with Account model data
             'total_amount_due_agents' => $data->sum('full_due_amount') + $data->sum('partial_due_amount'),
             'total_amount_paid_agents' => $totalAmountPaid,
@@ -142,19 +147,44 @@ class PolicyController extends Controller
         ];
 
         // Format currency values for display
-        $analytics['total_premium'] = number_format($analytics['total_premium'], 2);
-        $analytics['total_commission'] = number_format($analytics['total_commission'], 2);
-        $analytics['total_net_amount'] = number_format($analytics['total_net_amount'], 2);
-        $analytics['total_payout'] = number_format($analytics['total_payout'], 2);
-        $analytics['total_amount_due_agents'] = number_format($analytics['total_amount_due_agents'], 2);
-        $analytics['total_amount_paid_agents'] = number_format($analytics['total_amount_paid_agents'], 2);
-        $analytics['pending_amount_due'] = number_format($analytics['pending_amount_due'], 2);
+        foreach (
+            [
+                'total_premium',
+                'total_commission',
+                'total_net_amount',
+                'total_gst',
+                'total_payout',
+                'total_amount_due_agents',
+                'total_amount_paid_agents',
+                'pending_amount_due'
+            ] as $key
+        ) {
+            $analytics[$key] = number_format($analytics[$key], 2);
+        }
 
         return view('admin.policy_list', [
             'data' => $data,
             'agentData' => $agentData,
-            'analytics' => $analytics
+            'analytics' => $analytics,
+            'currentStartDate' => $start_date,
+            'currentEndDate' => $end_date,
+            'currentAgentId' => $agent_id
         ]);
+    }
+
+    /**
+     * Helper function to prepare dashboard date filters
+     */
+    private function prepareDashboardData(Request $request)
+    {
+        // Get agent filter
+        $agent_id = $request->input('agent_id', null);
+
+        // Process date filters with defaults
+        $start_date = $request->input('start_date', date('Y-m-01')); // Default to first day of current month
+        $end_date = $request->input('end_date', date('Y-m-t'));     // Default to last day of current month
+
+        return [$agent_id, $start_date, $end_date];
     }
 
 
@@ -204,13 +234,4 @@ class PolicyController extends Controller
             return redirect()->back()->withErrors([$e->getMessage()])->withInput()->with('activeTab', 'pdf');
         }
     }
-
-
-
-
-   
-
-
-
-    
 }
