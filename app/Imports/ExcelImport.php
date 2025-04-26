@@ -74,8 +74,8 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             $gst_percentage = $commissionDetails->gst; // Assuming this is the percentage value (e.g., 18 for 18%)
             
             $net_amount = $premium && $gst_percentage
-                ? round($premium / (1 + ($gst_percentage/100)), 2)
-                : null;
+            ? round($premium - ($premium * $gst_percentage / 100), 2)
+            : null;
             
             $gst_amount = $premium && $net_amount
                 ? round($premium - $net_amount, 2)
