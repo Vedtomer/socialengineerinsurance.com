@@ -24,7 +24,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Select Agent</label>
-                            <select class="form-select js-example-basic-single" name="agent_id" data-placeholder="All Agents">
+                            <select class="form-select js-example-basic-single w-100" name="agent_id" data-placeholder="All Agents">
                                 <option value="">All Agents</option>
                                 @foreach ($agentData as $agent)
                                     <option value="{{ $agent->id }}" {{ request('agent_id') == $agent->id ? 'selected' : '' }}>
@@ -33,6 +33,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        
                         <div class="d-flex justify-content-end gap-2">
                             <button type="reset" class="btn btn-outline-secondary">Reset</button>
                             <button type="submit" class="btn btn-primary">
