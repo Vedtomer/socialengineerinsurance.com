@@ -24,14 +24,16 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Select Agent</label>
-                            <select class="form-select js-example-basic-single w-100" name="agent_id" data-placeholder="All Agents">
-                                <option value="">All Agents</option>
-                                @foreach ($agentData as $agent)
-                                    <option value="{{ $agent->id }}" {{ request('agent_id') == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <div class="w-100">
+                                <select class="form-select js-example-basic-single" name="agent_id" data-placeholder="All Agents" style="width: 100%;">
+                                    <option value="">All Agents</option>
+                                    @foreach ($agentData as $agent)
+                                        <option value="{{ $agent->id }}" {{ request('agent_id') == $agent->id ? 'selected' : '' }}>
+                                            {{ $agent->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="d-flex justify-content-end gap-2">
@@ -45,6 +47,8 @@
             </div>
         </div>
     </div>
+    
+  
 
    
     <!-- Policy List Card -->

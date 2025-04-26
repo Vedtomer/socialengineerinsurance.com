@@ -175,6 +175,7 @@ class PolicyController extends Controller
     /**
      * Helper function to prepare dashboard date filters
      */
+
     private function prepareDashboardData(Request $request)
     {
         // Get agent filter
@@ -184,8 +185,13 @@ class PolicyController extends Controller
         $start_date = $request->input('start_date', date('Y-m-01')); // Default to first day of current month
         $end_date = $request->input('end_date', date('Y-m-t'));     // Default to last day of current month
 
+        // Convert date filters to Carbon instances for proper comparison
+        $start_date = Carbon::createFromFormat('Y-m-d', $start_date)->startOfDay();  // Set to the start of the day (midnight)
+        $end_date = Carbon::createFromFormat('Y-m-d', $end_date)->endOfDay();      // Set to the end of the day (11:59:59 PM)
+
         return [$agent_id, $start_date, $end_date];
     }
+
 
 
     public function policyDelete(Request $request, $id)

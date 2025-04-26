@@ -133,3 +133,20 @@
         border-bottom-right-radius: 8px;
     }
 </style>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 with proper width
+        $('.js-example-basic-single').select2({
+            dropdownParent: $('#filterModal'),
+            width: '100%'
+        });
+        
+        // Fix for Select2 width issue
+        $('#filterModal').on('shown.bs.modal', function() {
+            $('.js-example-basic-single').select2({
+                dropdownParent: $('#filterModal'),
+                width: '100%'
+            });
+        });
+    });
+</script>
