@@ -71,8 +71,14 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
 
             // Calculate financial values
             $premium = isset($row['premium']) ? (float)$row['premium'] : null;
-            $net_amount = $premium && $commissionDetails->gst
-                ? round($premium * (100 / (100 + $commissionDetails->gst)), 2)
+            $gst_percentage = $commissionDetails->gst; // Assuming this is the percentage value (e.g., 18 for 18%)
+            
+            $net_amount = $premium && $gst_percentage
+                ? round($premium / (1 + ($gst_percentage/100)), 2)
+                : null;
+            
+            $gst_amount = $premium && $net_amount
+                ? round($premium - $net_amount, 2)
                 : null;
 
             // Get discount and payout from commission details
@@ -105,7 +111,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             $existingRecord->agent_id = $commissionDetails->user_id;
             $existingRecord->premium = $premium;
             $existingRecord->gst = $premium && $commissionDetails->gst
-                ? round($premium * ($commissionDetails->gst / 100), 2)
+                ? $gst_amount
                 : null;
             $existingRecord->agent_commission = $agent_commission;
             $existingRecord->net_amount = $net_amount;
