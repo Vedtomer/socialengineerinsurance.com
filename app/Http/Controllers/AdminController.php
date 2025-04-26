@@ -673,11 +673,11 @@ class AdminController extends Controller
         $premiums = $monthlyCommissions->sum('total_premium');
         $payout = $monthlyCommissions->sum('total_payout');
         $final_amount_due = $agentSettlements->sum('final_amount_due');
-        
+
         // Get insurance company data
         $companies = InsuranceCompany::where('status', 1)->get();
         $companyIds = $companies->pluck('id');
-        
+
         // Get policy data by company
         $policyData = Policy::whereIn('company_id', $companyIds)
             ->where('policy_start_date', '>=', $start_date)
@@ -688,7 +688,7 @@ class AdminController extends Controller
             ->selectRaw('company_id, ROUND(SUM(net_amount)) as total_premium, COUNT(*) as total_policies, ROUND(SUM(payout)) as total_payout')
             ->groupBy('company_id')
             ->get();
-        
+
         // Combine the company data with the policy data
         $companies = $companies->map(function ($company) use ($policyData) {
             $policy = $policyData->firstWhere('company_id', $company->id);
@@ -697,14 +697,14 @@ class AdminController extends Controller
             $company->total_payout = $policy ? round($policy->total_payout) : 0;
             return $company;
         });
-        
+
         // Filter companies with amount greater than 0
         $companies = $companies->filter(function ($company) {
             return $company->total_premium > 0;
         });
 
         $agents = User::role('agent')->where('status', 1)->get();
-        
+
         return [
             'agents' => $agents,
             'policyCount' => round($policyCount),
@@ -726,26 +726,44 @@ class AdminController extends Controller
             ->groupBy('agent_id')
             ->get()
             ->keyBy('agent_id');
-
+    
         foreach ($formattedData as $agentId => &$agentData) {
+            // Add days since last policy
             if (isset($latestPolicyDates[$agentId])) {
                 $lastPolicyDate = strtotime($latestPolicyDates[$agentId]->last_policy_date);
-
-                // Calculate the difference in days
                 $daysDifference = ($today - $lastPolicyDate) / (60 * 60 * 24);
-
-                // Ensure the difference is not negative
                 $agentData['days_since_last_policy'] = max(0, (int)$daysDifference);
             } else {
-                // If no policy found for the agent, set a high number
                 $agentData['days_since_last_policy'] = 9999;
             }
+            
+            // Calculate last 2 months difference
+            $dataCount = count($agentData['data']);
+            if ($dataCount >= 2) {
+                $currentMonth = $agentData['data'][$dataCount - 1]; // Latest month
+                $previousMonth = $agentData['data'][$dataCount - 2]; // Previous month
+                
+                $agentData['last_2_months_diff'] = $currentMonth - $previousMonth;
+                
+                // Add trend direction (up or down)
+                if ($agentData['last_2_months_diff'] > 0) {
+                    $agentData['trend'] = 'up';
+                } elseif ($agentData['last_2_months_diff'] < 0) {
+                    $agentData['trend'] = 'down';
+                } else {
+                    $agentData['trend'] = 'same';
+                }
+            } else {
+                $agentData['last_2_months_diff'] = 0;
+                $agentData['trend'] = 'na';
+            }
         }
-
+    
+        // Sort by days since last policy (highest first)
         uasort($formattedData, function ($a, $b) {
             return $b['days_since_last_policy'] <=> $a['days_since_last_policy'];
         });
-
+    
         return $formattedData;
     }
 }

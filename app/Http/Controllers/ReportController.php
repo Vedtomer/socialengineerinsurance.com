@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -70,347 +71,591 @@ class ReportController extends Controller
     {
         try {
             // Validate the request
-            $request->validate([
-                'from_date' => 'nullable|date',
-                'to_date' => 'nullable|date|after_or_equal:from_date',
-                'company_id' => 'nullable|exists:insurance_companies,id',
-                'agent_id' => 'nullable|exists:users,id',
-                'policy_type' => 'nullable|exists:insurance_products,id',
-                'payment_by' => 'nullable|string',
-                'report_period' => 'nullable|in:daily,monthly,yearly',
-            ]);
-    
-            // Start query - SINGLE QUERY that will be used throughout
-            $query = Policy::query();
-    
-            // Get date range for all report types
-            $fromDate = $request->filled('from_date') 
-                ? Carbon::parse($request->from_date) 
+            $this->validateReportRequest($request);
+
+            // Build base query with filters
+            $query = $this->buildPolicyQuery($request);
+
+            // Get date range 
+            $fromDate = $request->filled('from_date')
+                ? Carbon::parse($request->from_date)
                 : Carbon::now()->subMonths(6);
-            $toDate = $request->filled('to_date') 
-                ? Carbon::parse($request->to_date) 
+            $toDate = $request->filled('to_date')
+                ? Carbon::parse($request->to_date)
                 : Carbon::now();
-    
-            // Apply filters to the single query
-            if ($request->filled('from_date')) {
-                $query->whereDate('policy_start_date', '>=', $request->from_date);
-            }
-            if ($request->filled('to_date')) {
-                $query->whereDate('policy_start_date', '<=', $request->to_date);
-            }
-            if ($request->filled('company_id')) {
-                $query->where('company_id', $request->company_id);
-            }
-            if ($request->filled('agent_id')) {
-                $query->where('agent_id', $request->agent_id);
-            }
-            if ($request->filled('policy_type')) {
-                $query->where('policy_type', $request->policy_type);
-            }
-            if ($request->filled('payment_by')) {
-                $query->where('payment_by', $request->payment_by);
-            }
-    
-            // Start Excel export
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            
+
             // Check report period selection
             $reportPeriod = $request->input('report_period', 'daily');
-            
-            if ($reportPeriod === 'daily') {
-                // Original detailed report - fetch all policies using the filtered query
-                $policies = $query->with(['agent', 'company', 'insuranceProduct'])->get();
-                
-                // Handle no records
-                if ($policies->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-                
-                // Headers for daily report (original format)
-                $headers = [
-                    'A1' => 'Policy No',
-                    'B1' => 'Policy Start Date',
-                    'C1' => 'Policy End Date',
-                    'D1' => 'Customer Name',
-                    'E1' => 'Insurance Company',
-                    'F1' => 'Agent',
-                    'G1' => 'Policy Type',
-                    'H1' => 'Premium',
-                    'I1' => 'GST',
-                    'J1' => 'Agent Commission',
-                    'K1' => 'Net Amount',
-                    'L1' => 'Payment Type',
-                    'M1' => 'Discount',
-                    'N1' => 'Payout',
-                ];
-                foreach ($headers as $cell => $label) {
-                    $sheet->setCellValue($cell, $label);
-                }
-    
-                // Fill data
-                $row = 2;
-                foreach ($policies as $policy) {
-                    $sheet->setCellValue('A' . $row, $policy->policy_no);
-                    $sheet->setCellValue('B' . $row, $policy->policy_start_date);
-                    $sheet->setCellValue('C' . $row, $policy->policy_end_date);
-                    $sheet->setCellValue('D' . $row, $policy->customername);
-                    $sheet->setCellValue('E' . $row, optional($policy->company)->name);
-                    $sheet->setCellValue('F' . $row, optional($policy->agent)->name);
-                    $sheet->setCellValue('G' . $row, optional($policy->insuranceProduct)->name);
-                    $sheet->setCellValue('H' . $row, $policy->premium);
-                    $sheet->setCellValue('I' . $row, $policy->gst);
-                    $sheet->setCellValue('J' . $row, $policy->agent_commission);
-                    $sheet->setCellValue('K' . $row, $policy->net_amount);
-                    $sheet->setCellValue('L' . $row, Policy::getPaymentTypes()[$policy->payment_by] ?? $policy->payment_by);
-                    $sheet->setCellValue('M' . $row, $policy->discount);
-                    $sheet->setCellValue('N' . $row, $policy->payout);
-                    $row++;
-                }
-                
-                // Auto-size columns
-                foreach (range('A', 'N') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-                
-            } elseif ($reportPeriod === 'monthly') {
-                // Create array of months for column headers
-                $months = [];
-                $currentDate = Carbon::parse($fromDate)->startOfMonth();
-                $endDate = Carbon::parse($toDate)->endOfMonth();
-                
-                while ($currentDate->lte($endDate)) {
-                    $months[] = [
-                        'year_month' => $currentDate->format('Y-m'),
-                        'display' => $currentDate->format('Y M')
-                    ];
-                    $currentDate->addMonth();
-                }
-                
-                // Get all agents with policies in the date range - using the filtered query base
-                $agentIds = (clone $query)->select('agent_id')
-                    ->groupBy('agent_id')
-                    ->pluck('agent_id')
-                    ->filter();
-                    
-                $agents = User::whereIn('id', $agentIds)->get();
-                
-                // If no agents found
-                if ($agents->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-                
-                // Set up headers - Agent in first column, then each month
-                $sheet->setCellValue('A1', 'Agent');
-                $sheet->getStyle('A1')->getFont()->setBold(true);
-                
-                // Set month headers
-                $col = 'B';
-                foreach ($months as $index => $month) {
-                    $sheet->setCellValue($col . '1', $month['display']);
-                    $sheet->getStyle($col . '1')->getFont()->setBold(true);
-                    $col++;
-                }
-                
-                // Add a total column
-                $sheet->setCellValue($col . '1', 'Total');
-                $sheet->getStyle($col . '1')->getFont()->setBold(true);
-                $totalCol = $col;
-                
-                $row = 2;
-                foreach ($agents as $agent) {
-                    if (!$agent) continue;
-                
-                    $sheet->setCellValue('A' . $row, $agent->name);
-                
-                    $totalPolicies = 0;
-                    $col = 'B';
-                
-                    foreach ($months as $month) {
-                        $monthStart = Carbon::createFromFormat('Y-m', $month['year_month'])->startOfMonth();
-                        $monthEnd = Carbon::createFromFormat('Y-m', $month['year_month'])->endOfMonth();
-                
-                        // Use a clone of the filtered base query with additional date filter for the month
-                        $policyCount = (clone $query)
-                            ->where('agent_id', $agent->id)
-                            ->whereDate('policy_start_date', '>=', $monthStart)
-                            ->whereDate('policy_start_date', '<=', $monthEnd)
-                            ->count();
-                
-                        $sheet->setCellValue($col . $row, $policyCount);
-                        $totalPolicies += $policyCount;
-                        $col++;
-                    }
-                
-                    $sheet->setCellValue($totalCol . $row, $totalPolicies);
-                    $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
-                
-                    $row++;
-                }
-                
-                // Auto-size columns
-                foreach (range('A', $totalCol) as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-                
-                // Add title and date range
-                $sheet->insertNewRowBefore(1, 2);
-                $title = 'Agent Policy Performance - Monthly Report';
-                $dateRange = 'Period: ' . $fromDate->format('M Y') . ' to ' . $toDate->format('M Y');
-                
-                $sheet->setCellValue('A1', $title);
-                $sheet->setCellValue('A2', $dateRange);
-                
-                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-                $sheet->mergeCells('A1:' . $totalCol . '1');
-                $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                
-                $sheet->mergeCells('A2:' . $totalCol . '2');
-                $sheet->getStyle('A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                
-            } else { // yearly
-                // Create array of years for column headers
-                $years = [];
-                $currentDate = Carbon::parse($fromDate)->startOfYear();
-                $endDate = Carbon::parse($toDate)->endOfYear();
-                
-                while ($currentDate->lte($endDate)) {
-                    $years[] = [
-                        'year' => $currentDate->format('Y'),
-                        'display' => $currentDate->format('Y')
-                    ];
-                    $currentDate->addYear();
-                }
-                
-                // Get all agents with policies in the date range - using the filtered query base
-                $agentIds = (clone $query)->select('agent_id')
-                    ->groupBy('agent_id')
-                    ->pluck('agent_id')
-                    ->filter();
-                    
-                $agents = User::whereIn('id', $agentIds)->get();
-                    
-                // If no agents found
-                if ($agents->isEmpty()) {
-                    return redirect()->back()->with('error', 'No records found for the selected filters.');
-                }
-                
-                // Set up headers - Agent in first column, then each year
-                $sheet->setCellValue('A1', 'Agent');
-                $sheet->getStyle('A1')->getFont()->setBold(true);
-                
-                // Set year headers
-                $col = 'B';
-                foreach ($years as $index => $year) {
-                    $sheet->setCellValue($col . '1', $year['display']);
-                    $sheet->getStyle($col . '1')->getFont()->setBold(true);
-                    $col++;
-                }
-                
-                // Add a total column
-                $sheet->setCellValue($col . '1', 'Total');
-                $sheet->getStyle($col . '1')->getFont()->setBold(true);
-                $totalCol = $col;
-                
-                // Fill data for each agent
-                $row = 2;
-                foreach ($agents as $agent) {
-                    if (!$agent) continue; // Skip if agent is null
-                    
-                    $sheet->setCellValue('A' . $row, $agent->name);
-                    
-                    // Calculate totals and add yearly data
-                    $totalPolicies = 0;
-                    $col = 'B';
-                    
-                    // Most recent policy date
-                    $mostRecentPolicy = null;
-                    
-                    foreach ($years as $year) {
-                        // Get count of policies for this agent in this year
-                        $yearStart = Carbon::createFromFormat('Y', $year['year'])->startOfYear();
-                        $yearEnd = Carbon::createFromFormat('Y', $year['year'])->endOfYear();
-                        
-                        // Use a clone of the filtered base query with additional date filter for the year
-                        $policyCount = (clone $query)
-                            ->where('agent_id', $agent->id)
-                            ->whereDate('policy_start_date', '>=', $yearStart)
-                            ->whereDate('policy_start_date', '<=', $yearEnd)
-                            ->count();
-                        
-                        // Get most recent policy date
-                        $latestPolicy = (clone $query)
-                            ->where('agent_id', $agent->id)
-                            ->whereDate('policy_start_date', '>=', $yearStart)
-                            ->whereDate('policy_start_date', '<=', $yearEnd)
-                            ->latest('policy_start_date')
-                            ->first();
-                            
-                        if ($latestPolicy && ($mostRecentPolicy === null || 
-                            Carbon::parse($latestPolicy->policy_start_date)->gt(Carbon::parse($mostRecentPolicy)))) {
-                            $mostRecentPolicy = $latestPolicy->policy_start_date;
-                        }
-                        
-                        // Set policy count in cell
-                        $sheet->setCellValue($col . $row, $policyCount);
-                        
-                        // Apply styling - blue cell with white text for non-zero counts
-                        if ($policyCount > 0) {
-                            $sheet->getStyle($col . $row)->getAlignment()
-                                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                        }
-                        
-                        $totalPolicies += $policyCount;
-                        $col++;
-                    }
-                    
-                    // Set total policies
-                    $sheet->setCellValue($totalCol . $row, $totalPolicies);
-                    $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
-                    
-                    $row++;
-                }
-                
-                // Auto-size columns
-                $lastCol = $totalCol;
-    
-                foreach (range('A', $lastCol) as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-                
-                // Add title and date range
-                $sheet->insertNewRowBefore(1, 2);
-                $title = 'Agent Policy Performance - Yearly Report';
-                $dateRange = 'Period: ' . $fromDate->format('Y') . ' to ' . $toDate->format('Y');
-                
-                $sheet->setCellValue('A1', $title);
-                $sheet->setCellValue('A2', $dateRange);
-                
-                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-                $sheet->mergeCells('A1:' . $totalCol . '1');
-                $sheet->getStyle('A1')->getAlignment()
-                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                    
-                $sheet->mergeCells('A2:' . $totalCol . '2');
-                $sheet->getStyle('A2')->getAlignment()
-                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            // Create spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Generate appropriate report based on period
+            switch ($reportPeriod) {
+                case 'daily':
+                    $this->generateDailyReport($sheet, $query);
+                    break;
+                case 'monthly':
+                    $this->generateMonthlyReport($sheet, $query, $fromDate, $toDate);
+                    break;
+                case 'yearly':
+                    $this->generateYearlyReport($sheet, $query, $fromDate, $toDate);
+                    break;
             }
-    
-            // Save the file
-            $filename = 'policy_report_' . $reportPeriod . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
-            $filePath = storage_path('app/public/reports/' . $filename);
-    
-            if (!file_exists(dirname($filePath))) {
-                mkdir(dirname($filePath), 0755, true);
-            }
-    
-            $writer = new Xlsx($spreadsheet);
-            $writer->save($filePath);
-    
-            return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+
+            // Save and download the file
+            return $this->saveAndDownloadReport($spreadsheet, $reportPeriod);
         } catch (\Exception $e) {
             \Log::error('Policy report export failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Validate the report request parameters
+     */
+    private function validateReportRequest(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date|after_or_equal:from_date',
+            'company_id' => 'nullable|exists:insurance_companies,id',
+            'agent_id' => 'nullable|exists:users,id',
+            'policy_type' => 'nullable|exists:insurance_products,id',
+            'payment_by' => 'nullable|string',
+            'report_period' => 'nullable|in:daily,monthly,yearly',
+        ]);
+    }
+
+    /**
+     * Build policy query with filters
+     */
+    private function buildPolicyQuery(Request $request)
+    {
+        $query = Policy::query();
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('policy_start_date', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('policy_start_date', '<=', $request->to_date);
+        }
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $request->company_id);
+        }
+        if ($request->filled('agent_id')) {
+            $query->where('agent_id', $request->agent_id);
+        }
+        if ($request->filled('policy_type')) {
+            $query->where('policy_type', $request->policy_type);
+        }
+        if ($request->filled('payment_by')) {
+            $query->where('payment_by', $request->payment_by);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Generate daily detailed report
+     */
+    private function generateDailyReport($sheet, $query)
+    {
+        // Fetch all policies using the filtered query
+        $policies = $query->with(['agent', 'company', 'insuranceProduct'])->get();
+
+        // Check if policies exist
+        if ($policies->isEmpty()) {
+            throw new \Exception('No records found for the selected filters.');
+        }
+
+        // Set headers
+        $headers = [
+            'A1' => 'Policy No',
+            'B1' => 'Policy Start Date',
+            'C1' => 'Policy End Date',
+            'D1' => 'Customer Name',
+            'E1' => 'Insurance Company',
+            'F1' => 'Agent',
+            'G1' => 'Policy Type',
+            'H1' => 'Premium',
+            'I1' => 'GST',
+            'J1' => 'Agent Commission',
+            'K1' => 'Net Amount',
+            'L1' => 'Payment Type',
+            'M1' => 'Discount',
+            'N1' => 'Payout',
+        ];
+
+        foreach ($headers as $cell => $label) {
+            $sheet->setCellValue($cell, $label);
+        }
+
+        // Fill data
+        $row = 2;
+        foreach ($policies as $policy) {
+            $sheet->setCellValue('A' . $row, $policy->policy_no);
+            $sheet->setCellValue('B' . $row, $policy->policy_start_date);
+            $sheet->setCellValue('C' . $row, $policy->policy_end_date);
+            $sheet->setCellValue('D' . $row, $policy->customername);
+            $sheet->setCellValue('E' . $row, optional($policy->company)->name);
+            $sheet->setCellValue('F' . $row, optional($policy->agent)->name);
+            $sheet->setCellValue('G' . $row, optional($policy->insuranceProduct)->name);
+            $sheet->setCellValue('H' . $row, $policy->premium);
+            $sheet->setCellValue('I' . $row, $policy->gst);
+            $sheet->setCellValue('J' . $row, $policy->agent_commission);
+            $sheet->setCellValue('K' . $row, $policy->net_amount);
+            $sheet->setCellValue('L' . $row, Policy::getPaymentTypes()[$policy->payment_by] ?? $policy->payment_by);
+            $sheet->setCellValue('M' . $row, $policy->discount);
+            $sheet->setCellValue('N' . $row, $policy->payout);
+            $row++;
+        }
+
+        // Auto-size columns
+        foreach (range('A', 'N') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Generate monthly report with added metrics
+     */
+    private function generateMonthlyReport($sheet, $query, $fromDate, $toDate)
+    {
+        // Create array of months for column headers
+        $months = $this->getMonthsArray($fromDate, $toDate);
+
+        // Get agents with policies in the date range
+        $agents = $this->getAgentsWithPolicies($query);
+
+        // If no agents found
+        if ($agents->isEmpty()) {
+            throw new \Exception('No records found for the selected filters.');
+        }
+
+        // Calculate last policy dates and differences for each agent
+        $lastPolicyDates = $this->calculateLastPolicyDates();
+
+        // Set up headers
+        $sheet->setCellValue('A1', 'Agent');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+
+        // Set month headers
+        $col = 'B';
+        foreach ($months as $month) {
+            $sheet->setCellValue($col . '1', $month['display']);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $col++;
+        }
+
+        // Add metrics headers
+        $totalCol = $col;
+        $sheet->setCellValue($totalCol . '1', 'Total');
+        $sheet->getStyle($totalCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $lastMonthsDiffCol = $col;
+        $sheet->setCellValue($lastMonthsDiffCol . '1', 'Last 2 Months Diff');
+        $sheet->getStyle($lastMonthsDiffCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $daysSinceCol = $col;
+        $sheet->setCellValue($daysSinceCol . '1', 'Days Since Last Policy');
+        $sheet->getStyle($daysSinceCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $trendCol = $col;
+        $sheet->setCellValue($trendCol . '1', 'Trend');
+        $sheet->getStyle($trendCol . '1')->getFont()->setBold(true);
+
+        // Fill data for each agent
+        $row = 2;
+        foreach ($agents as $agent) {
+            if (!$agent) continue;
+
+            $sheet->setCellValue('A' . $row, $agent->name);
+
+            $totalPolicies = 0;
+            $monthlyData = [];
+            $col = 'B';
+
+            // Process each month's data
+            foreach ($months as $month) {
+                $monthStart = Carbon::createFromFormat('Y-m', $month['year_month'])->startOfMonth();
+                $monthEnd = Carbon::createFromFormat('Y-m', $month['year_month'])->endOfMonth();
+
+                // Get count of policies for this month
+                $policyCount = (clone $query)
+                    ->where('agent_id', $agent->id)
+                    ->whereDate('policy_start_date', '>=', $monthStart)
+                    ->whereDate('policy_start_date', '<=', $monthEnd)
+                    ->count();
+
+                $sheet->setCellValue($col . $row, $policyCount);
+                $monthlyData[] = $policyCount;
+                $totalPolicies += $policyCount;
+                $col++;
+            }
+
+            // Set total policies
+            $sheet->setCellValue($totalCol . $row, $totalPolicies);
+            $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
+
+            // Calculate and set last 2 months difference
+            $lastTwoMonthsDiff = $this->calculateLastTwoMonthsDiff($monthlyData);
+            $sheet->setCellValue($lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+            $this->formatDiffCell($sheet, $lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+
+            // Set days since last policy
+            $daysSinceLastPolicy = isset($lastPolicyDates[$agent->id]) ? $lastPolicyDates[$agent->id] : 'N/A';
+            $sheet->setCellValue($daysSinceCol . $row, $daysSinceLastPolicy);
+            $this->formatDaysSinceCell($sheet, $daysSinceCol . $row, $daysSinceLastPolicy);
+
+            // Set trend indicator
+            $trend = $this->determineTrend($lastTwoMonthsDiff);
+            $sheet->setCellValue($trendCol . $row, $trend);
+            $this->formatTrendCell($sheet, $trendCol . $row, $trend);
+
+            $row++;
+        }
+
+        // Auto-size columns
+        foreach (range('A', $trendCol) as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        // Add title and date range
+        $sheet->insertNewRowBefore(1, 2);
+        $title = 'Agent Policy Performance - Monthly Report';
+        $dateRange = 'Period: ' . $fromDate->format('M Y') . ' to ' . $toDate->format('M Y');
+
+        $sheet->setCellValue('A1', $title);
+        $sheet->setCellValue('A2', $dateRange);
+
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->mergeCells('A1:' . $trendCol . '1');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        $sheet->mergeCells('A2:' . $trendCol . '2');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    /**
+     * Generate yearly report with added metrics
+     */
+    private function generateYearlyReport($sheet, $query, $fromDate, $toDate)
+    {
+        // Create array of years for column headers
+        $years = $this->getYearsArray($fromDate, $toDate);
+
+        // Get agents with policies in the date range
+        $agents = $this->getAgentsWithPolicies($query);
+
+        // If no agents found
+        if ($agents->isEmpty()) {
+            throw new \Exception('No records found for the selected filters.');
+        }
+
+        // Calculate last policy dates and differences for each agent
+        $lastPolicyDates = $this->calculateLastPolicyDates();
+
+        // Set up headers
+        $sheet->setCellValue('A1', 'Agent');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+
+        // Set year headers
+        $col = 'B';
+        foreach ($years as $year) {
+            $sheet->setCellValue($col . '1', $year['display']);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $col++;
+        }
+
+        // Add metrics headers
+        $totalCol = $col;
+        $sheet->setCellValue($totalCol . '1', 'Total');
+        $sheet->getStyle($totalCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $lastMonthsDiffCol = $col;
+        $sheet->setCellValue($lastMonthsDiffCol . '1', 'Last 2 Months Diff');
+        $sheet->getStyle($lastMonthsDiffCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $daysSinceCol = $col;
+        $sheet->setCellValue($daysSinceCol . '1', 'Days Since Last Policy');
+        $sheet->getStyle($daysSinceCol . '1')->getFont()->setBold(true);
+        $col++;
+
+        $trendCol = $col;
+        $sheet->setCellValue($trendCol . '1', 'Trend');
+        $sheet->getStyle($trendCol . '1')->getFont()->setBold(true);
+
+        // Fill data for each agent
+        $row = 2;
+        foreach ($agents as $agent) {
+            if (!$agent) continue;
+
+            $sheet->setCellValue('A' . $row, $agent->name);
+
+            $totalPolicies = 0;
+            $yearlyData = [];
+            $col = 'B';
+
+            // Calculate policy counts for each year
+            foreach ($years as $year) {
+                $yearStart = Carbon::createFromFormat('Y', $year['year'])->startOfYear();
+                $yearEnd = Carbon::createFromFormat('Y', $year['year'])->endOfYear();
+
+                $policyCount = (clone $query)
+                    ->where('agent_id', $agent->id)
+                    ->whereDate('policy_start_date', '>=', $yearStart)
+                    ->whereDate('policy_start_date', '<=', $yearEnd)
+                    ->count();
+
+                $sheet->setCellValue($col . $row, $policyCount);
+
+                if ($policyCount > 0) {
+                    $sheet->getStyle($col . $row)->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                }
+
+                $yearlyData[] = $policyCount;
+                $totalPolicies += $policyCount;
+                $col++;
+            }
+
+            // Set total policies
+            $sheet->setCellValue($totalCol . $row, $totalPolicies);
+            $sheet->getStyle($totalCol . $row)->getFont()->setBold(true);
+
+            // Calculate and set last 2 months difference
+            // For yearly report, this represents the last 2 months of the most recent year
+            $lastTwoMonthsDiff = $this->calculateLastTwoMonthsOfYearDiff($agent->id, $toDate->year);
+            $sheet->setCellValue($lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+            $this->formatDiffCell($sheet, $lastMonthsDiffCol . $row, $lastTwoMonthsDiff);
+
+            // Set days since last policy
+            $daysSinceLastPolicy = isset($lastPolicyDates[$agent->id]) ? $lastPolicyDates[$agent->id] : 'N/A';
+            $sheet->setCellValue($daysSinceCol . $row, $daysSinceLastPolicy);
+            $this->formatDaysSinceCell($sheet, $daysSinceCol . $row, $daysSinceLastPolicy);
+
+            // Set trend indicator
+            $trend = $this->determineTrend($lastTwoMonthsDiff);
+            $sheet->setCellValue($trendCol . $row, $trend);
+            $this->formatTrendCell($sheet, $trendCol . $row, $trend);
+
+            $row++;
+        }
+
+        // Auto-size columns
+        foreach (range('A', $trendCol) as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        // Add title and date range
+        $sheet->insertNewRowBefore(1, 2);
+        $title = 'Agent Policy Performance - Yearly Report';
+        $dateRange = 'Period: ' . $fromDate->format('Y') . ' to ' . $toDate->format('Y');
+
+        $sheet->setCellValue('A1', $title);
+        $sheet->setCellValue('A2', $dateRange);
+
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->mergeCells('A1:' . $trendCol . '1');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        $sheet->mergeCells('A2:' . $trendCol . '2');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    /**
+     * Save and download the Excel report
+     */
+    private function saveAndDownloadReport($spreadsheet, $reportPeriod)
+    {
+        $filename = 'policy_report_' . $reportPeriod . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $filePath = storage_path('app/public/reports/' . $filename);
+
+        if (!file_exists(dirname($filePath))) {
+            mkdir(dirname($filePath), 0755, true);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($filePath);
+
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Get array of months between date range
+     */
+    private function getMonthsArray($fromDate, $toDate)
+    {
+        $months = [];
+        $currentDate = Carbon::parse($fromDate)->startOfMonth();
+        $endDate = Carbon::parse($toDate)->endOfMonth();
+
+        while ($currentDate->lte($endDate)) {
+            $months[] = [
+                'year_month' => $currentDate->format('Y-m'),
+                'display' => $currentDate->format('Y M')
+            ];
+            $currentDate->addMonth();
+        }
+
+        return $months;
+    }
+
+    /**
+     * Get array of years between date range
+     */
+    private function getYearsArray($fromDate, $toDate)
+    {
+        $years = [];
+        $currentDate = Carbon::parse($fromDate)->startOfYear();
+        $endDate = Carbon::parse($toDate)->endOfYear();
+
+        while ($currentDate->lte($endDate)) {
+            $years[] = [
+                'year' => $currentDate->format('Y'),
+                'display' => $currentDate->format('Y')
+            ];
+            $currentDate->addYear();
+        }
+
+        return $years;
+    }
+
+    /**
+     * Get agents who have policies in the date range
+     */
+    private function getAgentsWithPolicies($query)
+    {
+        $agentIds = (clone $query)->select('agent_id')
+            ->groupBy('agent_id')
+            ->pluck('agent_id')
+            ->filter();
+
+        return User::whereIn('id', $agentIds)->get();
+    }
+
+    /**
+     * Calculate days since last policy for each agent
+     */
+    private function calculateLastPolicyDates()
+    {
+        $today = Carbon::now();
+        $latestPolicyDates = Policy
+            ::select('agent_id',DB::raw('MAX(DATE(policy_start_date)) as last_policy_date'))
+            ->groupBy('agent_id')
+            ->get();
+
+        $daysSinceLastPolicy = [];
+
+        foreach ($latestPolicyDates as $record) {
+            $lastPolicyDate = Carbon::parse($record->last_policy_date);
+            $daysDifference = $today->diffInDays($lastPolicyDate);
+            $daysSinceLastPolicy[$record->agent_id] = $daysDifference;
+        }
+
+        return $daysSinceLastPolicy;
+    }
+
+    /**
+     * Calculate difference between last two months in data array
+     */
+    private function calculateLastTwoMonthsDiff($monthlyData)
+    {
+        if (count($monthlyData) < 2) {
+            return 0;
+        }
+
+        $lastMonth = $monthlyData[count($monthlyData) - 1];
+        $secondLastMonth = $monthlyData[count($monthlyData) - 2];
+
+        return $lastMonth - $secondLastMonth;
+    }
+
+    /**
+     * Calculate difference between last two months of a specific year
+     */
+    private function calculateLastTwoMonthsOfYearDiff($agentId, $year)
+    {
+        $lastMonthOfYear = Carbon::createFromDate($year, 12, 1);
+        $secondLastMonthOfYear = Carbon::createFromDate($year, 11, 1);
+
+        $lastMonthCount = Policy::where('agent_id', $agentId)
+            ->whereYear('policy_start_date', $year)
+            ->whereMonth('policy_start_date', 12)
+            ->count();
+
+        $secondLastMonthCount = Policy::where('agent_id', $agentId)
+            ->whereYear('policy_start_date', $year)
+            ->whereMonth('policy_start_date', 11)
+            ->count();
+
+        return $lastMonthCount - $secondLastMonthCount;
+    }
+
+    /**
+     * Determine trend based on difference
+     */
+    private function determineTrend($diff)
+    {
+        if ($diff > 0) {
+            return 'up';
+        } elseif ($diff < 0) {
+            return 'down';
+        } else {
+            return 'same';
+        }
+    }
+
+    /**
+     * Format diff cell based on value
+     */
+    private function formatDiffCell($sheet, $cell, $diff)
+    {
+        if ($diff > 0) {
+            $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKGREEN));
+            $sheet->setCellValue($cell, '+' . $diff);
+        } elseif ($diff < 0) {
+            $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKRED));
+        }
+    }
+
+    /**
+     * Format days since cell based on value
+     */
+    private function formatDaysSinceCell($sheet, $cell, $days)
+    {
+        if (is_numeric($days)) {
+            if ($days > 60) {
+                $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKRED));
+                $sheet->getStyle($cell)->getFont()->setBold(true);
+            } elseif ($days > 30) {
+                $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKYELLOW));
+            } else {
+                $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKGREEN));
+            }
+        }
+    }
+
+    /**
+     * Format trend cell based on value
+     */
+    private function formatTrendCell($sheet, $cell, $trend)
+    {
+        if ($trend == 'up') {
+            $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKGREEN));
+            $sheet->setCellValue($cell, '↑ Up');
+        } elseif ($trend == 'down') {
+            $sheet->getStyle($cell)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_DARKRED));
+            $sheet->setCellValue($cell, '↓ Down');
+        } else {
+            $sheet->setCellValue($cell, '→ Same');
         }
     }
 
