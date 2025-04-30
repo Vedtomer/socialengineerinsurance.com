@@ -200,7 +200,7 @@ class ExcelImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
     {
         return [
             // Required fields
-            'policy_no' => 'required|string',
+            'policy_no' => 'required',
             'customername' => 'required|string',
 
             // Commission code validation - required and must exist
