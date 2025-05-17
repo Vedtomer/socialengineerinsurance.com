@@ -231,7 +231,7 @@
                                             data-customer-aadhar-number="{{ $user->aadhar_number ?? 'Not provided' }}"
                                             data-customer-aadhar-document="{{ $user->aadhar_document ? asset('storage/aadhar/' . $user->aadhar_document) : null }}"
                                             data-customer-pan-number="{{ $user->pan_number ?? 'Not provided' }}"
-                                            data-customer-pan-document="{{ $user->pan_document ? asset('storage/pancard/' . $user->pan_document) : null }}">
+                                            data-customer-pan-document="{{ $user->pan_image ? asset('storage/pancard/' . $user->pan_image) : null }}">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
                                     </td>

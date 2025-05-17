@@ -114,8 +114,8 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="pan_document" class="form-label">Upload PAN Card</label>
-                            <input type="file" class="form-control" id="pan_document" name="pan_document">
+                            <label for="pan_image" class="form-label">Upload PAN Card</label>
+                            <input type="file" class="form-control" id="pan_image" name="pan_image">
                         </div>
 
                         <div class="col-12">

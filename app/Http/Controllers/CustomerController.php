@@ -58,7 +58,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'password' => 'required|string',
             'aadhar_document' => 'nullable|max:2048',
-            'pan_document' => 'nullable|max:2048',
+            'pan_image' => 'nullable|max:2048',
             'username' => 'required|string|unique:users,username|max:255'
         ]);
 
@@ -78,8 +78,8 @@ class CustomerController extends Controller
             $aadharFile->storeAs('public/aadhar', $aadharFileName);
         }
 
-        if ($request->hasFile('pan_document')) {
-            $panFile = $request->file('pan_document');
+        if ($request->hasFile('pan_image')) {
+            $panFile = $request->file('pan_image');
             $panFileName = $request->pan_number . '.' . $panFile->getClientOriginalExtension();
             $panFile->storeAs('public/pancard', $panFileName);
         }
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         $user->city = $request->input('city');
         $user->address = $request->input('address');
         $user->aadhar_document = $aadharFileName;
-        $user->pan_document = $panFileName;
+        $user->pan_image = $panFileName;
         $user->username = strtolower($request->input('username'));
         $user->password = Hash::make($request->input('password'));
         // $user->password = Hash::make($request->input('pan_number'));
@@ -143,7 +143,7 @@ class CustomerController extends Controller
             'city' => 'nullable|string|max:255',
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
-            'pan_document' => 'nullable|file|max:2048',
+            'pan_image' => 'nullable|file|max:2048',
             'username' => strtolower($request->input('username')),
             // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
         ]);
@@ -156,7 +156,7 @@ class CustomerController extends Controller
 
         // Handle file uploads if present
         $aadharFileName = $customer->aadhar_document; // Retain old file name if not updated
-        $panFileName = $customer->pan_document; // Retain old file name if not updated
+        $panFileName = $customer->pan_image; // Retain old file name if not updated
 
         if ($request->hasFile('aadhar_document')) {
             $aadharFile = $request->file('aadhar_document');
@@ -164,8 +164,8 @@ class CustomerController extends Controller
             $aadharFile->storeAs('public/aadhar', $aadharFileName);
         }
 
-        if ($request->hasFile('pan_document')) {
-            $panFile = $request->file('pan_document');
+        if ($request->hasFile('pan_image')) {
+            $panFile = $request->file('pan_image');
             $panFileName = $request->pan_number . '.' . $panFile->getClientOriginalExtension();
             $panFile->storeAs('public/pancard', $panFileName);
         }
@@ -179,7 +179,7 @@ class CustomerController extends Controller
         $customer->city = $request->input('city');
         $customer->address = $request->input('address');
         $customer->aadhar_document = $aadharFileName;
-        $customer->pan_document = $panFileName;
+        $customer->pan_image = $panFileName;
         $customer->username = $request->input('username');
 
         // Update password if provided
