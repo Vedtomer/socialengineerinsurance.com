@@ -25,8 +25,11 @@
                                     <div class="form-group">
                                         <label for="period" class="form-label">Comparison Period</label>
                                         <select class="form-control" id="period" name="period">
-                                            <option value="monthly" {{ request('period') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                            <option value="daily" {{ request('period') == 'daily' ? 'selected' : '' }}>Daily</option>
                                             <option value="weekly" {{ request('period') == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                            <option value="monthly" {{ request('period') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                            <option value="quarterly" {{ request('period') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                                            <option value="yearly" {{ request('period') == 'yearly' ? 'selected' : '' }}>Yearly</option>
                                         </select>
                                     </div>
                                 </div>

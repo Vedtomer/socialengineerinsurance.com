@@ -983,16 +983,37 @@ class ReportController extends Controller
             $agent = User::find($agentId);
             if (!$agent) continue;
 
-            if ($period === 'weekly') {
-                $currentStartDate = Carbon::now()->startOfWeek();
-                $currentEndDate = Carbon::now()->endOfWeek();
-                $previousStartDate = Carbon::now()->subWeek()->startOfWeek();
-                $previousEndDate = Carbon::now()->subWeek()->endOfWeek();
-            } else { // monthly
-                $currentStartDate = Carbon::now()->startOfMonth();
-                $currentEndDate = Carbon::now()->endOfMonth();
-                $previousStartDate = Carbon::now()->subMonth()->startOfMonth();
-                $previousEndDate = Carbon::now()->subMonth()->endOfMonth();
+            switch ($period) {
+                case 'daily':
+                    $currentStartDate = Carbon::now()->startOfDay();
+                    $currentEndDate = Carbon::now()->endOfDay();
+                    $previousStartDate = Carbon::now()->subDay()->startOfDay();
+                    $previousEndDate = Carbon::now()->subDay()->endOfDay();
+                    break;
+                case 'weekly':
+                    $currentStartDate = Carbon::now()->startOfWeek();
+                    $currentEndDate = Carbon::now()->endOfWeek();
+                    $previousStartDate = Carbon::now()->subWeek()->startOfWeek();
+                    $previousEndDate = Carbon::now()->subWeek()->endOfWeek();
+                    break;
+                case 'quarterly':
+                    $currentStartDate = Carbon::now()->startOfQuarter();
+                    $currentEndDate = Carbon::now()->endOfQuarter();
+                    $previousStartDate = Carbon::now()->subQuarter()->startOfQuarter();
+                    $previousEndDate = Carbon::now()->subQuarter()->endOfQuarter();
+                    break;
+                case 'yearly':
+                    $currentStartDate = Carbon::now()->startOfYear();
+                    $currentEndDate = Carbon::now()->endOfYear();
+                    $previousStartDate = Carbon::now()->subYear()->startOfYear();
+                    $previousEndDate = Carbon::now()->subYear()->endOfYear();
+                    break;
+                default: // monthly
+                    $currentStartDate = Carbon::now()->startOfMonth();
+                    $currentEndDate = Carbon::now()->endOfMonth();
+                    $previousStartDate = Carbon::now()->subMonth()->startOfMonth();
+                    $previousEndDate = Carbon::now()->subMonth()->endOfMonth();
+                    break;
             }
 
             $currentPolicies = Policy::where('agent_id', $agentId)
