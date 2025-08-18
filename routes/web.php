@@ -165,6 +165,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('reports')->name('reports.')->group(function () {
             // Reports dashboard
             Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
+            Route::get('/agent-policy-comparison', [App\Http\Controllers\ReportController::class, 'agentPolicyComparison'])->name('agent-policy-comparison');
 
             // Policy reports
             Route::post('/policy/download', [App\Http\Controllers\ReportController::class, 'downloadPolicyReport'])->name('policy.download');

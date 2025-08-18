@@ -47,6 +47,15 @@
                     </div>
                 </a>
             </li>
+
+            <li class="menu {{ classActivePath('agent-policy-comparison') }}">
+                <a href="{{ route('reports.agent-policy-comparison') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-balance-scale fa-lx"></i> {{-- Font Awesome icon for comparison --}}
+                        <span>Agent Comparison</span>
+                    </div>
+                </a>
+            </li>
             
 
               

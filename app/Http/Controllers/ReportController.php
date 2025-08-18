@@ -956,4 +956,61 @@ class ReportController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Display the agent policy comparison page
+     */
+    public function agentPolicyComparison(Request $request)
+    {
+        $agents = User::role('agent')->get();
+        $comparisonData = [];
+        $period = $request->input('period', 'monthly'); // Default to monthly
+
+        $agentIds = $request->input('agent_ids', $agents->pluck('id')->toArray());
+
+        if (!empty($agentIds)) {
+            $comparisonData = $this->getAgentComparisonData($agentIds, $period);
+        }
+
+        return view('admin.reports.agent_policy_comparison', compact('agents', 'comparisonData'));
+    }
+
+    private function getAgentComparisonData(array $agentIds, string $period)
+    {
+        $data = [];
+
+        foreach ($agentIds as $agentId) {
+            $agent = User::find($agentId);
+            if (!$agent) continue;
+
+            if ($period === 'weekly') {
+                $currentStartDate = Carbon::now()->startOfWeek();
+                $currentEndDate = Carbon::now()->endOfWeek();
+                $previousStartDate = Carbon::now()->subWeek()->startOfWeek();
+                $previousEndDate = Carbon::now()->subWeek()->endOfWeek();
+            } else { // monthly
+                $currentStartDate = Carbon::now()->startOfMonth();
+                $currentEndDate = Carbon::now()->endOfMonth();
+                $previousStartDate = Carbon::now()->subMonth()->startOfMonth();
+                $previousEndDate = Carbon::now()->subMonth()->endOfMonth();
+            }
+
+            $currentPolicies = Policy::where('agent_id', $agentId)
+                ->whereBetween('created_at', [$currentStartDate, $currentEndDate])
+                ->count();
+
+            $previousPolicies = Policy::where('agent_id', $agentId)
+                ->whereBetween('created_at', [$previousStartDate, $previousEndDate])
+                ->count();
+
+            $data[] = [
+                'agent_name' => $agent->name,
+                'current_period_policies' => $currentPolicies,
+                'previous_period_policies' => $previousPolicies,
+                'difference' => $currentPolicies - $previousPolicies,
+            ];
+        }
+
+        return $data;
+    }
 }
