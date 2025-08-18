@@ -29,7 +29,7 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="customer-tab" data-bs-toggle="tab"
                                     data-bs-target="#customer-report" type="button" role="tab">
-                                    <i class="fas fa-users me-1"></i> Customer Reports
+                                    <i class="fas fa-users me-1"></i> Customer due report
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -109,7 +109,7 @@
                                 <div class="card border-light mb-3">
                                     <div class="card-header bg-light">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-filter me-2"></i>Customer Report Filters
+                                            <i class="fas fa-filter me-2"></i>Customer due report Filters
                                         </h5>
                                     </div>
                                     <div class="card-body">

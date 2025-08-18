@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
@@ -107,7 +108,7 @@ class ReportController extends Controller
             // Save and download the file
             return $this->saveAndDownloadReport($spreadsheet, $reportPeriod);
         } catch (\Exception $e) {
-            \Log::error('Policy report export failed: ' . $e->getMessage());
+            Log::error('Policy report export failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
         }
     }
@@ -674,35 +675,37 @@ class ReportController extends Controller
                 'status' => 'nullable|string',
                 'user_id' => 'nullable|exists:users,id',
                 'role' => 'required|in:agent,customer',
+                'due_date_option' => 'nullable|string|in:overdue,due_today,due_in_7_days,due_in_15_days,due_in_30_days,due_this_month,due_next_month',
             ]);
 
             $role = $request->role;
 
-            // Start query for users with the specified role
-            $query = User::role($role);
+            if ($role === 'agent') {
+                // Start query for users with the specified role
+                $query = User::role($role);
 
-            // Apply non-date filters to users
-            if ($request->filled('status')) {
-                $query->where('status', $request->status);
-            }
+                // Apply non-date filters to users
+                if ($request->filled('status')) {
+                    $query->where('status', $request->status);
+                }
 
-            if ($request->filled('user_id')) {
-                $query->where('id', $request->user_id);
-            }
+                if ($request->filled('user_id')) {
+                    $query->where('id', $request->user_id);
+                }
 
-            // Fetch all users with the specified role and filters
-            $users = $query->get();
+                // Fetch all users with the specified role and filters
+                $users = $query->get();
 
-            // Handle no records
-            if ($users->isEmpty()) {
-                return redirect()->back()->with('error', "No {$role}s found for the selected filters.");
+                // Handle no records
+                if ($users->isEmpty()) {
+                    return redirect()->back()->with('error', "No {$role}s found for the selected filters.");
+                }
             }
 
             // Start Excel export
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Set headers based on role
             if ($role === 'agent') {
                 $headers = [
                     'A1' => 'Name',
@@ -715,35 +718,20 @@ class ReportController extends Controller
                     'H1' => 'Address',
                     'I1' => 'Commission – Last Month Settlement',
                 ];
-            } else { // customer
-                $headers = [
-                    'A1' => 'Name',
-                    'B1' => 'Mobile Number',
-                    'C1' => 'Aadhar Number',
-                    'D1' => 'PAN Number',
-                    'E1' => 'Status',
-                    'F1' => 'Date Joined',
-                    'G1' => 'Total Policies',
-                    'H1' => 'Total Premium',
-                    'I1' => 'Address',
-                ];
-            }
+                foreach ($headers as $cell => $label) {
+                    $sheet->setCellValue($cell, $label);
+                }
 
-            foreach ($headers as $cell => $label) {
-                $sheet->setCellValue($cell, $label);
-            }
+                // Fill data
+                $row = 2;
+                foreach ($users as $user) {
+                    $sheet->setCellValue('A' . $row, $user->name);
+                    $sheet->setCellValue('B' . $row, $user->mobile_number);
 
-            // Fill data
-            $row = 2;
-            foreach ($users as $user) {
-                $sheet->setCellValue('A' . $row, $user->name);
-                $sheet->setCellValue('B' . $row, $user->mobile_number);
+                    // Combine state, city, and address into a single address field
+                    $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
+                    $sheet->setCellValue('H' . $row, $fullAddress);
 
-                // Combine state, city, and address into a single address field
-                $fullAddress = implode(', ', array_filter([$user->address, $user->city, $user->state]));
-                $sheet->setCellValue('H' . $row, $fullAddress);
-
-                if ($role === 'agent') {
                     // Get agent's policy count and commission with date filters
                     $policyQuery = Policy::where('agent_id', $user->id);
 
@@ -764,34 +752,91 @@ class ReportController extends Controller
                     $sheet->setCellValue('F' . $row, $policyCount);
                     $sheet->setCellValue('G' . $row, $totalCommission);
                     $sheet->setCellValue('I' . $row, $user->commission_settlement ? 'yes' : '-');
-                } else {
-                    // Get customer's policy count and total premium with date filters
-                    $policyQuery = CustomerPolicy::where('user_id', $user->id);
 
-                    // Apply date filters to policy query if provided
-                    if ($request->filled('from_date')) {
-                        $policyQuery->whereDate('policy_start_date', '>=', $request->from_date);
-                    }
-                    if ($request->filled('to_date')) {
-                        $policyQuery->whereDate('policy_start_date', '<=', $request->to_date);
-                    }
-
-                    $policyCount = $policyQuery->count();
-                    $totalPremium = $policyQuery->sum('premium');
-
-                    $sheet->setCellValue('C' . $row, $user->aadhar_number);
-                    $sheet->setCellValue('D' . $row, $user->pan_number);
-                    $sheet->setCellValue('E' . $row, ucfirst($user->status));
-                    $sheet->setCellValue('F' . $row, $user->created_at->format('Y-m-d'));
-                    $sheet->setCellValue('G' . $row, $policyCount);
-                    $sheet->setCellValue('H' . $row, $totalPremium);
+                    $row++;
                 }
-                $row++;
-            }
+                // Auto-size columns
+                foreach (range('A', 'I') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+            } else { // customer
+                $headers = [
+                    'A1' => 'Customer Name',
+                    'B1' => 'Mobile Number',
+                    'C1' => 'Policy Number',
+                    'D1' => 'Product Name',
+                    'E1' => 'Insurance Company',
+                    'F1' => 'Policy Type',
+                    'G1' => 'Policy Start Date',
+                    'H1' => 'Due Date',
+                    'I1' => 'Premium',
+                    'J1' => 'Net Amount',
+                    'K1' => 'GST',
+                ];
+                foreach ($headers as $cell => $label) {
+                    $sheet->setCellValue($cell, $label);
+                }
 
-            // Auto-size columns
-            foreach (range('A', 'I') as $column) {
-                $sheet->getColumnDimension($column)->setAutoSize(true);
+                $policyQuery = CustomerPolicy::with(['user', 'product']);
+
+                if ($request->filled('user_id')) {
+                    $policyQuery->where('user_id', $request->user_id);
+                }
+
+                if ($request->filled('due_date_option')) {
+                    $today = Carbon::today();
+                    switch ($request->due_date_option) {
+                        case 'overdue':
+                            $policyQuery->whereDate('policy_end_date', '<', $today);
+                            break;
+                        case 'due_today':
+                            $policyQuery->whereDate('policy_end_date', $today);
+                            break;
+                        case 'due_in_7_days':
+                            $policyQuery->whereBetween('policy_end_date', [$today, $today->copy()->addDays(7)]);
+                            break;
+                        case 'due_in_15_days':
+                            $policyQuery->whereBetween('policy_end_date', [$today, $today->copy()->addDays(15)]);
+                            break;
+                        case 'due_in_30_days':
+                            $policyQuery->whereBetween('policy_end_date', [$today, $today->copy()->addDays(30)]);
+                            break;
+                            case 'due_this_month':
+                                $policyQuery->whereYear('policy_end_date', $today->year)->whereMonth('policy_end_date', $today->month);
+                                break;
+                            case 'due_next_month':
+                                $nextMonth = $today->copy()->addMonth();
+                                $policyQuery->whereYear('policy_end_date', $nextMonth->year)->whereMonth('policy_end_date', $nextMonth->month);
+                                break;
+                        }
+                }
+
+                $policies = $policyQuery->get();
+
+                if ($policies->isEmpty()) {
+                    return redirect()->back()->with('error', "No policies found for the selected filters.");
+                }
+
+                $row = 2;
+                foreach ($policies as $policy) {
+                    $sheet->setCellValue('A' . $row, $policy->user->name);
+                    $sheet->setCellValue('B' . $row, $policy->user->mobile_number);
+                    $sheet->setCellValue('C' . $row, $policy->policy_no);
+                    $sheet->setCellValue('D' . $row, $policy->product ? $policy->product->name : 'N/A');
+                    $sheet->setCellValue('E' . $row, $policy->insurance_company);
+                    $sheet->setCellValue('F' . $row, $policy->policy_type);
+                    $sheet->setCellValue('G' . $row, Carbon::parse($policy->policy_start_date)->format('Y-m-d'));
+                    $sheet->setCellValue('H' . $row, Carbon::parse($policy->policy_end_date)->format('Y-m-d'));
+                    $sheet->setCellValue('I' . $row, $policy->premium);
+                    $sheet->setCellValue('J' . $row, $policy->net_amount);
+                    $sheet->setCellValue('K' . $row, $policy->gst);
+                    $row++;
+                }
+
+                // Auto-size columns
+                foreach (range('A', 'K') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
             }
 
             // Save the file
@@ -807,7 +852,7 @@ class ReportController extends Controller
 
             return response()->download($filePath, $filename)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            \Log::error($request->role . ' report export failed: ' . $e->getMessage());
+            Log::error($request->role . ' report export failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
         }
     }
@@ -907,7 +952,7 @@ class ReportController extends Controller
 
             return response()->download($filePath, $filename)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            \Log::error('Account report export failed: ' . $e->getMessage());
+            Log::error('Account report export failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while generating the report: ' . $e->getMessage());
         }
     }

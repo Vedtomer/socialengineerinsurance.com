@@ -2,6 +2,7 @@
     @csrf
     <input type="hidden" name="role" value="{{ $role }}">
     
+    @if($role === 'agent')
     <div class="row">
         <div class="col-md-4 mb-3">
             <div class="form-group">
@@ -50,6 +51,29 @@
             </div>
         </div>
     </div>
+    @endif
+
+    @if($role === 'customer')
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="due_date_option" class="form-label">
+                    <i class="fas fa-clock me-1"></i> Due Date
+                </label>
+                <select class="form-control w-100" id="due_date_option" name="due_date_option">
+                    <option value="">Select...</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="due_today">Due today</option>
+                    <option value="due_in_7_days">Due in 7 days</option>
+                    <option value="due_in_15_days">Due in 15 days</option>
+                    <option value="due_in_30_days">Due in 30 days</option>
+                    <option value="due_this_month">Due this month</option>
+                    <option value="due_next_month">Due next month</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    @endif
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
         <button type="reset" class="btn btn-outline-secondary me-2">
