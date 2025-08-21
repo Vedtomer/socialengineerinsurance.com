@@ -144,8 +144,8 @@ class CustomerController extends Controller
             'address' => 'nullable|string',
             'aadhar_document' => 'nullable|file|max:2048',
             'pan_image' => 'nullable|file|max:2048',
-            'username' => strtolower($request->input('username')),
-            // 'password' => 'nullable|string|min:8|confirmed', // Add password validation
+            'username' => 'required|string|max:255|unique:users,username,' . $customer->id,
+            'password' => 'nullable|string', // Add password validation
         ]);
 
         if ($validator->fails()) {
