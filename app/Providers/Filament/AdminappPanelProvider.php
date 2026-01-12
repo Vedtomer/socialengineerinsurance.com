@@ -26,7 +26,6 @@ class AdminappPanelProvider extends PanelProvider
             ->default()
             ->id('adminapp')
             ->path('adminapp')
-            ->login()
             ->homeUrl('/admin/dashboard')
             ->colors([
                 'primary' => Color::Amber,
