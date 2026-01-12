@@ -16,13 +16,8 @@ class CustomerController extends Controller
 
     public function index()
     {
-        // Get customers with the role 'customer' and include policy count
-        $customers = User::role('customer')
-            ->orderBy("id", "desc")
-            ->withCount('customerPolicies') 
-            ->orderBy('name','desc')
-            ->get();
-        return view('admin.customers.index', compact('customers'));
+        // Redirect to the new Filament Customer page
+        return redirect()->route('filament.adminapp.resources.customers.index');
     }
 
     

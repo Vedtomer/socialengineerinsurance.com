@@ -67,8 +67,11 @@ Route::prefix('policies')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('login');
+        return redirect('/adminapp');
     });
+    Route::get('/dashboard', function () {
+        return redirect('/adminapp');
+    })->name('dashboard');
 
     Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('login');
     Route::post('/send-otp', [AdminController::class, 'SendOtp'])->name('admin.SendOtp');

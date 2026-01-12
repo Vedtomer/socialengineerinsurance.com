@@ -153,8 +153,8 @@
 
 
 @section('content')
-    <div class="container-fluid p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="container-fluid p-3"> {{-- Reduced padding for compactness --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold mb-0">Manage Customer Policies</h3>
             <div>
                 <button class="btn btn-sm btn-primary rounded-pill"
@@ -164,22 +164,73 @@
             </div>
         </div>
 
+        {{-- Filter Section - Ultra Compact --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-2">
+            <div class="card-body p-2">
+                <form action="{{ route('customer-policies.index') }}" method="GET" class="row g-1 align-items-center"> {{-- align-items-center --}}
+                    
+                    {{-- Start Date Filters --}}
+                    <div class="col-6 col-md-2">
+                        <select name="start_year" class="form-select form-select-sm py-1" style="font-size: 0.8rem;">
+                            <option value="">Start Year</option> {{-- Label moved here --}}
+                            @foreach(range(date('Y'), date('Y') - 10) as $year)
+                                <option value="{{ $year }}" {{ request('start_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select name="start_month" class="form-select form-select-sm py-1" style="font-size: 0.8rem;">
+                            <option value="">Start Month</option>
+                            @for($m=1; $m<=12; ++$m)
+                                <option value="{{ $m }}" {{ request('start_month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    {{-- Due Date (End Date) Filters --}}
+                    <div class="col-6 col-md-2">
+                        <select name="due_year" class="form-select form-select-sm py-1" style="font-size: 0.8rem;">
+                            <option value="">Due Year</option>
+                            @foreach(range(date('Y') + 5, date('Y') - 5) as $year)
+                                <option value="{{ $year }}" {{ request('due_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select name="due_month" class="form-select form-select-sm py-1" style="font-size: 0.8rem;">
+                            <option value="">Due Month</option>
+                            @for($m=1; $m<=12; ++$m)
+                                <option value="{{ $m }}" {{ request('due_month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                         <div class="d-grid gap-1 d-flex justify-content-end"> {{-- Align right --}}
+                            <button type="submit" class="btn btn-sm btn-soft-primary px-3 py-1" style="font-size: 0.8rem;">Filter</button>
+                            <a href="{{ route('customer-policies.index') }}" class="btn btn-sm btn-soft-secondary px-3 py-1" style="font-size: 0.8rem;">Reset</a>
+                         </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         @include('admin.customers_policies.analyticsModel')
 
         <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body px-0 pb-0">
+            <div class="card-body px-0 pb-0 pt-0"> {{-- Reduced top/bottom padding --}}
                 <div class="table-responsive">
-                    <table id="customers-table" class="table table-hover align-middle mb-0">
+                    {{-- Added table-sm for compact layout --}}
+                    <table id="customers-table" class="table table-hover table-sm align-middle mb-0">
                         <thead class="bg-light">
                             <tr>
                                 <th class="ps-4"></th>
                                 <th>Customer</th>
                                 <th>Policy No.</th>
                                 <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th> {{-- Status kept outside modal --}}
-                                <th>Details</th>
-                                <th class="text-center">Actions</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th class="text-center">Actions</th> {{-- Merged Header --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -189,15 +240,14 @@
 
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-sm me-3">
-                                                <span class="avatar-title bg-primary text-white rounded-circle">
+                                            <div class="avatar avatar-sm me-2">
+                                                <span class="avatar-title bg-primary text-white rounded-circle" style="width: 30px; height: 30px; font-size: 12px;">
                                                     {{ substr($policy->user_name ?? 'U', 0, 1) }}
                                                 </span>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-medium">{{ $policy->user_name }}</h6>
-                                                <small
-                                                    class="text-muted">{{ $policy->policy_holder_name ?? 'No Policy Holder Name' }}</small>
+                                                <h6 class="mb-0 fw-medium" style="font-size: 0.9rem;">{{ Str::limit($policy->user_name, 16, '..') }}</h6>
+                                                <small class="text-muted" style="font-size: 0.75rem;">{{ Str::limit($policy->policy_holder_name ?? 'No Name', 16, '..') }}</small>
                                             </div>
                                         </div>
                                     </td>
@@ -227,29 +277,30 @@
                                         @elseif ($policy->status == 'approved')
                                             <span class="badge bg-soft-primary text-primary rounded-pill px-2">{{ ucfirst($policy->status) }}</span>
                                         @else
-                                            {{ $policy->status }} {{-- Default text if status doesn't match --}}
+                                            {{ $policy->status }}
                                         @endif
                                     </td>
-                                    <td>
-                                        <button type="button"
-                                            class="btn btn-sm btn-soft-info rounded-pill view-policy-details"
-                                            data-bs-toggle="modal" data-bs-target="#policyDetailsModal"
-                                            data-policy-status="{{ $policy->status }}"
-                                            data-policy-net-amount="{{ $policy->net_amount }}"
-                                            data-policy-gst="{{ $policy->gst }}"
-                                            data-policy-premium="{{ $policy->premium }}"
-                                            data-policy-insurance-company="{{ $policy->insurance_company }}"
-                                            data-policy-type="{{ $policy->policy_type }}" {{-- Policy Type for Modal --}}
-                                            data-policy-product="{{ $policy->product_name }}"> {{-- Policy Product for Modal --}}
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </td>
+                                    
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center">
+                                        <div class="d-flex justify-content-center gap-3"> {{-- Increased gap slightly for touch targets --}}
+                                            <a href="javascript:void(0);" 
+                                                class="text-info view-policy-details" 
+                                                data-bs-toggle="modal" data-bs-target="#policyDetailsModal"
+                                                data-policy-status="{{ $policy->status }}"
+                                                data-policy-net-amount="{{ $policy->net_amount }}"
+                                                data-policy-gst="{{ $policy->gst }}"
+                                                data-policy-premium="{{ $policy->premium }}"
+                                                data-policy-insurance-company="{{ $policy->insurance_company }}"
+                                                data-policy-type="{{ $policy->policy_type }}"
+                                                data-policy-product="{{ $policy->product_name }}"
+                                                title="View Details">
+                                                <i class="fa-solid fa-eye" style="font-size: 1.1rem;"></i>
+                                            </a>
+
                                             <a href="{{ route('customer-policies.edit', $policy->id) }}"
-                                                class="btn btn-sm btn-icon btn-soft-primary rounded-circle"
+                                                class="text-primary"
                                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Policy">
-                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <i class="fa-solid fa-pen-to-square" style="font-size: 1.1rem;"></i>
                                             </a>
                                         </div>
                                     </td>

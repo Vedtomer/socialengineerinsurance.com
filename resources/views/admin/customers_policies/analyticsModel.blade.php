@@ -1,159 +1,85 @@
-<?php
-// Access analytics data using helper function
+@php
 $analytics = getCustomerPolicyAnalytics();
-?>
-<div class="row g-4 mb-4">
-    <div class="col-xl-3 col-md-6">
-        <a href="{{ route('customers.index') }}" class="text-decoration-none"> {{-- Added link to customer index --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-primary">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-primary rounded-circle p-3">
-                            <i class="feather feather-users text-white"></i>
+@endphp
+
+<div class="row g-2 mb-3"> {{-- Reduced gutter and margin --}}
+    @php
+        $cards = [
+            // Card 1: Customer Overview (Customers, Total Policies, App Users)
+            [
+                'route' => 'customers.index', 
+                'bg' => 'bg-soft-primary', 'icon_bg' => 'bg-primary', 'icon' => 'feather-users', 
+                'title' => 'Total Customers', 
+                'value' => $analytics['totalCustomers'], 
+                'subtitle1' => 'Policies', 'subvalue1' => $analytics['totalPolicies'], 
+                'subtitle2' => 'App Users', 'subvalue2' => $analytics['totalAppActiveUsers'] ?? 'N/A'
+            ],
+            // Card 2: Active Business (Active, Pending)
+            [
+                'route' => ['customer-policies.index', ['status' => 'active']], 
+                'bg' => 'bg-soft-success', 'icon_bg' => 'bg-success', 'icon' => 'feather-shield', 
+                'title' => 'Active Policies', 
+                'value' => $analytics['activePoliciesCount'],
+                'subtitle1' => 'Pending', 'subvalue1' => $analytics['pendingPoliciesCount'],
+                 // Empty subtitle2 to keep alignment if needed, or omit
+            ],
+            // Card 3: Attention Required (Expired, Cancelled)
+            [
+                'route' => ['customer-policies.index', ['status' => 'expired']], 
+                'bg' => 'bg-soft-danger', 'icon_bg' => 'bg-danger', 'icon' => 'feather-alert-triangle', 
+                'title' => 'Expired Policies', 
+                'value' => $analytics['expiredPoliciesCount'],
+                'subtitle1' => 'Cancelled', 'subvalue1' => $analytics['cancelledPoliciesCount'],
+            ],
+            // Card 4: Upcoming Expiry (This Month, 7 Days)
+            [
+                'route' => ['customer-policies.index', ['expiry' => 'this_month']], 
+                'bg' => 'bg-soft-info', 'icon_bg' => 'bg-info', 'icon' => 'feather-calendar', 
+                'title' => 'Exp. This Month', 
+                'value' => $analytics['policiesExpiringThisMonthCount'],
+                'subtitle1' => 'In 7 Days', 'subvalue1' => $analytics['policiesExpiringIn7DaysCount'],
+            ],
+        ];
+    @endphp
+
+    @foreach($cards as $card)
+    <div class="col-xl-3 col-md-6 col-sm-6">
+        <a href="{{ is_array($card['route']) ? route($card['route'][0], $card['route'][1]) : route($card['route']) }}" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-3 h-100 overflow-hidden {{ $card['bg'] }}">
+                <div class="card-body p-2 position-relative"> {{-- Reduced padding --}}
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 {{ $card['icon_bg'] }} rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                            <i class="feather {{ $card['icon'] }} text-white" style="font-size: 16px;"></i>
                         </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Total Customers</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['totalCustomers'] }}</h2>
+                        <div class="flex-grow-1 ms-2">
+                            <h6 class="text-muted fw-normal mb-0" style="font-size: 0.75rem;">{{ $card['title'] }}</h6>
+                            <h4 class="fw-bold mb-0" style="font-size: 1.1rem;">{{ $card['value'] }}</h4>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-3 pt-2 border-top">
+                    {{-- Always show footer section for consistency height --}}
+                    <div class="d-flex justify-content-between mt-2 pt-1 border-top" style="border-top-color: rgba(0,0,0,0.05) !important;">
                         <div>
-                            <span class="d-block text-muted small">Total Policies</span>
-                            <span class="fw-medium">{{ $analytics['totalPolicies'] }}</span>
+                            @if(isset($card['subtitle1']))
+                                <span class="d-block text-muted" style="font-size: 0.65rem;">{{ $card['subtitle1'] }}</span>
+                                <span class="fw-medium" style="font-size: 0.8rem;">{{ $card['subvalue1'] }}</span>
+                            @else
+                                <span class="d-block text-muted" style="font-size: 0.65rem;">&nbsp;</span>
+                                <span class="fw-medium" style="font-size: 0.8rem;">&nbsp;</span>
+                            @endif
                         </div>
                         <div>
-                            <span class="d-block text-muted small">App Active Users</span>
-                            <span class="fw-medium">{{ $analytics['totalAppActiveUsers'] ?? 'N/A' }}</span>
+                            @if(isset($card['subtitle2']))
+                                <span class="d-block text-muted" style="font-size: 0.65rem;">{{ $card['subtitle2'] }}</span>
+                                <span class="fw-medium" style="font-size: 0.8rem;">{{ $card['subvalue2'] }}</span>
+                            @else
+                                <span class="d-block text-muted" style="font-size: 0.65rem;">&nbsp;</span>
+                                <span class="fw-medium" style="font-size: 0.8rem;">&nbsp;</span>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </a>
     </div>
-
-    <div class="col-xl-3 col-md-6">
-        <a href="{{ route('customer-policies.index') }}" class="text-decoration-none"> {{-- Link to all policies --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-info">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-info rounded-circle p-3">
-                            <i class="feather feather-file-text text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Total Policies</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['totalPolicies'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-        <a href="{{ route('customer-policies.index', ['status' => 'active']) }}" class="text-decoration-none"> {{-- Filter for active policies --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-success">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-success rounded-circle p-3">
-                            <i class="feather feather-shield text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Active Policies</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['activePoliciesCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-        <a href="{{ route('customer-policies.index', ['status' => 'expired']) }}" class="text-decoration-none"> {{-- Filter for expired policies --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-danger">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-danger rounded-circle p-3">
-                            <i class="feather feather-alert-triangle text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Expired Policies</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['expiredPoliciesCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-         <a href="{{ route('customer-policies.index', ['status' => 'cancelled']) }}" class="text-decoration-none"> {{-- Filter for cancelled policies --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-warning">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-warning rounded-circle p-3">
-                            <i class="feather feather-x-circle text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Cancelled Policies</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['cancelledPoliciesCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-         <a href="{{ route('customer-policies.index', ['status' => 'pending']) }}" class="text-decoration-none"> {{-- Filter for pending policies --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-secondary">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-secondary rounded-circle p-3">
-                            <i class="feather feather-clock text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Pending Policies</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['pendingPoliciesCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-         <a href="{{ route('customer-policies.index', ['expiry' => 'this_month']) }}" class="text-decoration-none"> {{-- Filter for policies expiring this month --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-info">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-info rounded-circle p-3">
-                            <i class="feather feather-calendar text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Policies Expiring This Month</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['policiesExpiringThisMonthCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-         <a href="{{ route('customer-policies.index', ['expiry' => 'next_7_days']) }}" class="text-decoration-none"> {{-- Filter for policies expiring in 7 days --}}
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-soft-danger">
-                <div class="card-body position-relative">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="flex-shrink-0 bg-danger rounded-circle p-3">
-                            <i class="feather feather-clock text-white"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="text-muted fw-normal mb-0">Policies Expiring in 7 Days</h5>
-                            <h2 class="fw-bold mb-0">{{ $analytics['policiesExpiringIn7DaysCount'] }}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+    @endforeach
 </div>

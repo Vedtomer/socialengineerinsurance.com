@@ -9,26 +9,9 @@ class CustomerPolicyController extends Controller
 {
     public function index(Request $request)
     {
-        $customerPolicies = CustomerPolicy::with('customer');
-    
-        $statusFilter = $request->query('status');
-        $expiryFilter = $request->query('expiry');
-    
-        if ($statusFilter) {
-            $customerPolicies->where('status', $statusFilter);
-        }
-    
-        if ($expiryFilter === 'this_month') {
-            $customerPolicies->whereYear('policy_end_date', now()->year) // Add year check here
-                             ->whereMonth('policy_end_date', now()->month);
-        } elseif ($expiryFilter === 'next_7_days') {
-            $customerPolicies->where('policy_end_date', '<=', now()->addDays(7))
-                             ->where('policy_end_date', '>=', now());
-        }
-    
-        $customerPolicies = $customerPolicies->get();
-    
-        return view('admin.customers_policies.index', compact('customerPolicies'));
+        // Redirect to the new Filament Customer Policy page
+        // We use the route name for the 'adminapp' panel's customer-policies resource
+        return redirect()->route('filament.adminapp.resources.customer-policies.index');
     }
 
     public function create()
