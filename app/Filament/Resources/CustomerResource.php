@@ -142,12 +142,6 @@ class CustomerResource extends Resource
                     ->label('Mobile')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false),
-                Tables\Columns\IconColumn::make('phone_verified_at')
-                    ->label('App Active')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->toggleable(),
             ])
             ->filters([
                 Tables\Filters\Filter::make('app_active')
@@ -221,7 +215,6 @@ class CustomerResource extends Resource
         return [
             'index' => Pages\ListCustomers::route('/'),
             'create' => Pages\CreateCustomer::route('/create'),
-            'view' => Pages\ViewCustomer::route('/{record}'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
