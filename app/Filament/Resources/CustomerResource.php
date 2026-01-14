@@ -143,6 +143,7 @@ class CustomerResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false),
             ])
+            ->recordUrl(null)
             ->filters([
                 Tables\Filters\Filter::make('app_active')
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('phone_verified_at'))
@@ -158,6 +159,19 @@ class CustomerResource extends Resource
                     ->modalWidth('3xl'),
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
+                Tables\Actions\Action::make('view_policies')
+                    ->label('')
+                    ->tooltip('View Policies')
+                    ->icon('heroicon-o-document-text')
+                    ->iconButton()
+                    ->color('info')
+                    ->url(fn (User $record): string => 
+                        route('filament.adminapp.resources.customer-policies.index', [
+                            'tableFilters' => [
+                                'customer' => ['value' => $record->id]
+                            ]
+                        ])
+                    ),
                 Tables\Actions\Action::make('change_password')
                     ->label('')
                     ->tooltip('Change Password')

@@ -169,6 +169,7 @@ class CustomerPolicyResource extends Resource
                     })
                     ->toggleable(isToggledHiddenByDefault: false),
             ])
+            ->recordUrl(null)
             ->filters([
                 Tables\Filters\SelectFilter::make('customer')
                     ->relationship('customer', 'name')
