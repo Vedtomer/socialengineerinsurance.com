@@ -17,12 +17,15 @@ class ListCustomerPolicies extends ListRecords
                 ->label('Export')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
-                    return response()->streamDownload(function () {
-                        $columns = ['Policy No', 'Customer', 'Start Date', 'End Date', 'Status', 'Net Amount', 'GST', 'Premium'];
+                    // Get the filtered query from the table
+                    $query = $this->getFilteredTableQuery();
+                    
+                    return response()->streamDownload(function () use ($query) {
+                        $columns = ['Policy No', 'Customer', 'Start Date', 'End Date', 'Status', 'Net Amount', 'GST', 'Premium', 'Insurance Company', 'Policy Type'];
                         $file = fopen('php://output', 'w');
                         fputcsv($file, $columns);
                         
-                        \App\Models\CustomerPolicy::with('customer')
+                        $query->with('customer')
                             ->chunk(100, function ($policies) use ($file) {
                                 foreach ($policies as $policy) {
                                     fputcsv($file, [
@@ -34,12 +37,14 @@ class ListCustomerPolicies extends ListRecords
                                         $policy->net_amount,
                                         $policy->gst,
                                         $policy->premium,
+                                        $policy->insurance_company,
+                                        $policy->policy_type,
                                     ]);
                                 }
                             });
                             
                         fclose($file);
-                    }, 'customer-policies-' . date('Y-m-d') . '.csv');
+                    }, 'customer-policies-' . date('Y-m-d-His') . '.csv');
                 }),
             Actions\CreateAction::make(),
         ];

@@ -208,6 +208,14 @@ class CustomerPolicyResource extends Resource
                     ->iconButton(),
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
+                Tables\Actions\Action::make('download')
+                    ->label('')
+                    ->tooltip('Download Policy')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->iconButton()
+                    ->url(fn (CustomerPolicy $record): string => $record->policy_link ?: '#')
+                    ->openUrlInNewTab()
+                    ->hidden(fn (CustomerPolicy $record): bool => empty($record->policy_link)),
                 Tables\Actions\DeleteAction::make()
                     ->iconButton(),
             ])
