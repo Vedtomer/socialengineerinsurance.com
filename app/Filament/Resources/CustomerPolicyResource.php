@@ -111,6 +111,23 @@ class CustomerPolicyResource extends Resource
                             ->relationship('product', 'name')
                             ->searchable()
                             ->preload(),
+                        Forms\Components\FileUpload::make('policy_document')
+                            ->label('Policy Document')
+                            ->disk('public')
+                            ->directory('customer_policies')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->maxSize(10240)
+                            ->downloadable()
+                            ->openable()
+                            ->columnSpanFull()
+                            ->helperText('Upload policy PDF document (Max 10MB)')
+                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                // When file is uploaded, rename it to policy_no.pdf
+                                if ($state && $get('policy_no')) {
+                                    $policyNo = $get('policy_no');
+                                    // The file will be renamed in the afterCreate/afterUpdate hooks
+                                }
+                            }),
                     ]),
             ]);
     }
@@ -208,14 +225,58 @@ class CustomerPolicyResource extends Resource
                     ->iconButton(),
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
-                Tables\Actions\Action::make('download')
+                Tables\Actions\Action::make('policy_action')
                     ->label('')
-                    ->tooltip('Download Policy')
-                    ->icon('heroicon-o-arrow-down-tray')
+                    ->tooltip(fn (CustomerPolicy $record): string => 
+                        empty($record->policy_link) ? 'Upload Policy' : 'Download Policy'
+                    )
+                    ->icon(fn (CustomerPolicy $record): string => 
+                        empty($record->policy_link) ? 'heroicon-o-arrow-up-tray' : 'heroicon-o-arrow-down-tray'
+                    )
                     ->iconButton()
-                    ->url(fn (CustomerPolicy $record): string => $record->policy_link ?: '#')
-                    ->openUrlInNewTab()
-                    ->hidden(fn (CustomerPolicy $record): bool => empty($record->policy_link)),
+                    ->color(fn (CustomerPolicy $record): string => 
+                        empty($record->policy_link) ? 'warning' : 'primary'
+                    )
+                    ->form(fn (CustomerPolicy $record): array => 
+                        empty($record->policy_link) ? [
+                            Forms\Components\FileUpload::make('policy_document')
+                                ->label('Policy Document')
+                                ->disk('public')
+                                ->directory('customer_policies')
+                                ->acceptedFileTypes(['application/pdf'])
+                                ->maxSize(10240)
+                                ->required()
+                                ->helperText('Upload policy PDF document (Max 10MB)'),
+                        ] : []
+                    )
+                    ->action(function (CustomerPolicy $record, array $data): void {
+                        if (!empty($data['policy_document'])) {
+                            // Get the uploaded file path
+                            $uploadedPath = $data['policy_document'];
+                            
+                            // Rename file to policy_no.pdf
+                            $newFileName = $record->policy_no . '.pdf';
+                            $newPath = 'customer_policies/' . $newFileName;
+                            
+                            // Move and rename the file
+                            \Storage::disk('public')->move($uploadedPath, $newPath);
+                            
+                            \Filament\Notifications\Notification::make()
+                                ->success()
+                                ->title('Policy Uploaded')
+                                ->body('Policy document uploaded successfully.')
+                                ->send();
+                        }
+                    })
+                    ->modalHeading(fn (CustomerPolicy $record): string => 
+                        empty($record->policy_link) ? 'Upload Policy Document' : ''
+                    )
+                    ->modalSubmitActionLabel('Upload')
+                    ->modalWidth('md')
+                    ->url(fn (CustomerPolicy $record): ?string => 
+                        !empty($record->policy_link) ? $record->policy_link : null
+                    )
+                    ->openUrlInNewTab(),
                 Tables\Actions\DeleteAction::make()
                     ->iconButton(),
             ])
