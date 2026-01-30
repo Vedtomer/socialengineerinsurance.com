@@ -82,7 +82,7 @@ class AgentController extends Controller
             } else {
                 $agent = new User();
                 $agent->assignRole('agent');
-                $agent->password = bcrypt($request->mobile_number);
+                $agent->password = $request->mobile_number;
             }
 
             $agent->name = $request->name;
@@ -145,7 +145,7 @@ class AgentController extends Controller
 
         try {
             $agent = User::findOrFail($request->agent_id);
-            $agent->password = bcrypt($request->password);
+            $agent->password = $request->password;
             $agent->save();
 
             return redirect()->route('agent.management')
