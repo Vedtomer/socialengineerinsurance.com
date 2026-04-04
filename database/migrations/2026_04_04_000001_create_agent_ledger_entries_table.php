@@ -15,7 +15,10 @@ return new class extends Migration
             $table->foreignId('agent_code_id')->nullable()->constrained('agent_codes')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->decimal('credit', 12, 2)->default(0);
+            $table->string('credit_ref')->nullable();
             $table->decimal('debit', 12, 2)->default(0);
+            $table->string('debit_ref')->nullable();
+            $table->text('note')->nullable();
             $table->foreignId('imported_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 

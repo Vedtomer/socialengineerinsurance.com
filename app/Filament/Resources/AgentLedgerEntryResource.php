@@ -60,16 +60,14 @@ class AgentLedgerEntryResource extends Resource
         return $table
             ->defaultSort('agent_name')
             ->columns([
-                Tables\Columns\TextColumn::make('agent_code')
-                    ->label('Agent Code')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('agent_name')
                     ->label('Agent')
                     ->placeholder('-')
-                    ->searchable()
+                    ->formatStateUsing(fn (AgentLedgerEntry $record): string => trim(($record->agent_name ?: '-') . ' - ' . ($record->agent_code ?: '-')))
+                    ->searchable(['users.name', 'agent_ledger_entries.agent_code'])
                     ->color('primary')
                     ->weight('600')
+                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy('users.name', $direction))
                     ->action(
                         Action::make('view_agent_ledger')
                             ->modalHeading(fn (AgentLedgerEntry $record): string => "{$record->agent_name} Ledger Details")

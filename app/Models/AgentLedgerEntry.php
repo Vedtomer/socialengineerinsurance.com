@@ -15,7 +15,10 @@ class AgentLedgerEntry extends Model
         'agent_code_id',
         'user_id',
         'credit',
+        'credit_ref',
         'debit',
+        'debit_ref',
+        'note',
         'imported_by',
     ];
 

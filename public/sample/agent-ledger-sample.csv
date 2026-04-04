@@ -1,0 +1,4 @@
+agent_code,credit,credit_ref,debit,debit_ref,note
+AG001,1500,CR-1001,0,,Opening balance credit
+AG002,0,,250,DR-2001,Adjustment debit
+AG003,800,CR-1002,100,DR-2002,Monthly settlement entry

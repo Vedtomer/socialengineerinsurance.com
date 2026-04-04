@@ -48,20 +48,20 @@
                 </a>
             </li>
 
-            <li class="menu {{ classActivePath('agent-policy-comparison') }}">
-                <a href="{{ route('reports.agent-policy-comparison') }}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-balance-scale fa-lx"></i> {{-- Font Awesome icon for comparison --}}
-                        <span>Agent Comparison</span>
-                    </div>
-                </a>
-            </li>
-
             <li class="menu {{ request()->is('adminapp/agent-ledger-entries*') ? 'active' : '' }}">
                 <a href="{{ url('/adminapp/agent-ledger-entries') }}" aria-expanded="false" class="dropdown-toggle">
                     <div class="d-flex align-items-center gap-2">
                         <i class="fas fa-file-import fa-lx"></i>
                         <span>Agent Ledger</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="menu {{ classActivePath('agent-policy-comparison') }}">
+                <a href="{{ route('reports.agent-policy-comparison') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-balance-scale fa-lx"></i> {{-- Font Awesome icon for comparison --}}
+                        <span>Agent Comparison</span>
                     </div>
                 </a>
             </li>

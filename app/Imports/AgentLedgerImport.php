@@ -37,7 +37,10 @@ class AgentLedgerImport implements ToModel, WithHeadingRow, WithValidation, With
             'agent_code_id' => $agentCode->id,
             'user_id' => $agentCode->user_id,
             'credit' => $this->normalizeAmount($row['credit'] ?? 0),
+            'credit_ref' => $this->normalizeText($row['credit_ref'] ?? null),
             'debit' => $this->normalizeAmount($row['debit'] ?? 0),
+            'debit_ref' => $this->normalizeText($row['debit_ref'] ?? null),
+            'note' => $this->normalizeText($row['note'] ?? null),
             'imported_by' => Auth::id(),
         ]);
     }
@@ -47,7 +50,10 @@ class AgentLedgerImport implements ToModel, WithHeadingRow, WithValidation, With
         return [
             'agent_code' => ['required', 'string'],
             'credit' => ['nullable', 'numeric', 'min:0'],
+            'credit_ref' => ['nullable', 'string', 'max:255'],
             'debit' => ['nullable', 'numeric', 'min:0'],
+            'debit_ref' => ['nullable', 'string', 'max:255'],
+            'note' => ['nullable', 'string', 'max:1000'],
         ];
     }
 
@@ -56,7 +62,10 @@ class AgentLedgerImport implements ToModel, WithHeadingRow, WithValidation, With
         return [
             'agent_code.required' => 'Agent code is required.',
             'credit.numeric' => 'Credit must be numeric.',
+            'credit_ref.string' => 'Credit reference must be text.',
             'debit.numeric' => 'Debit must be numeric.',
+            'debit_ref.string' => 'Debit reference must be text.',
+            'note.string' => 'Note must be text.',
             'credit.min' => 'Credit cannot be negative.',
             'debit.min' => 'Debit cannot be negative.',
         ];
@@ -79,5 +88,16 @@ class AgentLedgerImport implements ToModel, WithHeadingRow, WithValidation, With
         }
 
         return (float) $value;
+    }
+
+    protected function normalizeText($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $value = trim((string) $value);
+
+        return $value === '' ? null : $value;
     }
 }
