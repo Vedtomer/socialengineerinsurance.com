@@ -19,7 +19,16 @@
     </div>
 
     <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-        <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <table class="w-full table-fixed divide-y divide-slate-200 text-sm">
+            <colgroup>
+                <col class="w-12">
+                <col class="w-40">
+                <col class="w-28">
+                <col class="w-32">
+                <col class="w-28">
+                <col class="w-32">
+                <col>
+            </colgroup>
             <thead class="bg-slate-50">
                 <tr>
                     <th class="px-4 py-3 text-left font-semibold text-slate-700">#</th>
@@ -40,7 +49,7 @@
                         <td class="px-4 py-3 text-slate-700">{{ $row->credit_ref ?: '-' }}</td>
                         <td class="px-4 py-3 text-right text-rose-700">{{ number_format((float) $row->debit, 2) }}</td>
                         <td class="px-4 py-3 text-slate-700">{{ $row->debit_ref ?: '-' }}</td>
-                        <td class="px-4 py-3 text-slate-700">{{ $row->note ?: '-' }}</td>
+                        <td class="px-4 py-3 text-slate-700 break-words">{{ $row->note ?: '-' }}</td>
                     </tr>
                 @empty
                     <tr>
