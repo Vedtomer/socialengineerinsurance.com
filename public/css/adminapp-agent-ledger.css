@@ -4,7 +4,7 @@
 
 .agent-ledger-summary-grid {
     display: grid;
-    gap: 0.75rem;
+    gap: 0.625rem;
 }
 
 @media (min-width: 768px) {
@@ -21,9 +21,9 @@
 
 .agent-ledger-card {
     border: 1px solid #d7dde7;
-    border-radius: 1rem;
-    padding: 1rem;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    border-radius: 0.85rem;
+    padding: 0.75rem 0.9rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 }
 
 .agent-ledger-card--info {
@@ -47,12 +47,12 @@
 
 .agent-ledger-card__icon {
     display: flex;
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2.1rem;
+    width: 2.1rem;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    border-radius: 1rem;
+    border-radius: 0.8rem;
     border: 1px solid #d7dde7;
     background: #ffffff;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
@@ -75,15 +75,16 @@
 
 .agent-ledger-card__value {
     color: #111827;
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    line-height: 1.25rem;
+    line-height: 1.15rem;
 }
 
 .agent-ledger-card__meta {
-    margin-top: 0.5rem;
-    font-size: 0.8125rem;
+    margin-top: 0.35rem;
+    font-size: 0.74rem;
     font-weight: 600;
+    line-height: 1rem;
 }
 
 .agent-ledger-card--credit .agent-ledger-card__value,

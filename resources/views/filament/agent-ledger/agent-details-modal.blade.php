@@ -1,61 +1,61 @@
 <div class="agent-ledger-modal space-y-6 text-gray-900">
     <div class="agent-ledger-summary-grid">
-        <div class="agent-ledger-card agent-ledger-card--info rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
-            <div class="flex items-start gap-3">
-                <div class="agent-ledger-card__icon flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <div class="agent-ledger-card agent-ledger-card--info">
+            <div class="flex items-start gap-2.5">
+                <div class="agent-ledger-card__icon text-slate-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5a7.5 7.5 0 0115 0" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <div class="agent-ledger-card__value break-words text-sm font-semibold text-slate-900">{{ $summary->agent_code ?: '-' }}</div>
-                    <div class="mt-2 break-words text-xs text-slate-600">{{ $summary->agent_mobile_number ?: '-' }}</div>
+                    <div class="agent-ledger-card__value break-words">{{ $summary->agent_code ?: '-' }}</div>
+                    <div class="mt-1 break-words text-[0.82rem] leading-tight text-slate-600">{{ $summary->agent_mobile_number ?: '-' }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="agent-ledger-card agent-ledger-card--credit rounded-2xl border border-emerald-300 bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 shadow-sm">
-            <div class="flex items-start gap-3">
-                <div class="agent-ledger-card__icon flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-200 bg-white text-emerald-700 shadow-sm">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <div class="agent-ledger-card agent-ledger-card--credit">
+            <div class="flex items-start gap-2.5">
+                <div class="agent-ledger-card__icon">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 12h10" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 8l4 4-4 4" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <div class="agent-ledger-card__value break-words text-sm font-bold text-emerald-900">Rs. {{ number_format((float) $summary->total_credit, 2) }}</div>
-                    <div class="agent-ledger-card__meta mt-2 text-xs font-semibold text-emerald-700">Total credit amount</div>
+                    <div class="agent-ledger-card__value break-words">Rs. {{ number_format((float) $summary->total_credit, 2) }}</div>
+                    <div class="agent-ledger-card__meta">Total credit amount</div>
                 </div>
             </div>
         </div>
 
-        <div class="agent-ledger-card agent-ledger-card--debit rounded-2xl border border-rose-300 bg-gradient-to-br from-rose-50 to-rose-100 p-4 shadow-sm">
-            <div class="flex items-start gap-3">
-                <div class="agent-ledger-card__icon flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-rose-200 bg-white text-rose-700 shadow-sm">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <div class="agent-ledger-card agent-ledger-card--debit">
+            <div class="flex items-start gap-2.5">
+                <div class="agent-ledger-card__icon">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 12h10" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4 4-4" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <div class="agent-ledger-card__value break-words text-sm font-bold text-rose-900">Rs. {{ number_format((float) $summary->total_debit, 2) }}</div>
-                    <div class="agent-ledger-card__meta mt-2 text-xs font-semibold text-rose-700">Total debit amount</div>
+                    <div class="agent-ledger-card__value break-words">Rs. {{ number_format((float) $summary->total_debit, 2) }}</div>
+                    <div class="agent-ledger-card__meta">Total debit amount</div>
                 </div>
             </div>
         </div>
 
-        <div class="agent-ledger-card agent-ledger-card--balance rounded-2xl border border-sky-300 bg-gradient-to-br from-sky-50 to-sky-100 p-4 shadow-sm">
-            <div class="flex items-start gap-3">
-                <div class="agent-ledger-card__icon flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-sky-200 bg-white text-sky-700 shadow-sm">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <div class="agent-ledger-card agent-ledger-card--balance">
+            <div class="flex items-start gap-2.5">
+                <div class="agent-ledger-card__icon">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <div class="agent-ledger-card__value break-words text-sm font-bold text-sky-900">Rs. {{ number_format((float) $summary->balance, 2) }}</div>
-                    <div class="agent-ledger-card__meta mt-2 text-xs font-semibold text-sky-700">Balance</div>
+                    <div class="agent-ledger-card__value break-words">Rs. {{ number_format((float) $summary->balance, 2) }}</div>
+                    <div class="agent-ledger-card__meta">Balance</div>
                 </div>
             </div>
         </div>
