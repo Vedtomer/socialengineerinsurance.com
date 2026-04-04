@@ -54,7 +54,7 @@ class ListAgentLedgerEntries extends ListRecords
                                     'text/csv',
                                 ])
                                 ->helperText(new HtmlString(
-                                    '<a href="' . asset('sample/agent-ledger-sample.csv') . '" download class="text-primary-600 text-xs underline">Download sample CSV</a>'
+                                    '<a href="' . route('admin.agent-ledger.sample') . '" class="text-primary-600 text-xs underline">Download sample CSV</a>'
                                 ))
                                 ->required(),
                         ]),

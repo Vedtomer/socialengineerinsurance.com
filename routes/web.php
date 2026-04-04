@@ -74,6 +74,16 @@ Route::prefix('admin')->group(function () {
     Route::match(['get', 'post'], '/login', [AdminController::class, 'login'])->name('login');
     Route::post('/send-otp', [AdminController::class, 'SendOtp'])->name('admin.SendOtp');
     Route::post('/verify-otp', [AdminController::class, 'verifyOtp'])->name('admin.verifyOtp');
+    Route::get('/agent-ledger/sample-csv', function () {
+        return response()->download(
+            public_path('sample/agent-ledger-sample.csv'),
+            'agent-ledger-sample.csv',
+            [
+                'Content-Type' => 'text/csv',
+            ]
+        );
+    })->name('admin.agent-ledger.sample');
+
     Route::middleware(['role:admin', 'auth'])->group(function () {
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
