@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use BackedEnum;
 use App\Filament\Resources\CustomerPolicyResource\Pages;
 use App\Filament\Resources\CustomerPolicyResource\RelationManagers;
 use App\Models\CustomerPolicy;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,13 +18,13 @@ class CustomerPolicyResource extends Resource
 {
     protected static ?string $model = CustomerPolicy::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Customer Policies';
     protected static ?int $navigationSort = 16;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Grid::make(3)
                     ->schema([

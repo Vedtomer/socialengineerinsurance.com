@@ -2,15 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use BackedEnum;
 use App\Filament\Resources\AgentLedgerEntryResource\Pages;
 use App\Imports\AgentLedgerImport;
 use App\Models\AgentLedgerEntry;
 use App\Models\AgentLedgerImportHistory;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -22,7 +23,7 @@ class AgentLedgerEntryResource extends Resource
 {
     protected static ?string $model = AgentLedgerEntry::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-up-on-square';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-arrow-up-on-square';
 
     protected static ?string $navigationLabel = 'Agent Ledger';
 
@@ -51,9 +52,9 @@ class AgentLedgerEntryResource extends Resource
             ->groupBy('agent_ledger_entries.agent_code', 'agent_ledger_entries.user_id', 'users.name', 'users.email', 'users.mobile_number');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([]);
+        return $schema->schema([]);
     }
 
     public static function table(Table $table): Table

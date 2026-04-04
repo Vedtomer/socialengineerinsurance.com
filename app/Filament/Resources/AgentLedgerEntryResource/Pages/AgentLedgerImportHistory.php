@@ -19,7 +19,7 @@ class AgentLedgerImportHistory extends Page implements HasTable
 
     protected static string $resource = AgentLedgerEntryResource::class;
 
-    protected static string $view = 'filament.agent-ledger.import-history-page';
+    protected string $view = 'filament.agent-ledger.import-history-page';
 
     protected ?string $heading = 'Agent Ledger Import History';
 

@@ -11,26 +11,35 @@ class CreateAgentCodesTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('agent_codes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('insurance_product_id')->nullable();
-            $table->enum('commission_type', ['fixed', 'percentage']);
-            $table->decimal('commission', 10, 2);
-            $table->string('code', 6)->unique()->nullable();
-            $table->enum('payment_type', ['agent_full_payment', 'commission_deducted', 'pay_later_with_adjustment', 'pay_later']);
-            $table->decimal('gst', 5, 2)->default(15.25);
-            $table->decimal('discount', 10, 2)->nullable();
-            $table->decimal('payout', 10, 2)->nullable();
-            $table->unsignedInteger('insurance_company_id')->nullable(); // Changed to unsignedInteger to match companies.id
-            $table->boolean('commission_settlement')->default(false);
-            $table->timestamps();
+        if (! Schema::hasTable('agent_codes')) {
+            Schema::create('agent_codes', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id');
+                $table->unsignedBigInteger('insurance_product_id')->nullable();
+                $table->enum('commission_type', ['fixed', 'percentage']);
+                $table->decimal('commission', 10, 2);
+                $table->string('code', 6)->unique()->nullable();
+                $table->enum('payment_type', ['agent_full_payment', 'commission_deducted', 'pay_later_with_adjustment', 'pay_later']);
+                $table->decimal('gst', 5, 2)->default(15.25);
+                $table->decimal('discount', 10, 2)->nullable();
+                $table->decimal('payout', 10, 2)->nullable();
+                $table->unsignedInteger('insurance_company_id')->nullable();
+                $table->boolean('commission_settlement')->default(false);
+                $table->timestamps();
 
-            // Foreign key constraints
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('insurance_product_id')->references('id')->on('insurance_products')->onDelete('cascade');
-            $table->foreign('insurance_company_id')->references('id')->on('insurance_companies')->onDelete('set null');
-        });
+                if (Schema::hasTable('users')) {
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
+
+                if (Schema::hasTable('insurance_products')) {
+                    $table->foreign('insurance_product_id')->references('id')->on('insurance_products')->onDelete('cascade');
+                }
+
+                if (Schema::hasTable('insurance_companies')) {
+                    $table->foreign('insurance_company_id')->references('id')->on('insurance_companies')->onDelete('set null');
+                }
+            });
+        }
     }
 
     /**
