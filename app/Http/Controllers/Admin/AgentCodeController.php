@@ -128,7 +128,7 @@ class AgentCodeController extends Controller
             ->with('success', ($request->filled('id') ? 'Updated' : 'Added') . ' commission successfully');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $agentCode = AgentCode::findOrFail($id);
         $agentCode->delete();
@@ -136,6 +136,11 @@ class AgentCodeController extends Controller
         return redirect()
             ->route('commission.management')
             ->with('success', 'Commission deleted successfully');
+    }
+
+    public function delete($id)
+    {
+        return $this->destroy($id);
     }
 
     public function bulkDelete(Request $request)

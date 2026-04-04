@@ -65,7 +65,8 @@
             // Initialize delete functionality
             $('.delete-commission').click(function() {
                 const id = $(this).data('id');
-                $('#deleteForm').attr('action', '{{ route("commission.delete", "") }}/' + id);
+                const deleteUrl = '{{ route("commission.delete", ["id" => "__ID__"]) }}'.replace('__ID__', id);
+                $('#deleteForm').attr('action', deleteUrl);
                 $('#deleteModal').modal('show');
             });
 
