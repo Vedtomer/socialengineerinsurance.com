@@ -62,47 +62,7 @@
     </div>
 
     <div class="agent-ledger-table-wrap overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div class="block space-y-4 p-4 md:hidden">
-            @forelse ($entries as $entry)
-                <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Entry Date</div>
-                            <div class="mt-1 text-sm font-semibold text-slate-900">
-                                {{ optional($entry->entry_date)->format('d M Y') ?: '-' }}
-                            </div>
-                        </div>
-                        <div class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-                            {{ optional($entry->importer)->name ?: 'System' }}
-                        </div>
-                    </div>
-
-                    <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                        <div class="rounded-xl bg-white p-3">
-                            <div class="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">Credit</div>
-                            <div class="mt-1 font-semibold text-slate-900">Rs. {{ number_format((float) $entry->credit, 2) }}</div>
-                            <div class="mt-2 break-words text-xs text-slate-500">Ref: {{ $entry->credit_ref ?: '-' }}</div>
-                        </div>
-                        <div class="rounded-xl bg-white p-3">
-                            <div class="text-xs font-semibold uppercase tracking-[0.16em] text-rose-700">Debit</div>
-                            <div class="mt-1 font-semibold text-slate-900">Rs. {{ number_format((float) $entry->debit, 2) }}</div>
-                            <div class="mt-2 break-words text-xs text-slate-500">Ref: {{ $entry->debit_ref ?: '-' }}</div>
-                        </div>
-                    </div>
-
-                    <div class="mt-3 rounded-xl bg-white p-3">
-                        <div class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Note</div>
-                        <div class="mt-1 break-words text-sm leading-6 text-slate-700">{{ $entry->note ?: '-' }}</div>
-                    </div>
-                </div>
-            @empty
-                <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-                    No ledger entries found for this agent.
-                </div>
-            @endforelse
-        </div>
-
-        <div class="hidden w-full overflow-x-auto md:block">
+        <div class="w-full overflow-x-auto">
             <table class="agent-ledger-table w-full border-collapse text-sm">
                 <thead class="bg-slate-50">
                     <tr>

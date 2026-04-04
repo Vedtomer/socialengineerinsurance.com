@@ -175,3 +175,55 @@
 .agent-ledger-table .agent-ledger-total-row td {
     font-weight: 700;
 }
+
+.agent-ledger-import-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.agent-ledger-import-card__label {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.agent-ledger-import-card__value {
+    margin-top: 0.35rem;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.agent-ledger-import-card__value--wrap {
+    word-break: break-word;
+}
+
+.agent-ledger-import-table-wrap {
+    border-radius: 1rem;
+}
+
+.agent-ledger-import-table-scroll {
+    overflow-x: auto;
+}
+
+.agent-ledger-import-table {
+    table-layout: fixed;
+}
+
+.agent-ledger-align-right {
+    text-align: right;
+}
+
+.agent-ledger-note-cell {
+    word-break: break-word;
+}
+
+.agent-ledger-import-empty {
+    padding: 1rem;
+    color: #64748b;
+    text-align: center;
+}

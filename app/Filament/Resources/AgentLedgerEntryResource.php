@@ -61,6 +61,7 @@ class AgentLedgerEntryResource extends Resource
     {
         return $table
             ->defaultSort('agent_name')
+            ->defaultKeySort(false)
             ->columns([
                 Tables\Columns\TextColumn::make('agent_name')
                     ->label('Agent')
