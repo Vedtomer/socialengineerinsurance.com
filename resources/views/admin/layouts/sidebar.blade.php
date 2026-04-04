@@ -56,7 +56,16 @@
                     </div>
                 </a>
             </li>
-            
+
+            <li class="menu {{ request()->is('adminapp/agent-ledger-entries*') ? 'active' : '' }}">
+                <a href="{{ url('/adminapp/agent-ledger-entries') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-file-import fa-lx"></i>
+                        <span>Agent Ledger</span>
+                    </div>
+                </a>
+            </li>
+
             <li class="menu {{ classActivePath('reports') }}">
                 <a href="{{ route('reports.index') }}" aria-expanded="false" class="dropdown-toggle">
                     <div class="d-flex align-items-center gap-2">
