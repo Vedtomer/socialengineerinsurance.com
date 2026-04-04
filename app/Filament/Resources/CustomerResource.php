@@ -6,6 +6,12 @@ use BackedEnum;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\User;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -154,13 +160,13 @@ class CustomerResource extends Resource
                     ->label('Inactive'),
             ], layout: Tables\Enums\FiltersLayout::Modal)
             ->actions([
-                Tables\Actions\ViewAction::make()
+                ViewAction::make()
                     ->iconButton()
                     ->modalHeading('Customer Details')
                     ->modalWidth('3xl'),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton(),
-                Tables\Actions\Action::make('view_policies')
+                Action::make('view_policies')
                     ->label('')
                     ->tooltip('View Policies')
                     ->icon('heroicon-o-document-text')
@@ -173,7 +179,7 @@ class CustomerResource extends Resource
                             ]
                         ])
                     ),
-                Tables\Actions\Action::make('change_password')
+                Action::make('change_password')
                     ->label('')
                     ->tooltip('Change Password')
                     ->icon('heroicon-o-lock-closed')
@@ -196,9 +202,9 @@ class CustomerResource extends Resource
                         ]);
                     })
                     ->successNotificationTitle('Password changed successfully'),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton()
-                    ->before(function (User $record, Tables\Actions\DeleteAction $action) {
+                    ->before(function (User $record, DeleteAction $action) {
                         if ($record->customerPolicies()->count() > 0) {
                             \Filament\Notifications\Notification::make()
                                 ->danger()
@@ -212,8 +218,8 @@ class CustomerResource extends Resource
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

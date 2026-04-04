@@ -7,7 +7,6 @@ use App\Models\AgentLedgerImportHistory as AgentLedgerImportHistoryModel;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Filament\Tables;
-use Filament\Tables\Actions\Action as TableAction;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -55,7 +54,7 @@ class AgentLedgerImportHistory extends Page implements HasTable
                     ->sortable(),
             ])
             ->actions([
-                TableAction::make('view_data')
+                Action::make('view_data')
                     ->label('View Data')
                     ->icon('heroicon-o-eye')
                     ->modalHeading(fn (AgentLedgerImportHistoryModel $record): string => "Imported Data - {$record->file_name}")

@@ -7,9 +7,9 @@ use Filament\Actions\Action;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Grid;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\HtmlString;
 

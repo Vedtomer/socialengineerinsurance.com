@@ -6,8 +6,15 @@ use BackedEnum;
 use App\Filament\Resources\CustomerPolicyResource\Pages;
 use App\Filament\Resources\CustomerPolicyResource\RelationManagers;
 use App\Models\CustomerPolicy;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -26,7 +33,7 @@ class CustomerPolicyResource extends Resource
     {
         return $schema
             ->schema([
-                Forms\Components\Grid::make(3)
+                Grid::make(3)
                     ->schema([
                         Forms\Components\TextInput::make('policy_no')
                             ->required()
@@ -186,7 +193,7 @@ class CustomerPolicyResource extends Resource
                             ])
                             ->default('policy_start_date')
                             ->inline(),
-                        Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
                                 Forms\Components\Select::make('year')
                                     ->label('Year')
@@ -223,11 +230,11 @@ class CustomerPolicyResource extends Resource
                     }),
             ], layout: Tables\Enums\FiltersLayout::Modal)
             ->actions([
-                Tables\Actions\ViewAction::make()
+                ViewAction::make()
                     ->iconButton(),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton(),
-                Tables\Actions\Action::make('policy_action')
+                Action::make('policy_action')
                     ->label('')
                     ->tooltip(fn (CustomerPolicy $record): string => 
                         empty($record->policy_link) ? 'Upload Policy' : 'Download Policy'
@@ -279,12 +286,12 @@ class CustomerPolicyResource extends Resource
                         !empty($record->policy_link) ? $record->policy_link : null
                     )
                     ->openUrlInNewTab(),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->iconButton(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
