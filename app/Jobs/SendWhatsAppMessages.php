@@ -77,19 +77,16 @@ class SendWhatsAppMessages implements ShouldQueue
                 $this->checkAndWaitForRateLimit();
 
                 try {
-                    $messageLog = $this->prepareMessageLog($user, $date);
-
                     if ($user->policy_count === 0) {
-                        $lastPolicyDays = $this->getLastPolicyDays($user);
-                        $payload = $this->prepareNoPolicyPayload($user, $lastPolicyDays);
-                        $messageLog->message_type = 'no_policy';
-                        $messageLog->days_since_last_policy = $lastPolicyDays;
-                    } else {
-                        $payload = $this->preparePolicyUpdatePayload($user, $date);
-                        $messageLog->message_type = 'daily_report';
-                        $messageLog->policy_count = $user->policy_count;
-                        $messageLog->total_commission = $user->total_commission;
+                        Log::info('Skipping no-policy WhatsApp for user: ' . $user->id);
+                        continue;
                     }
+
+                    $messageLog = $this->prepareMessageLog($user, $date);
+                    $payload = $this->preparePolicyUpdatePayload($user, $date);
+                    $messageLog->message_type = 'daily_report';
+                    $messageLog->policy_count = $user->policy_count;
+                    $messageLog->total_commission = $user->total_commission;
 
                     $messageLog->request_payload = json_encode($payload);
                     $messageLog->save();
@@ -178,40 +175,6 @@ class SendWhatsAppMessages implements ShouldQueue
             'user_id' => $user->id,
             'mobile_number' => $user->mobile_number
         ]);
-    }
-
-    /**
-     * Prepare payload for no policy message
-     */
-    private function prepareNoPolicyPayload($user, int $days): array
-    {
-        return [
-            'messaging_product' => 'whatsapp',
-            'recipient_type' => 'individual',
-            'to' => $this->formatPhoneNumber($user->mobile_number),
-            'type' => 'template',
-            'template' => [
-                'name' => 'no_policy_reminder',
-                'language' => [
-                    'code' => 'en'
-                ],
-                'components' => [
-                    [
-                        'type' => 'body',
-                        'parameters' => [
-                            [
-                                'type' => 'text',
-                                'text' => $user->name
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => (string)$days
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
     }
 
     /**
@@ -307,22 +270,6 @@ class SendWhatsAppMessages implements ShouldQueue
         }
 
         return $phone;
-    }
-
-    /**
-     * Get days since last policy
-     */
-    private function getLastPolicyDays($user): int
-    {
-        $lastPolicy = $user->Policy()
-            ->latest('policy_start_date')
-            ->first();
-
-        if (!$lastPolicy) {
-            return 30; // If no policy found, return maximum days
-        }
-
-        return Carbon::parse($lastPolicy->policy_start_date)->diffInDays(Carbon::today());
     }
 
     private function hasMessageSentToday($user): bool
