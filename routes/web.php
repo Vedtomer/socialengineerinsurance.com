@@ -17,9 +17,7 @@ use App\Http\Controllers\ContactController;
 
 
 use App\Console\Commands\CustomTask;
-use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AgentCodeController;
-use App\Http\Controllers\AgentSettlementController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
@@ -82,14 +80,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile/edit', [AdminController::class, 'ProfileEdit'])->name('edit.profile');
         Route::post('/profile/update', [AdminController::class, 'ProfileUpdate'])->name('admin.update');
 
-
-
-        // Account Routes
-        Route::get('/account-management', [App\Http\Controllers\AccountController::class, 'index'])->name('account.management');
-        Route::post('/account-store', [App\Http\Controllers\AccountController::class, 'store'])->name('account.store');
-        Route::delete('/account-delete/{id}', [App\Http\Controllers\AccountController::class, 'delete'])->name('account.delete');
-
-
         #commission
         // Main commission management route (handles listing, filtering, and editing and deleting)
         Route::get('/agent-code-management', [AgentCodeController::class, 'index'])->name('commission.management');
@@ -100,10 +90,6 @@ Route::prefix('admin')->group(function () {
 
         // Monthly Commission Routes
         Route::match(['get'], '/monthly-commissions/{id?}', 'App\Http\Controllers\MonthlyCommissionController@handle')->name('monthly-commissions');
-
-        Route::get('/agent-settlements', [AgentSettlementController::class, 'index'])->name('agent.settlements.index');
-
-
 
         Route::get('/agent-management', [AgentController::class, 'index'])->name('agent.management');
         Route::post('/agent/store', [AgentController::class, 'store'])->name('agent.store');

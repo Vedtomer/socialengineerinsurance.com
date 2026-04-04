@@ -49,71 +49,63 @@ class AdminappPanelProvider extends PanelProvider
                 \Filament\Navigation\NavigationItem::make('Agent Comparison')
                     ->url('/admin/reports/agent-policy-comparison')
                     ->icon('heroicon-o-scale')
-                    ->sort(2),
-                \Filament\Navigation\NavigationItem::make('Account Management')
-                    ->url('/admin/account-management')
-                    ->icon('heroicon-o-users')
                     ->sort(3),
-                \Filament\Navigation\NavigationItem::make('Agent Statement')
-                    ->url('/admin/agent-settlements')
-                    ->icon('heroicon-o-document-text')
-                    ->sort(4),
                 \Filament\Navigation\NavigationItem::make('Reports')
                     ->url('/admin/reports')
                     ->icon('heroicon-o-chart-bar')
-                    ->sort(5),
+                    ->sort(4),
                 \Filament\Navigation\NavigationItem::make('Agent Listing')
                     ->url('/admin/agent-management')
                     ->icon('heroicon-o-user-group')
-                    ->sort(6),
+                    ->sort(5),
                 \Filament\Navigation\NavigationItem::make('Agent Code')
                     ->url('/admin/agent-code-management')
                     ->icon('heroicon-o-hashtag')
-                    ->sort(7),
+                    ->sort(6),
                 \Filament\Navigation\NavigationItem::make('Monthly Commissions')
                     ->url('/admin/monthly-commissions')
                     ->icon('heroicon-o-currency-dollar')
-                    ->sort(8),
+                    ->sort(7),
                 \Filament\Navigation\NavigationItem::make('Policy Listing')
                     ->url('/admin/policy-list')
                     ->icon('heroicon-o-document-duplicate')
-                    ->sort(9),
+                    ->sort(8),
                 \Filament\Navigation\NavigationItem::make('Import Policy')
                     ->url('/admin/upload-policy')
                     ->icon('heroicon-o-arrow-up-tray')
-                    ->sort(10),
+                    ->sort(9),
                 \Filament\Navigation\NavigationItem::make('Redeem Request')
                     ->url('/admin/points-redemRequest')
                     ->icon('heroicon-o-gift')
-                    ->sort(11),
+                    ->sort(10),
                 \Filament\Navigation\NavigationItem::make('Redeem Proceeded')
                     ->url('/admin/points-redemption')
                     ->icon('heroicon-o-check-circle')
-                    ->sort(12),
+                    ->sort(11),
                 \Filament\Navigation\NavigationItem::make('App Slider')
                     ->url('/admin/sliders')
                     ->icon('heroicon-o-photo')
-                    ->sort(13),
+                    ->sort(12),
                 \Filament\Navigation\NavigationItem::make('Company')
                     ->url('/admin/companies')
                     ->icon('heroicon-o-building-office')
-                    ->sort(14),
+                    ->sort(13),
                 \Filament\Navigation\NavigationItem::make('Insurance Claim')
                     ->url('/admin/claims')
                     ->icon('heroicon-o-clipboard-document-check')
-                    ->sort(15),
+                    ->sort(14),
                 \Filament\Navigation\NavigationItem::make('Logs')
                     ->url('/admin/WhatsappMessageLog')
                     ->icon('heroicon-o-document-text')
-                    ->sort(17),
+                    ->sort(15),
                 \Filament\Navigation\NavigationItem::make('App Activity')
                     ->url('/admin/app-activity')
                     ->icon('heroicon-o-chart-pie')
-                    ->sort(18),
+                    ->sort(16),
                 \Filament\Navigation\NavigationItem::make('Insurance Product')
                     ->url('/admin/insurance-products')
                     ->icon('heroicon-o-briefcase')
-                    ->sort(19),
+                    ->sort(17),
             ])
             ->middleware([
                 EncryptCookies::class,
