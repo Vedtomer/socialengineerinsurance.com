@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AgentLedgerEntryResource\Pages;
 use App\Imports\AgentLedgerImport;
 use App\Models\AgentLedgerEntry;
+use App\Models\AgentLedgerImportHistory;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -124,6 +125,7 @@ class AgentLedgerEntryResource extends Resource
     {
         return [
             'index' => Pages\ListAgentLedgerEntries::route('/'),
+            'history' => Pages\AgentLedgerImportHistory::route('/history'),
         ];
     }
 
@@ -138,16 +140,24 @@ class AgentLedgerEntryResource extends Resource
     {
         $disk = 'local';
         $path = $data['file'];
+        $history = AgentLedgerImportHistory::create([
+            'entry_date' => $data['entry_date'],
+            'file_name' => $data['original_file_name'] ?? basename((string) $path),
+            'file_path' => $path,
+            'imported_by' => auth()->id(),
+        ]);
+        $import = new AgentLedgerImport($data['entry_date'], $history->id);
 
-        Excel::import(
-            new AgentLedgerImport($data['entry_date']),
-            Storage::disk($disk)->path($path)
-        );
+        Excel::import($import, Storage::disk($disk)->path($path));
+
+        $history->update([
+            'total_records' => $import->processedRowsCount(),
+        ]);
 
         Notification::make()
             ->success()
             ->title('Excel imported successfully')
-            ->body('Rows have been added to Agent Ledger.')
+            ->body("{$history->total_records} rows have been saved in import history.")
             ->send();
     }
 }

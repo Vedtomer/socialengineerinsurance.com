@@ -42,4 +42,9 @@ class AgentLedgerEntry extends Model
     {
         return $this->belongsTo(User::class, 'imported_by');
     }
+
+    public function importHistoryRows()
+    {
+        return $this->hasMany(AgentLedgerImportHistoryRow::class, 'ledger_entry_id');
+    }
 }
