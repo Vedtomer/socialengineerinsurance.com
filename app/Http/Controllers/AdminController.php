@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\AgentMonthlySettlement;
+use App\Models\AgentLedgerEntry;
 use App\Models\InsuranceCompany;
 use App\Models\Policy;
 use App\Models\UserActivity;
@@ -673,6 +674,12 @@ class AdminController extends Controller
         $premiums = $monthlyCommissions->sum('total_premium');
         $payout = $monthlyCommissions->sum('total_payout');
         $final_amount_due = $agentSettlements->sum('final_amount_due');
+        $overallBalance = AgentLedgerEntry::query()
+            ->when(!empty($start_date), fn ($query) => $query->whereDate('entry_date', '>=', $start_date))
+            ->when(!empty($end_date), fn ($query) => $query->whereDate('entry_date', '<=', $end_date))
+            ->when(!empty($agent_id), fn ($query) => $query->where('user_id', $agent_id))
+            ->selectRaw('COALESCE(SUM(credit - debit), 0) as balance')
+            ->value('balance');
 
         // Get insurance company data
         $companies = InsuranceCompany::where('status', 1)->get();
@@ -709,6 +716,7 @@ class AdminController extends Controller
             'agents' => $agents,
             'policyCount' => round($policyCount),
             'final_amount_due' => $final_amount_due,
+            'overall_balance' => round((float) $overallBalance),
             'premiums' => round($premiums),
             'payout' => round($payout),
             'companies' => $companies
