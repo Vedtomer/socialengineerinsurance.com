@@ -1,6 +1,14 @@
 @if($period == 'annually')
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="card bg-info">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Total Policies</h5>
+                    <h3 class="text-white">{{ $totalPolicies }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="card bg-primary">
                 <div class="card-body">
                     <h5 class="card-title text-white">Total Net Amount</h5>
@@ -8,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card bg-success">
                 <div class="card-body">
                     <h5 class="card-title text-white">Total Payout</h5>
@@ -23,6 +31,7 @@
             <thead>
                 <tr>
                     <th>Month</th>
+                    <th class="text-center">Total Policies</th>
                     <th class="text-right">Total Net Amount</th>
                     <th class="text-right">Payout</th>
                 </tr>
@@ -31,6 +40,7 @@
                 @foreach($monthlyData as $data)
                     <tr>
                         <td>{{ $data['month_name'] }}</td>
+                        <td class="text-center">{{ $data['policies'] }}</td>
                         <td class="text-right">₹ {{ number_format(round($data['net_amount']), 0) }}</td>
                         <td class="text-right">₹ {{ number_format(round($data['payout']), 0) }}</td>
                     </tr>
@@ -39,6 +49,7 @@
             <tfoot>
                 <tr>
                     <th>Total</th>
+                    <th class="text-center">{{ $totalPolicies }}</th>
                     <th class="text-right">₹ {{ number_format(round($totalNetAmount), 0) }}</th>
                     <th class="text-right">₹ {{ number_format(round($totalPayout), 0) }}</th>
                 </tr>
