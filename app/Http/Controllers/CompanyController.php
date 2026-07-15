@@ -167,11 +167,13 @@ class CompanyController extends Controller
         if ($period == 'annually') {
             $totalNetAmount = $query->sum('net_amount');
             $totalPolicies = $query->count();
-            $payout = ($totalNetAmount * $percentage) / 100;
+            $actualPayout = $query->sum('payout');
+            $calculatedPayout = ($totalNetAmount * $percentage) / 100;
             return view('admin.companies.payout_result', [
                 'totalNetAmount' => $totalNetAmount,
                 'totalPolicies' => $totalPolicies,
-                'payout' => $payout,
+                'actualPayout' => $actualPayout,
+                'payout' => $calculatedPayout,
                 'period' => $period
             ]);
         } else {
@@ -182,6 +184,7 @@ class CompanyController extends Controller
                 $year = $i > 12 ? $years[1] : $years[0];
                 $monthlyData[sprintf("%04d-%02d", $year, $month)] = [
                     'net_amount' => 0,
+                    'actual_payout' => 0,
                     'payout' => 0,
                     'policies' => 0,
                     'month_name' => date('M Y', strtotime(sprintf("%04d-%02d-01", $year, $month)))
@@ -194,6 +197,7 @@ class CompanyController extends Controller
                 if (isset($monthlyData[$monthKey])) {
                     $monthlyData[$monthKey]['policies'] += 1;
                     $monthlyData[$monthKey]['net_amount'] += (float)$policy->net_amount;
+                    $monthlyData[$monthKey]['actual_payout'] += (float)$policy->payout;
                     $monthlyData[$monthKey]['payout'] += ((float)$policy->net_amount * $percentage) / 100;
                 }
             }
@@ -202,6 +206,7 @@ class CompanyController extends Controller
                 'monthlyData' => $monthlyData,
                 'period' => $period,
                 'totalNetAmount' => array_sum(array_column($monthlyData, 'net_amount')),
+                'totalActualPayout' => array_sum(array_column($monthlyData, 'actual_payout')),
                 'totalPayout' => array_sum(array_column($monthlyData, 'payout')),
                 'totalPolicies' => array_sum(array_column($monthlyData, 'policies'))
             ]);
