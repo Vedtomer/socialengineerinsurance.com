@@ -142,4 +142,64 @@ class CompanyController extends Controller
         $company->delete();
         return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
     }
+
+    public function payout(Request $request, InsuranceCompany $company)
+    {
+        return view('admin.companies.payout', compact('company'));
+    }
+
+    public function payoutData(Request $request, InsuranceCompany $company)
+    {
+        $period = $request->get('period', 'annually');
+        $financialYear = $request->get('financial_year'); 
+        $percentage = (float)$request->get('percentage', 59);
+
+        $years = explode('-', $financialYear);
+        if (count($years) != 2) {
+            return "Invalid Financial Year";
+        }
+        $startDate = $years[0] . '-04-01 00:00:00';
+        $endDate = $years[1] . '-03-31 23:59:59';
+
+        $query = \App\Models\Policy::where('company_id', $company->id)
+            ->whereBetween('policy_start_date', [$startDate, $endDate]);
+
+        if ($period == 'annually') {
+            $totalNetAmount = $query->sum('net_amount');
+            $payout = ($totalNetAmount * $percentage) / 100;
+            return view('admin.companies.payout_result', [
+                'totalNetAmount' => $totalNetAmount,
+                'payout' => $payout,
+                'period' => $period
+            ]);
+        } else {
+            $policies = $query->get();
+            $monthlyData = [];
+            for ($i = 4; $i <= 15; $i++) {
+                $month = $i > 12 ? $i - 12 : $i;
+                $year = $i > 12 ? $years[1] : $years[0];
+                $monthlyData[sprintf("%04d-%02d", $year, $month)] = [
+                    'net_amount' => 0,
+                    'payout' => 0,
+                    'month_name' => date('M Y', strtotime(sprintf("%04d-%02d-01", $year, $month)))
+                ];
+            }
+
+            foreach ($policies as $policy) {
+                if (!$policy->policy_start_date) continue;
+                $monthKey = date('Y-m', strtotime($policy->policy_start_date));
+                if (isset($monthlyData[$monthKey])) {
+                    $monthlyData[$monthKey]['net_amount'] += (float)$policy->net_amount;
+                    $monthlyData[$monthKey]['payout'] += ((float)$policy->net_amount * $percentage) / 100;
+                }
+            }
+
+            return view('admin.companies.payout_result', [
+                'monthlyData' => $monthlyData,
+                'period' => $period,
+                'totalNetAmount' => array_sum(array_column($monthlyData, 'net_amount')),
+                'totalPayout' => array_sum(array_column($monthlyData, 'payout'))
+            ]);
+        }
+    }
 }

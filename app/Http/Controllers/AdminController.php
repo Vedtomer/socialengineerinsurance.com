@@ -687,8 +687,8 @@ class AdminController extends Controller
 
         // Get policy data by company
         $policyData = Policy::whereIn('company_id', $companyIds)
-            ->where('policy_start_date', '>=', $start_date)
-            ->where('policy_start_date', '<=', $end_date)
+            ->where('policy_start_date', '>=', $start_date . ' 00:00:00')
+            ->where('policy_start_date', '<=', $end_date . ' 23:59:59')
             ->when($agent_id, function ($query) use ($agent_id) {
                 return $query->where('agent_id', $agent_id);
             })

@@ -146,6 +146,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/points-redemRequest', [PointRedemptionController::class, 'ReedemRequest'])->name('admin.reward.request');
         Route::post('/redeem/success/{pointId?}', [PointRedemptionController::class, 'redeemSuccess'])->name('redeem.success');
         Route::post('/redeem/cancel/{pointId}', [PointRedemptionController::class, 'cancelRedemption'])->name('redeem.cancel');
+        Route::match(['get', 'post'], 'companies/{company}/payout', [CompanyController::class, 'payout'])->name('companies.payout');
+        Route::get('companies/{company}/payout-data', [CompanyController::class, 'payoutData'])->name('companies.payout.data');
         Route::resource('companies', CompanyController::class);
 
 
